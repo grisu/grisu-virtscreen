@@ -30,7 +30,7 @@ public class GoldJobControl {
 		job.setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
 		job.setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
 
-		job.submit();
+		job.createAndSubmitJob();
 
 	}
 }
