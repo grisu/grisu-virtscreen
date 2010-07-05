@@ -43,37 +43,20 @@ public class GoldJob {
 
 	}
 
-	private GoldConfFile goldConfFile;
+	private final GoldConfFile goldConfFile;
 	private final ServiceInterface si;
 
 	private String molFile1;
 	private String molFile2;
 
-	public GoldJob(ServiceInterface si) {
+	public GoldJob(ServiceInterface si, String confFileTemplate)
+			throws FileTransactionException {
 		this.si = si;
+		this.goldConfFile = new GoldConfFile(this.si, confFileTemplate);
 	}
 
-	public void setConfFileTemplate(String url) throws FileTransactionException {
-		this.goldConfFile = new GoldConfFile(this.si, url);
-	}
-
-	private void setJobDirectory(String jobDir) {
-
-		this.goldConfFile.setProperty(GoldConfFile.DIRECTORY, "./Results");
-		this.goldConfFile.setProperty(GoldConfFile.CONCATENATED_OUTPUT,
-				"./Results/test.sdf");
-
-	}
-
-	public void setInputFiles(String proteinPath, String ligandPath,
-			String paramsPath) {
-
-		this.goldConfFile.setProperty(GoldConfFile.PROTEIN_DATA_FILE,
-				proteinPath);
-		this.goldConfFile.setLigand_data_file(ligandPath);
-		this.goldConfFile
-				.setProperty(GoldConfFile.SCORE_PARAM_FILE, paramsPath);
-
+	public void setParameter(GoldConfFile.PARAMETER key, String value) {
+		this.goldConfFile.setParameter(key, value);
 	}
 
 	public void submit() throws JobSubmissionException, JobPropertiesException {
@@ -93,6 +76,8 @@ public class GoldJob {
 		job.setWalltimeInSeconds(5000 * 60);
 
 		job.createJob("/ARCS/BeSTGRID");
+
+		this.goldConfFile.updateConfFile();
 
 		try {
 			job.submitJob();
