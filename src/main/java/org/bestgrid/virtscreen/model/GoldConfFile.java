@@ -42,12 +42,27 @@ public class GoldConfFile {
 
 	}
 
-	private void setProperty(String key, String value) {
+	public void setProperty(String key, String value) {
 
 		for (int i = 0; i < configLines.size(); i++) {
 			if (configLines.get(i).trim().startsWith(key)) {
 				String tmp = key + " = " + value;
 				configLines.set(i, tmp);
+				break;
+			}
+		}
+
+	}
+
+	public void setLigand_data_file(String path) {
+
+		for (int i = 0; i < configLines.size(); i++) {
+			if (configLines.get(i).trim().startsWith(LIGAND_DATA_FILE)) {
+				String[] parts = configLines.get(i).split(" ");
+				String tmp = LIGAND_DATA_FILE + " " + path + " "
+						+ parts[parts.length - 1];
+				configLines.set(i, tmp);
+				break;
 			}
 		}
 
@@ -57,7 +72,14 @@ public class GoldConfFile {
 
 		File temp;
 		try {
-			temp = File.createTempFile("pattern", ".suffix");
+			// temp = File.createTempFile(
+			// FilenameUtils.getBaseName(file.getName()), "."
+			// + FilenameUtils.getExtension(file.getName()));
+			// temp = File.createTempFile("test", "suffix");
+			// temp.deleteOnExit();
+			File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+			temp = new File(tmpDir, file.getName());
+			temp.delete();
 			temp.deleteOnExit();
 			FileUtils.writeLines(temp, configLines);
 		} catch (IOException e) {
