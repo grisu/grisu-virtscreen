@@ -48,6 +48,9 @@ public class GoldJob {
 
 	private String molFile1;
 	private String molFile2;
+	
+	private int cpus = 1;
+	private int walltimeInSeconds = 600;
 
 	public GoldJob(ServiceInterface si, String confFileTemplate)
 			throws FileTransactionException {
@@ -58,8 +61,16 @@ public class GoldJob {
 	public void setParameter(GoldConfFile.PARAMETER key, String value) {
 		this.goldConfFile.setParameter(key, value);
 	}
+	
+	public void setWalltime(int inSeconds) {
+		this.walltimeInSeconds = inSeconds;
+	}
+	
+	public void setCpus(int cpus) {
+		this.cpus = cpus;
+	}
 
-	public void submit() throws JobSubmissionException, JobPropertiesException {
+	public void createAndSubmitJob() throws JobSubmissionException, JobPropertiesException {
 
 		JobObject job = new JobObject(si);
 		job.setTimestampJobname(goldConfFile.getName());
@@ -69,11 +80,11 @@ public class GoldJob {
 		job.setApplication(Constants.GENERIC_APPLICATION_NAME);
 		job.setSubmissionLocation("route@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		job.setCommandline("sh script.sh");
-		job.setCpus(8);
+		job.setCommandline("sh script.sh "+this.goldConfFile.getName());
+		job.setCpus(this.cpus);
 		job.setHostCount(1);
 		job.setForce_single(true);
-		job.setWalltimeInSeconds(5000 * 60);
+		job.setWalltimeInSeconds(walltimeInSeconds);
 
 		job.createJob("/ARCS/BeSTGRID");
 
