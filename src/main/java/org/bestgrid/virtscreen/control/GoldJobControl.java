@@ -22,7 +22,7 @@ public class GoldJobControl {
 		String ligandPath = "/home/grid-bestgrid/virtScreen/test/sn_inter_single_clean.mol2";
 		String paramsPath = "/home/grid-bestgrid/virtScreen/test/chemscore_kin.params";
 		String resultsDir = "./Results";
-		String concOut = ".Results/test.sdf";
+		String concOut = "./Results/test.sdf";
 
 		job.setParameter(GoldConfFile.PARAMETER.protein_datafile, proteinPath);
 		job.setParameter(GoldConfFile.PARAMETER.ligand_data_file, ligandPath);
