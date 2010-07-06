@@ -1,29 +1,35 @@
 package org.bestgrid.virtscreen.view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
-import org.globus.myproxy.GetParams;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
+import org.vpac.grisu.frontend.model.job.JobObject;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Cpus;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.TextCombo;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
 
 import au.org.arcs.jcommons.constants.Constants;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+
 import com.jgoodies.forms.factories.FormFactory;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.TextCombo;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Cpus;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
@@ -36,6 +42,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private Walltime walltime;
 	private SubmissionLogPanel submissionLogPanel;
 	private JButton btnSubmit;
+
+	private final String HISTORY_KEY = "virtScreenGoldJob";
+
+	private final List<AbstractWidget> widgets = new LinkedList<AbstractWidget>();
 
 	/**
 	 * Create the panel.
@@ -80,7 +90,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	}
 
 	public String getPanelName() {
-		return "VirtScreen";
+		return "Gold";
 	}
 
 	public String getSupportedApplication() {
@@ -89,13 +99,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	public void setServiceInterface(ServiceInterface si) {
 		this.si = si;
-		getConfFileInput().setServiceInterface(si);
+		for (AbstractWidget w : widgets) {
+			w.setServiceInterface(si);
+		}
 	}
 
 	private SingleInputFile getConfFileInput() {
 		if (confFileInput == null) {
 			confFileInput = new SingleInputFile();
 			confFileInput.setTitle(".conf file");
+			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
+			widgets.add(confFileInput);
 		}
 		return confFileInput;
 	}
@@ -104,7 +118,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		if (proteinFileCombo == null) {
 			proteinFileCombo = new TextCombo();
 			proteinFileCombo.setTitle("Protein file");
-			proteinFileCombo.setText("/home/grid-bestgrid/virtScreen/test/alpha_correct.mol2");
+			proteinFileCombo
+					.setText("/home/grid-vs/virtScreen/test/alpha_correct.mol2");
+			proteinFileCombo.setHistoryKey(HISTORY_KEY + "_protein_file");
+			widgets.add(proteinFileCombo);
 		}
 		return proteinFileCombo;
 	}
@@ -113,7 +130,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		if (ligandFileCombo == null) {
 			ligandFileCombo = new TextCombo();
 			ligandFileCombo.setTitle("Ligand file");
-			ligandFileCombo.setText("/home/grid-bestgrid/virtScreen/test/sn_inter_single_clean.mol2");
+			ligandFileCombo
+					.setText("/home/grid-vs/virtScreen/test/sn_inter_single_clean.mol2");
+			ligandFileCombo.setHistoryKey(HISTORY_KEY + "_ligand_file");
+			widgets.add(ligandFileCombo);
 		}
 		return ligandFileCombo;
 	}
@@ -122,7 +142,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		if (paramsFile == null) {
 			paramsFile = new TextCombo();
 			paramsFile.setTitle(".params file");
-			paramsFile.setText("/home/grid-bestgrid/virtScreen/test/chemscore_kin.params");
+			paramsFile
+					.setText("/home/grid-vs/virtScreen/test/chemscore_kin.params");
+			paramsFile.setHistoryKey(HISTORY_KEY + "_params_file");
+			widgets.add(paramsFile);
 		}
 		return paramsFile;
 	}
@@ -130,6 +153,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private Cpus getCpus() {
 		if (cpus == null) {
 			cpus = new Cpus();
+			cpus.setHistoryKey(HISTORY_KEY + "_cpus");
+			widgets.add(cpus);
 		}
 		return cpus;
 	}
@@ -137,6 +162,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private Walltime getWalltime() {
 		if (walltime == null) {
 			walltime = new Walltime();
+			walltime.setHistoryKey(HISTORY_KEY + "_walltime");
+			widgets.add(walltime);
 		}
 		return walltime;
 	}
@@ -148,12 +175,26 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		return submissionLogPanel;
 	}
 
+	private void lockUI(final boolean lock) {
+
+		SwingUtilities.invokeLater(new Thread() {
+			@Override
+			public void run() {
+				getBtnSubmit().setEnabled(!lock);
+				for (AbstractWidget w : widgets) {
+					w.lockIUI(lock);
+				}
+			}
+		});
+
+	}
+
 	private void submit() {
 
-		GoldJob job = null;;
+		GoldJob job = null;
+		;
 		try {
-			job = new GoldJob(si,
-					getConfFileInput().getInputFileUrl());
+			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
 		} catch (FileTransactionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -171,18 +212,30 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		job.setParameter(GoldConfFile.PARAMETER.score_param_file, paramsPath);
 		job.setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
 		job.setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
-		
+
 		job.setCpus(getCpus().getCpus());
 		job.setWalltime(getWalltime().getWalltimeInSeconds());
 
 		try {
+			lockUI(true);
+
+			JobObject jobObject = job.createJobObject();
+
+			getSubmissionLogPanel().setJobObject(jobObject);
+
 			job.createAndSubmitJob();
+
+			for (AbstractWidget w : widgets) {
+				w.saveItemToHistory();
+			}
 		} catch (JobSubmissionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JobPropertiesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			lockUI(false);
 		}
 
 	}
@@ -192,7 +245,12 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			btnSubmit = new JButton("Submit");
 			btnSubmit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					submit();
+					new Thread() {
+						@Override
+						public void run() {
+							submit();
+						}
+					}.start();
 				}
 			});
 		}

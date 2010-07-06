@@ -160,10 +160,10 @@
 							<archive>
 								<index>true</index>
 								<manifest>
-									<mainClass>org.bestgrid.virtscreen.Client</mainClass>
+									<mainClass>org.bestgrid.virtscreen.view.GrisuVirtScreen</mainClass>
 								</manifest>
 								<manifestEntries>
-									<Class-Path>bcprov.jar bcprov-jdk15-143.jar local-backend.jar
+									<Class-Path>bcprov.jar bcprov-jdk15-143.jar local-backend.jar grisu-client-dependencies.jar
 									</Class-Path>
 								</manifestEntries>
 							</archive>

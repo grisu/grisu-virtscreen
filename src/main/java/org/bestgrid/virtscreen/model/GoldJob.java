@@ -43,12 +43,14 @@ public class GoldJob {
 
 	}
 
+	private JobObject job;
+
 	private final GoldConfFile goldConfFile;
 	private final ServiceInterface si;
 
 	private String molFile1;
 	private String molFile2;
-	
+
 	private int cpus = 1;
 	private int walltimeInSeconds = 600;
 
@@ -61,18 +63,27 @@ public class GoldJob {
 	public void setParameter(GoldConfFile.PARAMETER key, String value) {
 		this.goldConfFile.setParameter(key, value);
 	}
-	
+
 	public void setWalltime(int inSeconds) {
 		this.walltimeInSeconds = inSeconds;
 	}
-	
+
 	public void setCpus(int cpus) {
 		this.cpus = cpus;
 	}
 
-	public void createAndSubmitJob() throws JobSubmissionException, JobPropertiesException {
+	public JobObject createJobObject() {
+		job = new JobObject(si);
+		return job;
+	}
 
-		JobObject job = new JobObject(si);
+	public void createAndSubmitJob() throws JobSubmissionException,
+			JobPropertiesException {
+
+		if (job == null) {
+			createJobObject();
+		}
+
 		job.setTimestampJobname(goldConfFile.getName());
 		job.addInputFileUrl(VIRTSCREEN_JOB_CONTROL_SCRIPT.getPath());
 		job.addInputFileUrl(VIRTSCREEN_HELPER_PY_SCRIPT.getPath());
@@ -80,13 +91,14 @@ public class GoldJob {
 		job.setApplication(Constants.GENERIC_APPLICATION_NAME);
 		job.setSubmissionLocation("route@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		job.setCommandline("sh script.sh "+this.goldConfFile.getName());
+		job.setCommandline("sh script.sh " + this.goldConfFile.getName());
 		job.setCpus(this.cpus);
 		job.setHostCount(1);
 		job.setForce_single(true);
 		job.setWalltimeInSeconds(walltimeInSeconds);
 
-		job.createJob("/ARCS/BeSTGRID");
+		job.createJob("/ARCS/BeSTGRID/VS_Discovery");
+		// job.createJob("/ARCS/BeSTGRID");
 
 		this.goldConfFile.updateConfFile();
 
@@ -95,6 +107,8 @@ public class GoldJob {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		job = null;
 
 	}
 }
