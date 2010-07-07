@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
 import org.vpac.grisu.control.ServiceInterface;
@@ -16,7 +17,7 @@ import org.vpac.grisu.settings.Environment;
 import au.org.arcs.jcommons.constants.Constants;
 
 public class GoldJob {
-
+	
 	public static final File VIRTSCREEN_PLUGIN_DIR = new File(
 			Environment.getGrisuClientDirectory(), "virtscreen");
 	public static final File VIRTSCREEN_JOB_CONTROL_SCRIPT = new File(
@@ -54,22 +55,27 @@ public class GoldJob {
 
 	private int cpus = 1;
 	private int walltimeInSeconds = 600;
-
+	
 	public GoldJob(ServiceInterface si, String confFileTemplate)
 			throws FileTransactionException {
 		this.si = si;
 		this.goldConfFile = new GoldConfFile(this.si, confFileTemplate);
-		createJobObject();
+		job = new JobObject(si);
 	}
-
+	
+	public void setProteinFile() {
+		String filePath = this.goldConfFile.getProteinFilePath();
+		setParameter(GoldConfFile.PARAMETER.protein_datafile, FilenameUtils.getBaseName(filePath));
+		job.addInputFileUrl(filePath);
+	}
+	
 	private void setParameter(GoldConfFile.PARAMETER key, String value) {
 		this.goldConfFile.setParameter(key, value);
 	}
 
 	public void setOptionalParamsFile(String fileUrl) {
-		this.goldConfFile.setParameter(PARAMETER.score_param_file, fileUrl);
+		this.goldConfFile.setParameter(PARAMETER.score_param_file, FilenameUtils.getBaseName(fileUrl));
 		this.job.addInputFileUrl(fileUrl);
-		// TODO update conf file
 	}
 
 	public void setWalltime(int inSeconds) {
@@ -80,9 +86,9 @@ public class GoldJob {
 		this.cpus = cpus;
 	}
 
-	private JobObject createJobObject() {
-		job = new JobObject(si);
-		return job;
+
+	public JobObject getJobObject() {
+		return this.job;
 	}
 
 	public void createAndSubmitJob() throws JobSubmissionException,
@@ -103,6 +109,13 @@ public class GoldJob {
 
 		job.createJob("/ARCS/BeSTGRID/VS_Discovery");
 		// job.createJob("/ARCS/BeSTGRID");
+		
+		String resultsDir = "./Results";
+		String concOut = "./Results/test.sdf";
+		setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
+		setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
+
+		setProteinFile();
 
 		this.goldConfFile.updateConfFile();
 

@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
 import org.vpac.grisu.control.ServiceInterface;
@@ -35,9 +37,6 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	private ServiceInterface si;
 	private SingleInputFile confFileInput;
-	private TextCombo proteinFileCombo;
-	private TextCombo ligandFileCombo;
-	private TextCombo paramsFile;
 	private Cpus cpus;
 	private Walltime walltime;
 	private SubmissionLogPanel submissionLogPanel;
@@ -46,6 +45,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private final String HISTORY_KEY = "virtScreenGoldJob";
 
 	private final List<AbstractWidget> widgets = new LinkedList<AbstractWidget>();
+	private SingleInputFile singleInputFile;
 
 	/**
 	 * Create the panel.
@@ -57,24 +57,25 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC, }));
+				FormFactory.RELATED_GAP_ROWSPEC,}));
 		add(getConfFileInput(), "2, 2, 3, 1, fill, fill");
-		add(getProteinFileCombo(), "2, 4, 3, 1, fill, fill");
-		add(getLigandFileCombo(), "2, 6, 3, 1, fill, fill");
-		add(getTextCombo_1(), "2, 8, 3, 1, fill, fill");
-		add(getCpus(), "2, 10, fill, fill");
-		add(getWalltime(), "4, 10, fill, fill");
-		add(getBtnSubmit(), "4, 12, right, default");
-		add(getSubmissionLogPanel(), "2, 14, 3, 1, fill, fill");
+		add(getSingleInputFile(), "2, 4, 3, 1, fill, fill");
+		add(getCpus(), "2, 6, fill, fill");
+		add(getWalltime(), "4, 6, fill, fill");
+		add(getBtnSubmit(), "4, 8, right, default");
+		add(getSubmissionLogPanel(), "2, 10, 3, 1, fill, fill");
 	}
 
 	public boolean createsBatchJob() {
@@ -112,42 +113,6 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			widgets.add(confFileInput);
 		}
 		return confFileInput;
-	}
-
-	private TextCombo getProteinFileCombo() {
-		if (proteinFileCombo == null) {
-			proteinFileCombo = new TextCombo();
-			proteinFileCombo.setTitle("Protein file");
-			proteinFileCombo
-					.setText("/home/grid-vs/virtScreen/test/alpha_correct.mol2");
-			proteinFileCombo.setHistoryKey(HISTORY_KEY + "_protein_file");
-			widgets.add(proteinFileCombo);
-		}
-		return proteinFileCombo;
-	}
-
-	private TextCombo getLigandFileCombo() {
-		if (ligandFileCombo == null) {
-			ligandFileCombo = new TextCombo();
-			ligandFileCombo.setTitle("Ligand file");
-			ligandFileCombo
-					.setText("/home/grid-vs/virtScreen/test/sn_inter_single_clean.mol2");
-			ligandFileCombo.setHistoryKey(HISTORY_KEY + "_ligand_file");
-			widgets.add(ligandFileCombo);
-		}
-		return ligandFileCombo;
-	}
-
-	private TextCombo getTextCombo_1() {
-		if (paramsFile == null) {
-			paramsFile = new TextCombo();
-			paramsFile.setTitle(".params file");
-			paramsFile
-					.setText("/home/grid-vs/virtScreen/test/chemscore_kin.params");
-			paramsFile.setHistoryKey(HISTORY_KEY + "_params_file");
-			widgets.add(paramsFile);
-		}
-		return paramsFile;
 	}
 
 	private Cpus getCpus() {
@@ -201,17 +166,12 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			return;
 		}
 
-		String proteinPath = getProteinFileCombo().getText();
-		String ligandPath = getLigandFileCombo().getText();
-		String paramsPath = getTextCombo_1().getText();
-		String resultsDir = "./Results";
-		String concOut = "./Results/test.sdf";
 
-		job.setParameter(GoldConfFile.PARAMETER.protein_datafile, proteinPath);
-		job.setParameter(GoldConfFile.PARAMETER.ligand_data_file, ligandPath);
-		job.setParameter(GoldConfFile.PARAMETER.score_param_file, paramsPath);
-		job.setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
-		job.setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
+		String paramsPath = getSingleInputFile().getInputFileUrl();
+
+		if (StringUtils.isNotBlank(paramsPath)) {
+			job.setOptionalParamsFile(paramsPath);
+		}
 
 		job.setCpus(getCpus().getCpus());
 		job.setWalltime(getWalltime().getWalltimeInSeconds());
@@ -219,9 +179,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		try {
 			lockUI(true);
 
-			JobObject jobObject = job.createJobObject();
-
-			getSubmissionLogPanel().setJobObject(jobObject);
+			getSubmissionLogPanel().setJobObject(job.getJobObject());
 
 			job.createAndSubmitJob();
 
@@ -255,5 +213,12 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			});
 		}
 		return btnSubmit;
+	}
+	private SingleInputFile getSingleInputFile() {
+		if (singleInputFile == null) {
+			singleInputFile = new SingleInputFile();
+			singleInputFile.setTitle(".params file (optional)");
+		}
+		return singleInputFile;
 	}
 }
