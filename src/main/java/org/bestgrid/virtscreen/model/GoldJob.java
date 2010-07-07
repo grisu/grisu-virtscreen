@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
@@ -58,10 +59,17 @@ public class GoldJob {
 			throws FileTransactionException {
 		this.si = si;
 		this.goldConfFile = new GoldConfFile(this.si, confFileTemplate);
+		createJobObject();
 	}
 
-	public void setParameter(GoldConfFile.PARAMETER key, String value) {
+	private void setParameter(GoldConfFile.PARAMETER key, String value) {
 		this.goldConfFile.setParameter(key, value);
+	}
+
+	public void setOptionalParamsFile(String fileUrl) {
+		this.goldConfFile.setParameter(PARAMETER.score_param_file, fileUrl);
+		this.job.addInputFileUrl(fileUrl);
+		// TODO update conf file
 	}
 
 	public void setWalltime(int inSeconds) {
@@ -72,17 +80,13 @@ public class GoldJob {
 		this.cpus = cpus;
 	}
 
-	public JobObject createJobObject() {
+	private JobObject createJobObject() {
 		job = new JobObject(si);
 		return job;
 	}
 
 	public void createAndSubmitJob() throws JobSubmissionException,
 			JobPropertiesException {
-
-		if (job == null) {
-			createJobObject();
-		}
 
 		job.setTimestampJobname(goldConfFile.getName());
 		job.addInputFileUrl(VIRTSCREEN_JOB_CONTROL_SCRIPT.getPath());
