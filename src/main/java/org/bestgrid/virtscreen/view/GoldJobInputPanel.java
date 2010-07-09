@@ -31,6 +31,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JLabel;
 
 public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
@@ -47,6 +48,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private SingleInputFile singleInputFile;
 	private final ValidationPanel validationPanel = new ValidationPanel();
 	private final ValidationGroup validationGroup;
+	private JButton btnRefresh;
+	private JLabel errorLabel;
 
 	/**
 	 * Create the panel.
@@ -59,22 +62,31 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("max(56dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(64dlu;default):grow"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC, }));
-		add(getConfFileInput(), "2, 2, 3, 1, fill, fill");
-		add(getCpus(), "2, 6, fill, fill");
-		add(getWalltime(), "4, 6, fill, fill");
-		add(getBtnSubmit(), "4, 8, right, default");
-		add(getSubmissionLogPanel(), "2, 10, 3, 1, fill, fill");
+				FormFactory.RELATED_GAP_ROWSPEC,}));
+		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
+		add(getBtnRefresh(), "8, 2");
+		add(getCpus(), "4, 4, fill, fill");
+		add(getWalltime(), "6, 4, 3, 1, fill, fill");
+		add(getErrorLabel(), "2, 6, 5, 1");
+		add(getBtnSubmit(), "8, 6, right, default");
+		add(getSubmissionLogPanel(), "2, 8, 7, 1, fill, fill");
 
 	}
 
@@ -250,7 +262,12 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 						fixes.append("Select an existing file.");
 						setParseResult(false, logMessage, fixes);
 						return;
-					} finally {
+					} catch (Exception e) {
+						logMessage.append("Error opening .conf file: "+e.getLocalizedMessage());
+						fixes.append("Please check syntax of .conf file "+confUrl);
+						setParseResult(false, logMessage, fixes);
+						return;
+					}finally {
 						lockUI(false);
 					}
 
@@ -267,6 +284,28 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
 		getBtnSubmit().setEnabled(success);
+		if ( success ) {
+			getErrorLabel().setText("");
+		} else {
+			getErrorLabel().setText(fixes.toString());
+		}
 
+	}
+	private JButton getBtnRefresh() {
+		if (btnRefresh == null) {
+			btnRefresh = new JButton("Refresh");
+			btnRefresh.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					parseConfig();
+				}
+			});
+		}
+		return btnRefresh;
+	}
+	private JLabel getErrorLabel() {
+		if (errorLabel == null) {
+			errorLabel = new JLabel("");
+		}
+		return errorLabel;
 	}
 }
