@@ -7,15 +7,14 @@ nohup /share/apps/gold/GOLD_Suite/GOLD/pvm3/lib/LINUX64/pvmd3  &
 GOLD_DIR=/share/apps/gold/GOLD_Suite
 
 INDIR=`pwd`
-
-
 CONF_FILE=$1
+
 
 #clean up key files in the working directory. just in case
 rm -f $INDIR/gold.hosts
 
-echo " PARALLEL OPTIONS" >> $INDIR/$1
-echo "hostfile = gold.hosts" >> $INDIR/$1
+echo " PARALLEL OPTIONS" >> $INDIR/$CONF_FILE
+echo "hostfile = gold.hosts" >> $INDIR/$CONF_FILE
 
 cat $PBS_NODEFILE|python $INDIR/gold.py > $INDIR/gold.hosts
 

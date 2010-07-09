@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.vpac.grisu.control.ServiceInterface;
+import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.model.FileManager;
 import org.vpac.grisu.model.GrisuRegistryManager;
@@ -29,12 +33,13 @@ public class GoldConfFile {
 
 	private final List<String> configLines;
 
-//	private String currentJobDirectory = null;
+	// private String currentJobDirectory = null;
 
 	private final Map<PARAMETER, String> parameters = new HashMap<PARAMETER, String>();
-	
-	private LigandFiles libFile = null;
 
+	private final Map<String, String> inputFiles = new HashMap<String, String>();
+
+	private LigandFiles libFile = null;
 
 	public GoldConfFile(ServiceInterface si, String url)
 			throws FileTransactionException {
@@ -52,6 +57,24 @@ public class GoldConfFile {
 		}
 		libFile = new LigandFiles(si);
 		libFile.setFiles(getLigandPaths());
+
+		String filePath = getProteinFilePath();
+		setParameter(GoldConfFile.PARAMETER.protein_datafile,
+				FilenameUtils.getName(filePath));
+		inputFiles.put(FilenameUtils.getName(filePath), filePath);
+
+		String optionalParameterFile = getParameter(PARAMETER.score_param_file);
+		if (StringUtils.isNotBlank(optionalParameterFile)) {
+			setParameter(PARAMETER.score_param_file,
+					FilenameUtils.getName(optionalParameterFile));
+			inputFiles.put(FilenameUtils.getName(optionalParameterFile),
+					optionalParameterFile);
+		}
+
+	}
+
+	public Set<String> getFilesToStageIn() {
+		return new HashSet(this.inputFiles.values());
 	}
 
 	public void setParameter(PARAMETER key, String value) {
@@ -59,13 +82,14 @@ public class GoldConfFile {
 	}
 
 	public void updateConfFile() {
-		
-		String[] tempArray = Arrays.copyOf(libFile.getRemotePaths(), libFile.getRemotePaths().length+1);
-		tempArray[tempArray.length-1] = new Integer(getLigandDockingAmount()).toString();
-		String newLigandValue = StringUtils.join(tempArray, "");
-		
+
+		String[] tempArray = Arrays.copyOf(libFile.getRemotePaths(),
+				libFile.getRemotePaths().length + 1);
+		tempArray[tempArray.length - 1] = new Integer(getLigandDockingAmount())
+				.toString();
+		String newLigandValue = StringUtils.join(tempArray, " ");
+
 		parameters.put(PARAMETER.ligand_data_file, newLigandValue);
-		
 
 		for (PARAMETER key : parameters.keySet()) {
 
@@ -88,11 +112,77 @@ public class GoldConfFile {
 		}
 
 		try {
-			newConfFile.delete();
-			newConfFile.deleteOnExit();
-			FileUtils.writeLines(newConfFile, configLines);
+			getConfFile().delete();
+			getConfFile().deleteOnExit();
+			FileUtils.writeLines(getConfFile(), configLines);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+
+	}
+
+	public boolean checkForValidity(StringBuffer logMessage, StringBuffer fixes) {
+
+		updateConfFile();
+
+		// check whether protein file exists
+		String protein = inputFiles
+				.get(getParameter(PARAMETER.protein_datafile));
+		logMessage.append("Checking " + PARAMETER.protein_datafile.toString()
+				+ "...\n");
+		if (!fm.isFile(protein)) {
+			logMessage.append("\t" + PARAMETER.protein_datafile.toString()
+					+ " \"" + protein + " \"can't be accessed.\n");
+			fixes.append("Fix path for "
+					+ PARAMETER.protein_datafile.toString() + "\n");
+		} else {
+			logMessage.append("\t" + PARAMETER.protein_datafile.toString()
+					+ "\"" + protein + "\" exists and is file.\n");
+		}
+
+		// check whether ligand files exist remotely
+		logMessage.append("Checking " + PARAMETER.ligand_data_file + "...\n");
+		for (String url : libFile.getRemoteUrls()) {
+			logMessage.append("\tChecking remote library "
+					+ FilenameUtils.getName(url) + ": ");
+			try {
+				if (si.fileExists(url)) {
+					logMessage.append("Installed\n");
+				} else {
+					logMessage.append("Not  installed\n");
+					fixes.append("Get library " + FilenameUtils.getName(url)
+							+ " installed on cluster");
+				}
+			} catch (RemoteFileSystemException e) {
+				logMessage.append("Not  installed/accessible ("
+						+ e.getLocalizedMessage() + "\n");
+				fixes.append("Get library "
+						+ FilenameUtils.getName(url)
+						+ " installed on cluster / Ask BeSTGRID staff to look at access issues\n");
+			}
+		}
+
+		// check whether optional params file is accessible
+		String params = inputFiles
+				.get(getParameter(PARAMETER.score_param_file));
+		if (StringUtils.isNotBlank(params)) {
+			logMessage.append("Checking "
+					+ PARAMETER.score_param_file.toString() + "...\n");
+			if (!fm.isFile(params)) {
+				logMessage.append("\t" + PARAMETER.score_param_file.toString()
+						+ " \"" + params + "\" can't be accessed.\n");
+				fixes.append("Fix path for "
+						+ PARAMETER.score_param_file.toString() + "\n");
+			} else {
+				logMessage.append("\t" + PARAMETER.score_param_file.toString()
+						+ "\"" + protein + "\" exists and is file.\n");
+			}
+		}
+
+		if (fixes.length() > 0) {
+			return false;
+		} else {
+			return true;
 		}
 
 	}
@@ -103,8 +193,7 @@ public class GoldConfFile {
 			if (configLines.get(i).trim()
 					.startsWith(PARAMETER.ligand_data_file.toString())) {
 				String[] parts = configLines.get(i).split(" ");
-				String tmp = PARAMETER.ligand_data_file.toString() + " " + path
-						+ " " + parts[parts.length - 1];
+				String tmp = PARAMETER.ligand_data_file.toString() + " " + path;
 				configLines.set(i, tmp);
 				break;
 			}
@@ -133,50 +222,51 @@ public class GoldConfFile {
 		return this.templateFile.getName();
 	}
 
-//	public void setJobDirectory(String jobDirectoryUrl) {
-//		currentJobDirectory = jobDirectoryUrl;
-//	}
-	
+	// public void setJobDirectory(String jobDirectoryUrl) {
+	// currentJobDirectory = jobDirectoryUrl;
+	// }
+
 	private String getParameter(PARAMETER key) {
-		
-		if ( PARAMETER.ligand_data_file.equals(key) ) {
-			
+
+		if (PARAMETER.ligand_data_file.equals(key)) {
+
 			for (int i = 0; i < configLines.size(); i++) {
 				if (configLines.get(i).trim()
 						.startsWith(PARAMETER.ligand_data_file.toString())) {
-					String temp = configLines.get(i).substring(key.toString().length()).trim();
+					String temp = configLines.get(i)
+							.substring(key.toString().length()).trim();
 					return temp;
 				}
 			}
-			
+
 		} else {
-		for ( String line : this.configLines ) {
-			if ( line.trim().startsWith(key.toString()) ) {
-				return line.substring(line.indexOf("=")+1).trim();
+			for (String line : this.configLines) {
+				if (line.trim().startsWith(key.toString())) {
+					return line.substring(line.indexOf("=") + 1).trim();
+				}
 			}
 		}
-		}
-		
+
 		return null;
 	}
 
 	public String getLigandValue() {
 		return getParameter(PARAMETER.ligand_data_file);
 	}
-	
+
 	public String[] getLigandPaths() {
-		
+
 		String[] temp = getLigandValue().split("\\s");
-		
-		return Arrays.copyOf(temp, temp.length-1);
-		
+
+		return Arrays.copyOf(temp, temp.length - 1);
+
 	}
-	
+
 	public int getLigandDockingAmount() {
-		
+
 		String[] temp = getLigandValue().split("\\s");
-		String temp2 = temp[temp.length-1];
-		
+		String temp2 = temp[temp.length - 1];
+
 		try {
 			return Integer.parseInt(temp2);
 		} catch (Exception e) {

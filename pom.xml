@@ -117,7 +117,12 @@
 			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.kenai</groupId>
+			<artifactId>validationAPI</artifactId>
+			<version>0.4</version>
+			<scope>compile</scope>
+		</dependency>
 
 
 

@@ -1,6 +1,5 @@
 package org.bestgrid.virtscreen.control;
 
-import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.login.LoginManager;
@@ -24,11 +23,15 @@ public class GoldJobControl {
 		String resultsDir = "./Results";
 		String concOut = "./Results/test.sdf";
 
-		job.setParameter(GoldConfFile.PARAMETER.protein_datafile, proteinPath);
-		job.setParameter(GoldConfFile.PARAMETER.ligand_data_file, ligandPath);
-		job.setParameter(GoldConfFile.PARAMETER.score_param_file, paramsPath);
-		job.setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
-		job.setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
+		// job.setParameter(GoldConfFile.PARAMETER.protein_datafile,
+		// proteinPath);
+		// job.setParameter(GoldConfFile.PARAMETER.ligand_data_file,
+		// ligandPath);
+		// job.setParameter(GoldConfFile.PARAMETER.score_param_file,
+		// paramsPath);
+		// job.setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
+		// job.setParameter(GoldConfFile.PARAMETER.concatenated_output,
+		// concOut);
 
 		job.createAndSubmitJob();
 

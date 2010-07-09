@@ -9,21 +9,20 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
+import org.netbeans.validation.api.ui.ValidationGroup;
+import org.netbeans.validation.api.ui.ValidationPanel;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
-import org.vpac.grisu.frontend.model.job.JobObject;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Cpus;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.TextCombo;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
 
 import au.org.arcs.jcommons.constants.Constants;
@@ -36,7 +35,7 @@ import com.jgoodies.forms.layout.RowSpec;
 public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	private ServiceInterface si;
-	private SingleInputFile confFileInput;
+	private ConfFileInputFile confFileInput;
 	private Cpus cpus;
 	private Walltime walltime;
 	private SubmissionLogPanel submissionLogPanel;
@@ -46,36 +45,37 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	private final List<AbstractWidget> widgets = new LinkedList<AbstractWidget>();
 	private SingleInputFile singleInputFile;
+	private final ValidationPanel validationPanel = new ValidationPanel();
+	private final ValidationGroup validationGroup;
 
 	/**
 	 * Create the panel.
 	 */
 	public GoldJobInputPanel() {
 		super();
+
+		validationPanel.setInnerComponent(this);
+		validationGroup = validationPanel.getValidationGroup();
+
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormFactory.RELATED_GAP_ROWSPEC, }));
 		add(getConfFileInput(), "2, 2, 3, 1, fill, fill");
-		add(getSingleInputFile(), "2, 4, 3, 1, fill, fill");
 		add(getCpus(), "2, 6, fill, fill");
 		add(getWalltime(), "4, 6, fill, fill");
 		add(getBtnSubmit(), "4, 8, right, default");
 		add(getSubmissionLogPanel(), "2, 10, 3, 1, fill, fill");
+
 	}
 
 	public boolean createsBatchJob() {
@@ -105,21 +105,26 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		}
 	}
 
-	private SingleInputFile getConfFileInput() {
+	private ConfFileInputFile getConfFileInput() {
 		if (confFileInput == null) {
-			confFileInput = new SingleInputFile();
+			confFileInput = new ConfFileInputFile(this);
 			confFileInput.setTitle(".conf file");
 			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
-			widgets.add(confFileInput);
+			addWidget(confFileInput);
 		}
 		return confFileInput;
+	}
+
+	private void addWidget(AbstractWidget widget) {
+		widgets.add(widget);
+		widget.setValidationGroup(validationGroup);
 	}
 
 	private Cpus getCpus() {
 		if (cpus == null) {
 			cpus = new Cpus();
 			cpus.setHistoryKey(HISTORY_KEY + "_cpus");
-			widgets.add(cpus);
+			addWidget(cpus);
 		}
 		return cpus;
 	}
@@ -128,7 +133,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		if (walltime == null) {
 			walltime = new Walltime();
 			walltime.setHistoryKey(HISTORY_KEY + "_walltime");
-			widgets.add(walltime);
+			addWidget(walltime);
 		}
 		return walltime;
 	}
@@ -156,7 +161,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	private void submit() {
 
-		GoldJob job = null;
+		final GoldJob job;
 		;
 		try {
 			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
@@ -166,41 +171,41 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			return;
 		}
 
-
-		String paramsPath = getSingleInputFile().getInputFileUrl();
-
-		if (StringUtils.isNotBlank(paramsPath)) {
-			job.setOptionalParamsFile(paramsPath);
-		}
-
 		job.setCpus(getCpus().getCpus());
 		job.setWalltime(getWalltime().getWalltimeInSeconds());
 
-		try {
-			lockUI(true);
+		new Thread() {
+			@Override
+			public void run() {
 
-			getSubmissionLogPanel().setJobObject(job.getJobObject());
+				try {
+					lockUI(true);
 
-			job.createAndSubmitJob();
+					getSubmissionLogPanel().setJobObject(job.getJobObject());
+					job.createAndSubmitJob();
 
-			for (AbstractWidget w : widgets) {
-				w.saveItemToHistory();
+					for (AbstractWidget w : widgets) {
+						w.saveItemToHistory();
+					}
+				} catch (JobSubmissionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JobPropertiesException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					lockUI(false);
+					getConfFileInput().setInputFile(null);
+				}
 			}
-		} catch (JobSubmissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JobPropertiesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			lockUI(false);
-		}
+		}.start();
 
 	}
 
 	private JButton getBtnSubmit() {
 		if (btnSubmit == null) {
 			btnSubmit = new JButton("Submit");
+			btnSubmit.setEnabled(false);
 			btnSubmit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					new Thread() {
@@ -214,11 +219,54 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		}
 		return btnSubmit;
 	}
-	private SingleInputFile getSingleInputFile() {
-		if (singleInputFile == null) {
-			singleInputFile = new SingleInputFile();
-			singleInputFile.setTitle(".params file (optional)");
+
+	public void parseConfig() {
+
+		final String confUrl = getConfFileInput().getInputFileUrl();
+
+		if (StringUtils.isBlank(confUrl)) {
+			setParseResult(false, new StringBuffer("No .conf file specified."),
+					new StringBuffer("Select .conf file."));
+		} else {
+
+			final StringBuffer logMessage = new StringBuffer(
+					"Parse log:\n\nLoading conf file...\n");
+			final StringBuffer fixes = new StringBuffer();
+
+			lockUI(true);
+
+			getSubmissionLogPanel().setText("Parsing file " + confUrl + "...");
+
+			new Thread() {
+				@Override
+				public void run() {
+
+					GoldConfFile temp = null;
+					try {
+						temp = new GoldConfFile(si, confUrl);
+					} catch (FileTransactionException e) {
+						logMessage.append("Can't access .conf file: "
+								+ getConfFileInput().getInputFileUrl());
+						fixes.append("Select an existing file.");
+						setParseResult(false, logMessage, fixes);
+						return;
+					} finally {
+						lockUI(false);
+					}
+
+					boolean success = temp.checkForValidity(logMessage, fixes);
+					setParseResult(success, logMessage, fixes);
+				}
+			}.start();
 		}
-		return singleInputFile;
+
+	}
+
+	private void setParseResult(boolean success, StringBuffer logMessage,
+			StringBuffer fixes) {
+
+		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
+		getBtnSubmit().setEnabled(success);
+
 	}
 }
