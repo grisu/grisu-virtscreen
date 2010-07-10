@@ -14,8 +14,7 @@ public class ConfFileInputFile extends SingleInputFile {
 	@Override
 	protected void setInputFile(String url) {
 		super.setInputFile(url);
-
-		if (StringUtils.isNotBlank(url)) {
+		if (StringUtils.isNotBlank(url) && !url.equals(selString)) {
 			parent.parseConfig();
 		}
 	}

@@ -97,6 +97,7 @@ public class GoldJob {
 		job.setWalltimeInSeconds(walltimeInSeconds);
 
 		job.createJob("/ARCS/BeSTGRID/Drug_discovery");
+		// job.createJob("/ARCS/BeSTGRID/UoA/LocalUsers");
 		// job.createJob("/ARCS/BeSTGRID");
 
 		String resultsDir = "./Results";

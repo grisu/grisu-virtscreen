@@ -1,11 +1,13 @@
 package org.bestgrid.virtscreen.view;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -31,7 +33,6 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JLabel;
 
 public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
@@ -63,23 +64,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(56dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(64dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormFactory.RELATED_GAP_ROWSPEC, }));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2");
 		add(getCpus(), "4, 4, fill, fill");
@@ -163,6 +158,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			@Override
 			public void run() {
 				getBtnSubmit().setEnabled(!lock);
+				getBtnRefresh().setEnabled(!lock);
 				for (AbstractWidget w : widgets) {
 					w.lockIUI(lock);
 				}
@@ -208,6 +204,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 				} finally {
 					lockUI(false);
 					getConfFileInput().setInputFile(null);
+					getBtnSubmit().setEnabled(false);
+					getBtnRefresh().setEnabled(false);
 				}
 			}
 		}.start();
@@ -239,8 +237,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		if (StringUtils.isBlank(confUrl)) {
 			setParseResult(false, new StringBuffer("No .conf file specified."),
 					new StringBuffer("Select .conf file."));
+			getBtnRefresh().setEnabled(false);
 		} else {
-
 			final StringBuffer logMessage = new StringBuffer(
 					"Parse log:\n\nLoading conf file...\n");
 			final StringBuffer fixes = new StringBuffer();
@@ -263,11 +261,13 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 						setParseResult(false, logMessage, fixes);
 						return;
 					} catch (Exception e) {
-						logMessage.append("Error opening .conf file: "+e.getLocalizedMessage());
-						fixes.append("Please check syntax of .conf file "+confUrl);
+						logMessage.append("Error opening .conf file: "
+								+ e.getLocalizedMessage());
+						fixes.append("Please check syntax of .conf file "
+								+ confUrl);
 						setParseResult(false, logMessage, fixes);
 						return;
-					}finally {
+					} finally {
 						lockUI(false);
 					}
 
@@ -282,18 +282,26 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private void setParseResult(boolean success, StringBuffer logMessage,
 			StringBuffer fixes) {
 
-		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
 		getBtnSubmit().setEnabled(success);
-		if ( success ) {
+		if (success) {
 			getErrorLabel().setText("");
+			logMessage
+					.append("\n\nConfig file parsed successful. Job ready for submission.\n");
 		} else {
-			getErrorLabel().setText(fixes.toString());
+			getErrorLabel()
+					.setText(
+							"Error when parsing .conf file. Please check log below for details.");
+			logMessage
+					.append("\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Refresh\":\n");
 		}
+		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
 
 	}
+
 	private JButton getBtnRefresh() {
 		if (btnRefresh == null) {
 			btnRefresh = new JButton("Refresh");
+			btnRefresh.setEnabled(false);
 			btnRefresh.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					parseConfig();
@@ -302,9 +310,11 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		}
 		return btnRefresh;
 	}
+
 	private JLabel getErrorLabel() {
 		if (errorLabel == null) {
 			errorLabel = new JLabel("");
+			errorLabel.setForeground(Color.RED);
 		}
 		return errorLabel;
 	}

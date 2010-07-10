@@ -91,6 +91,15 @@ public class GoldConfFile {
 
 		parameters.put(PARAMETER.ligand_data_file, newLigandValue);
 
+		String resultsPath = getParameter(PARAMETER.directory);
+		String newResultsPath = "./" + FilenameUtils.getName(resultsPath);
+		parameters.put(PARAMETER.directory, newResultsPath);
+
+		String concat = getParameter(PARAMETER.concatenated_output);
+		String newConcat = newResultsPath + "/" + FilenameUtils.getName(concat);
+
+		parameters.put(PARAMETER.concatenated_output, newConcat);
+
 		for (PARAMETER key : parameters.keySet()) {
 
 			switch (key) {
@@ -133,7 +142,7 @@ public class GoldConfFile {
 		if (!fm.isFile(protein)) {
 			logMessage.append("\t" + PARAMETER.protein_datafile.toString()
 					+ " \"" + protein + " \"can't be accessed.\n");
-			fixes.append("Fix path for "
+			fixes.append("\t* Fix path for "
 					+ PARAMETER.protein_datafile.toString() + "\n");
 		} else {
 			logMessage.append("\t" + PARAMETER.protein_datafile.toString()
@@ -150,8 +159,9 @@ public class GoldConfFile {
 					logMessage.append("Installed\n");
 				} else {
 					logMessage.append("Not  installed\n");
-					fixes.append("Get library " + FilenameUtils.getName(url)
-							+ " installed on cluster");
+					fixes.append("\t* contact BeSTGRID support (Markus and/or Yuriy) and tell them to get the library file \""
+							+ FilenameUtils.getName(url)
+							+ " \" installed on the cluster\n");
 				}
 			} catch (RemoteFileSystemException e) {
 				logMessage.append("Not  installed/accessible ("
@@ -171,12 +181,32 @@ public class GoldConfFile {
 			if (!fm.isFile(params)) {
 				logMessage.append("\t" + PARAMETER.score_param_file.toString()
 						+ " \"" + params + "\" can't be accessed.\n");
-				fixes.append("Fix path for "
+				fixes.append("\t* fix path for "
 						+ PARAMETER.score_param_file.toString() + "\n");
 			} else {
 				logMessage.append("\t" + PARAMETER.score_param_file.toString()
-						+ "\"" + protein + "\" exists and is file.\n");
+						+ "\"" + params + "\" exists and is file.\n");
 			}
+		}
+
+		// output results file
+		logMessage.append("Checking output directory value...\n");
+		String directory = getParameter(PARAMETER.directory);
+		if (StringUtils.isNotBlank(directory)) {
+			logMessage.append("\tUsing directory: " + directory + "\n");
+		} else {
+			logMessage
+					.append("\tNot found... (not sure, is that ok -- please tell Markus\n)");
+		}
+
+		// concatenated output
+		logMessage.append("Checking for concatenated output value...\n");
+		String concat = getParameter(PARAMETER.concatenated_output);
+		if (StringUtils.isNotBlank(concat)) {
+			logMessage.append("\tUsing output file: " + concat + "\n");
+		} else {
+			logMessage
+					.append("\tNot found... (not sure, is that ok -- please tell Markus\n");
 		}
 
 		if (fixes.length() > 0) {

@@ -90,6 +90,8 @@ public class GrisuVirtScreen implements WindowListener {
 		// frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		frame.setTitle("Virtual screening / Drug discovery grid client");
+
 		frame.getContentPane().setLayout(new BorderLayout());
 		Set<String> apps = new HashSet<String>();
 		apps.add("generic");
@@ -118,12 +120,12 @@ public class GrisuVirtScreen implements WindowListener {
 
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -132,22 +134,22 @@ public class GrisuVirtScreen implements WindowListener {
 
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
