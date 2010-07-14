@@ -13,8 +13,6 @@ import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException
 import org.vpac.grisu.frontend.model.job.JobObject;
 import org.vpac.grisu.settings.Environment;
 
-import au.org.arcs.jcommons.constants.Constants;
-
 public class GoldJob {
 
 	public static final File VIRTSCREEN_PLUGIN_DIR = new File(
@@ -39,7 +37,7 @@ public class GoldJob {
 
 			IOUtils.copy(in, new FileOutputStream(VIRTSCREEN_HELPER_PY_SCRIPT));
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+
 		}
 
 	}
@@ -84,11 +82,9 @@ public class GoldJob {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(goldConfFile
 				.getName()));
-		job.addInputFileUrl(VIRTSCREEN_JOB_CONTROL_SCRIPT.getPath());
-		job.addInputFileUrl(VIRTSCREEN_HELPER_PY_SCRIPT.getPath());
-		job.addInputFileUrl(goldConfFile.getConfFile().getPath());
-		job.setApplication(Constants.GENERIC_APPLICATION_NAME);
-		job.setSubmissionLocation("route@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
+		job.setApplication("Gold");
+		job.setApplicationVersion("1.3.2");
+		job.setSubmissionLocation("gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
 		job.setCommandline("sh script.sh " + this.goldConfFile.getName());
 		job.setCpus(this.cpus);
@@ -96,20 +92,32 @@ public class GoldJob {
 		job.setForce_single(true);
 		job.setWalltimeInSeconds(walltimeInSeconds);
 
-		job.createJob("/ARCS/BeSTGRID/Drug_discovery");
-		// job.createJob("/ARCS/BeSTGRID/UoA/LocalUsers");
-		// job.createJob("/ARCS/BeSTGRID");
+		job.addInputFileUrl(VIRTSCREEN_JOB_CONTROL_SCRIPT.getPath());
+		job.addInputFileUrl(VIRTSCREEN_HELPER_PY_SCRIPT.getPath());
+		job.addInputFileUrl(goldConfFile.getConfFile().getPath());
 
-		String resultsDir = "./Results";
-		String concOut = "./Results/test.sdf";
-		setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
-		setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
-
-		this.goldConfFile.updateConfFile();
+		// for (String url : goldConfFile.getLigandUrls()) {
+		// System.out.println(url);
+		// job.addInputFileUrl(url);
+		// }
 
 		for (String url : goldConfFile.getFilesToStageIn()) {
 			job.addInputFileUrl(url);
 		}
+
+		// job.createJob("/ARCS/BeSTGRID/Drug_discovery");
+		job.createJob("/ARCS/BeSTGRID/Drug_discovery/Local");
+		// job.createJob("/ARCS/BeSTGRID/UoA/LocalUsers");
+		// job.createJob("/ARCS/BeSTGRID");
+
+		// String resultsDir = "./Results";
+		// String concOut = "./Results/test.sdf";
+		// setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
+		// setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
+
+		// need to do this after we get the files to stage in, otherwise the new
+		// paths would be already there
+		this.goldConfFile.updateConfFile();
 
 		try {
 			job.submitJob();

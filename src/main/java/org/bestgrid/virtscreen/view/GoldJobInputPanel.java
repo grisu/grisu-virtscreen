@@ -17,8 +17,6 @@ import org.bestgrid.virtscreen.model.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
 import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.control.exceptions.JobPropertiesException;
-import org.vpac.grisu.control.exceptions.JobSubmissionException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
@@ -195,15 +193,15 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 					for (AbstractWidget w : widgets) {
 						w.saveItemToHistory();
 					}
-				} catch (JobSubmissionException e) {
-					// TODO Auto-generated catch block
+					getConfFileInput().setInputFile(null);
+				} catch (Exception e) {
+					String message = "\nJob creation / submission failed: "
+							+ e.getLocalizedMessage() + "\n";
 					e.printStackTrace();
-				} catch (JobPropertiesException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					getErrorLabel().setText(message);
+					getSubmissionLogPanel().appendMessage(message);
 				} finally {
 					lockUI(false);
-					getConfFileInput().setInputFile(null);
 					getBtnSubmit().setEnabled(false);
 					getBtnRefresh().setEnabled(false);
 				}
@@ -233,6 +231,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	public void parseConfig() {
 
 		final String confUrl = getConfFileInput().getInputFileUrl();
+		getErrorLabel().setText("");
 
 		if (StringUtils.isBlank(confUrl)) {
 			setParseResult(false, new StringBuffer("No .conf file specified."),
@@ -250,7 +249,6 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			new Thread() {
 				@Override
 				public void run() {
-
 					GoldConfFile temp = null;
 					try {
 						temp = new GoldConfFile(si, confUrl);

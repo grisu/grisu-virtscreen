@@ -73,6 +73,10 @@ public class GoldConfFile {
 
 	}
 
+	public String[] getLigandUrls() {
+		return this.libFile.getRemoteUrls();
+	}
+
 	public Set<String> getFilesToStageIn() {
 		return new HashSet(this.inputFiles.values());
 	}
