@@ -41,10 +41,14 @@ public class GoldConfFile {
 
 	private LigandFiles libFile = null;
 
+	private final String parentUrl;
+
 	public GoldConfFile(ServiceInterface si, String url)
 			throws FileTransactionException {
 		this.si = si;
 		this.url = url;
+		this.parentUrl = FileManager.calculateParentUrl(this.url);
+
 		this.fm = GrisuRegistryManager.getDefault(si).getFileManager();
 
 		this.templateFile = this.fm.downloadFile(this.url);
@@ -59,12 +63,37 @@ public class GoldConfFile {
 		libFile.setFiles(getLigandPaths());
 
 		String filePath = getProteinFilePath();
+
+		try {
+			if (!fm.fileExists(filePath)) {
+				String tmp = this.parentUrl + File.separator + filePath;
+				if (fm.fileExists(tmp)) {
+					filePath = tmp;
+				}
+			}
+		} catch (RemoteFileSystemException e) {
+			// Do nothing, will show up later when parsing file
+		}
+
 		setParameter(GoldConfFile.PARAMETER.protein_datafile,
 				FilenameUtils.getName(filePath));
 		inputFiles.put(FilenameUtils.getName(filePath), filePath);
 
 		String optionalParameterFile = getParameter(PARAMETER.score_param_file);
 		if (StringUtils.isNotBlank(optionalParameterFile)) {
+
+			try {
+				if (!fm.fileExists(optionalParameterFile)) {
+					String tmp = this.parentUrl + File.separator
+							+ optionalParameterFile;
+					if (fm.fileExists(tmp)) {
+						optionalParameterFile = tmp;
+					}
+				}
+			} catch (RemoteFileSystemException e) {
+				// Do nothing, will show up later when parsing file
+			}
+
 			setParameter(PARAMETER.score_param_file,
 					FilenameUtils.getName(optionalParameterFile));
 			inputFiles.put(FilenameUtils.getName(optionalParameterFile),
