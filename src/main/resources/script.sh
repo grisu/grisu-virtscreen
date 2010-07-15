@@ -19,6 +19,5 @@ echo "hostfile = gold.hosts" >> $INDIR/$CONF_FILE
 cat $PBS_NODEFILE|python $INDIR/gold.py > $INDIR/gold.hosts
 
 NO_OF_CPUS=$(cat $PBS_NODEFILE|wc -l)
-echo $NO_OF_CPUS > test_file
 
 $GOLD_DIR/bin/parallel_gold_auto ${NO_OF_CPUS} $INDIR/$1 $INDIR/gold.hosts $INDIR
