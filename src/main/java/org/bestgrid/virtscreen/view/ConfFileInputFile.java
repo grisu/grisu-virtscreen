@@ -9,6 +9,7 @@ public class ConfFileInputFile extends SingleInputFile {
 
 	public ConfFileInputFile(GoldJobInputPanel parent) {
 		this.parent = parent;
+		setExtensionsToDisplay(new String[] { ".conf" });
 	}
 
 	@Override
