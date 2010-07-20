@@ -95,7 +95,8 @@ public class GrisuVirtScreen implements WindowListener {
 		frame.getContentPane().setLayout(new BorderLayout());
 		Set<String> apps = new HashSet<String>();
 		apps.add("generic");
-		mainPanel = new GrisuMainPanel(true, apps);
+		mainPanel = new GrisuMainPanel(true, false, false, apps, false, false,
+				false, null, true);
 		mainPanel.addJobCreationPanel(new GoldJobInputPanel());
 		// mainPanel.addJobCreationPanel(new BlenderJobCreationPanel());
 		// TODO add creationpanel
