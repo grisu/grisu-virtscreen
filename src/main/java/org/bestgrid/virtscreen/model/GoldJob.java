@@ -18,7 +18,7 @@ public class GoldJob {
 	public static final File VIRTSCREEN_PLUGIN_DIR = new File(
 			Environment.getGrisuClientDirectory(), "virtscreen");
 	public static final File VIRTSCREEN_JOB_CONTROL_SCRIPT = new File(
-			VIRTSCREEN_PLUGIN_DIR, "script.sh");
+			VIRTSCREEN_PLUGIN_DIR, "gold.sh");
 	public static final File VIRTSCREEN_HELPER_PY_SCRIPT = new File(
 			VIRTSCREEN_PLUGIN_DIR, "gold.py");
 
@@ -28,7 +28,7 @@ public class GoldJob {
 		}
 
 		try {
-			InputStream in = GoldJob.class.getResourceAsStream("/script.sh");
+			InputStream in = GoldJob.class.getResourceAsStream("/gold.sh");
 
 			IOUtils.copy(in,
 					new FileOutputStream(VIRTSCREEN_JOB_CONTROL_SCRIPT));
@@ -86,7 +86,7 @@ public class GoldJob {
 		job.setApplicationVersion("1.3.2");
 		job.setSubmissionLocation("gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		job.setCommandline("sh script.sh " + this.goldConfFile.getName());
+		job.setCommandline("sh gold.sh " + this.goldConfFile.getName());
 		job.setCpus(this.cpus);
 		job.setHostCount(1);
 		job.setForce_single(true);
