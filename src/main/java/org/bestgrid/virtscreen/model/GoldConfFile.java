@@ -80,7 +80,8 @@ public class GoldConfFile {
 		inputFiles.put(FilenameUtils.getName(filePath), filePath);
 
 		String optionalParameterFile = getParameter(PARAMETER.score_param_file);
-		if (StringUtils.isNotBlank(optionalParameterFile)) {
+		if (StringUtils.isNotBlank(optionalParameterFile)
+				&& !"DEFAULT".equalsIgnoreCase(optionalParameterFile)) {
 
 			try {
 				if (!fm.fileExists(optionalParameterFile)) {
