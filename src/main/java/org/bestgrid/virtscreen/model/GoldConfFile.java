@@ -30,7 +30,7 @@ public class GoldConfFile {
 	private final File templateFile;
 
 	private File newConfFile;
-	
+
 	private String[] externalLigand = null;
 	private int externalLigandAmount = -1;
 
@@ -109,9 +109,13 @@ public class GoldConfFile {
 	public String[] getLigandUrls() {
 		return this.libFile.getRemoteUrls();
 	}
-	
+
 	public void setCostumLigandDataFiles(String[] ligand) {
-		this.externalLigand = ligand;
+		String[] temp = new String[ligand.length];
+		for (int i = 0; i < ligand.length; i++) {
+			temp[i] = LigandFiles.VS_LIBRARY_LOCAL_PATH + ligand[i];
+		}
+		this.externalLigand = temp;
 		this.externalLigandAmount = getLigandDockingAmount();
 	}
 
@@ -147,8 +151,9 @@ public class GoldConfFile {
 			switch (key) {
 
 			case ligand_data_file:
-				if ( externalLigand != null && externalLigand.length > 0 ) {
-					String temp = StringUtils.join(externalLigand, " ")+" "+new Integer(getLigandDockingAmount()).toString();
+				if (externalLigand != null && externalLigand.length > 0) {
+					String temp = StringUtils.join(externalLigand, " ") + " "
+							+ new Integer(getLigandDockingAmount()).toString();
 					setLigand_data_file(temp);
 				} else {
 					setLigand_data_file(parameters.get(key));
@@ -338,14 +343,14 @@ public class GoldConfFile {
 		return Arrays.copyOf(temp, temp.length - 1);
 
 	}
-	
+
 	public void setCostumLigandAmount(int amount) {
 		this.externalLigandAmount = amount;
 	}
 
 	public int getLigandDockingAmount() {
-		
-		if ( externalLigandAmount >= 0 ) {
+
+		if (externalLigandAmount >= 0) {
 			return externalLigandAmount;
 		}
 
