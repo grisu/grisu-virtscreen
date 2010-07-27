@@ -30,6 +30,9 @@ public class GoldConfFile {
 	private final File templateFile;
 
 	private File newConfFile;
+	
+	private String[] externalLigand = null;
+	private int externalLigandAmount = -1;
 
 	private final List<String> configLines;
 
@@ -106,6 +109,11 @@ public class GoldConfFile {
 	public String[] getLigandUrls() {
 		return this.libFile.getRemoteUrls();
 	}
+	
+	public void setCostumLigandDataFiles(String[] ligand) {
+		this.externalLigand = ligand;
+		this.externalLigandAmount = getLigandDockingAmount();
+	}
 
 	public Set<String> getFilesToStageIn() {
 		return new HashSet(this.inputFiles.values());
@@ -139,7 +147,12 @@ public class GoldConfFile {
 			switch (key) {
 
 			case ligand_data_file:
-				setLigand_data_file(parameters.get(key));
+				if ( externalLigand != null && externalLigand.length > 0 ) {
+					String temp = StringUtils.join(externalLigand, " ")+" "+new Integer(getLigandDockingAmount()).toString();
+					setLigand_data_file(temp);
+				} else {
+					setLigand_data_file(parameters.get(key));
+				}
 				break;
 
 			default:
@@ -325,8 +338,16 @@ public class GoldConfFile {
 		return Arrays.copyOf(temp, temp.length - 1);
 
 	}
+	
+	public void setCostumLigandAmount(int amount) {
+		this.externalLigandAmount = amount;
+	}
 
 	public int getLigandDockingAmount() {
+		
+		if ( externalLigandAmount >= 0 ) {
+			return externalLigandAmount;
+		}
 
 		String[] temp = getLigandValue().split("\\s");
 		String temp2 = temp[temp.length - 1];

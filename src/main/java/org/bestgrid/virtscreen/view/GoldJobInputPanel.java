@@ -49,6 +49,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private final ValidationGroup validationGroup;
 	private JButton btnRefresh;
 	private JLabel errorLabel;
+	private GoldLibrarySelectPanel goldLibrarySelectPanel;
+	private DockingAmoungCombo dockingAmoungCombo;
 
 	/**
 	 * Create the panel.
@@ -62,25 +64,40 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(56dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(64dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(59dlu;default):grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC, }));
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),
+				FormFactory.RELATED_GAP_ROWSPEC,}));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2");
-		add(getCpus(), "4, 4, fill, fill");
-		add(getWalltime(), "6, 4, 3, 1, fill, fill");
-		add(getErrorLabel(), "2, 6, 5, 1");
-		add(getBtnSubmit(), "8, 6, right, default");
-		add(getSubmissionLogPanel(), "2, 8, 7, 1, fill, fill");
+		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, fill");
+		add(getDockingAmoungCombo(), "2, 6, left, top");
+		add(getCpus(), "4, 6, fill, fill");
+		add(getWalltime(), "6, 6, 3, 1, fill, fill");
+		add(getErrorLabel(), "2, 8, 5, 1");
+		add(getBtnSubmit(), "8, 8, right, default");
+		add(getSubmissionLogPanel(), "2, 10, 7, 1, fill, fill");
 
+	}
+
+	private void addWidget(AbstractWidget widget) {
+		widgets.add(widget);
+		widget.setValidationGroup(validationGroup);
 	}
 
 	public boolean createsBatchJob() {
@@ -91,123 +108,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		return true;
 	}
 
-	public JPanel getPanel() {
-		return this;
-	}
-
-	public String getPanelName() {
-		return "Gold";
-	}
-
-	public String getSupportedApplication() {
-		return Constants.GENERIC_APPLICATION_NAME;
-	}
-
-	public void setServiceInterface(ServiceInterface si) {
-		this.si = si;
-		for (AbstractWidget w : widgets) {
-			w.setServiceInterface(si);
-		}
-	}
-
-	private ConfFileInputFile getConfFileInput() {
-		if (confFileInput == null) {
-			confFileInput = new ConfFileInputFile(this);
-			confFileInput.setTitle(".conf file");
-			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
-			addWidget(confFileInput);
-		}
-		return confFileInput;
-	}
-
-	private void addWidget(AbstractWidget widget) {
-		widgets.add(widget);
-		widget.setValidationGroup(validationGroup);
-	}
-
-	private Cpus getCpus() {
-		if (cpus == null) {
-			cpus = new Cpus();
-			cpus.setHistoryKey(HISTORY_KEY + "_cpus");
-			addWidget(cpus);
-		}
-		return cpus;
-	}
-
-	private Walltime getWalltime() {
-		if (walltime == null) {
-			walltime = new Walltime();
-			walltime.setHistoryKey(HISTORY_KEY + "_walltime");
-			addWidget(walltime);
-		}
-		return walltime;
-	}
-
-	private SubmissionLogPanel getSubmissionLogPanel() {
-		if (submissionLogPanel == null) {
-			submissionLogPanel = new SubmissionLogPanel();
-		}
-		return submissionLogPanel;
-	}
-
-	private void lockUI(final boolean lock) {
-
-		SwingUtilities.invokeLater(new Thread() {
-			@Override
-			public void run() {
-				getBtnSubmit().setEnabled(!lock);
-				getBtnRefresh().setEnabled(!lock);
-				for (AbstractWidget w : widgets) {
-					w.lockIUI(lock);
+	private JButton getBtnRefresh() {
+		if (btnRefresh == null) {
+			btnRefresh = new JButton("Refresh");
+			btnRefresh.setEnabled(false);
+			btnRefresh.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					parseConfig();
 				}
-			}
-		});
-
-	}
-
-	private void submit() {
-
-		final GoldJob job;
-		;
-		try {
-			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
-		} catch (FileTransactionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
+			});
 		}
-
-		job.setCpus(getCpus().getCpus());
-		job.setWalltime(getWalltime().getWalltimeInSeconds());
-
-		new Thread() {
-			@Override
-			public void run() {
-
-				try {
-					lockUI(true);
-
-					getSubmissionLogPanel().setJobObject(job.getJobObject());
-					job.createAndSubmitJob();
-
-					for (AbstractWidget w : widgets) {
-						w.saveItemToHistory();
-					}
-					getConfFileInput().setInputFile(null);
-				} catch (Exception e) {
-					String message = "\nJob creation / submission failed: "
-							+ e.getLocalizedMessage() + "\n";
-					e.printStackTrace();
-					getErrorLabel().setText(message);
-					getSubmissionLogPanel().appendMessage(message);
-				} finally {
-					lockUI(false);
-					getBtnSubmit().setEnabled(false);
-					getBtnRefresh().setEnabled(false);
-				}
-			}
-		}.start();
-
+		return btnRefresh;
 	}
 
 	private JButton getBtnSubmit() {
@@ -226,6 +137,84 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			});
 		}
 		return btnSubmit;
+	}
+
+	private ConfFileInputFile getConfFileInput() {
+		if (confFileInput == null) {
+			confFileInput = new ConfFileInputFile(this);
+			confFileInput.setTitle(".conf file");
+			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
+			addWidget(confFileInput);
+		}
+		return confFileInput;
+	}
+
+	private Cpus getCpus() {
+		if (cpus == null) {
+			cpus = new Cpus();
+			cpus.setHistoryKey(HISTORY_KEY + "_cpus");
+			addWidget(cpus);
+		}
+		return cpus;
+	}
+
+	private JLabel getErrorLabel() {
+		if (errorLabel == null) {
+			errorLabel = new JLabel("");
+			errorLabel.setForeground(Color.RED);
+		}
+		return errorLabel;
+	}
+
+	private GoldLibrarySelectPanel getGoldLibrarySelectPanel() {
+		if (goldLibrarySelectPanel == null) {
+			goldLibrarySelectPanel = new GoldLibrarySelectPanel();
+			addWidget(goldLibrarySelectPanel);
+		}
+		return goldLibrarySelectPanel;
+	}
+
+	public JPanel getPanel() {
+		return this;
+	}
+
+	public String getPanelName() {
+		return "Gold";
+	}
+
+	private SubmissionLogPanel getSubmissionLogPanel() {
+		if (submissionLogPanel == null) {
+			submissionLogPanel = new SubmissionLogPanel();
+		}
+		return submissionLogPanel;
+	}
+
+	public String getSupportedApplication() {
+		return Constants.GENERIC_APPLICATION_NAME;
+	}
+
+	private Walltime getWalltime() {
+		if (walltime == null) {
+			walltime = new Walltime();
+			walltime.setHistoryKey(HISTORY_KEY + "_walltime");
+			addWidget(walltime);
+		}
+		return walltime;
+	}
+
+	private void lockUI(final boolean lock) {
+
+		SwingUtilities.invokeLater(new Thread() {
+			@Override
+			public void run() {
+				getBtnSubmit().setEnabled(!lock);
+				getBtnRefresh().setEnabled(!lock);
+				for (AbstractWidget w : widgets) {
+					w.lockIUI(lock);
+				}
+			}
+		});
+
 	}
 
 	public void parseConfig() {
@@ -252,6 +241,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 					GoldConfFile temp = null;
 					try {
 						temp = new GoldConfFile(si, confUrl);
+						getGoldLibrarySelectPanel().setGoldConfFile(temp);
+						getDockingAmoungCombo().setGoldConfFile(temp);
 					} catch (FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());
@@ -296,24 +287,63 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 
 	}
 
-	private JButton getBtnRefresh() {
-		if (btnRefresh == null) {
-			btnRefresh = new JButton("Refresh");
-			btnRefresh.setEnabled(false);
-			btnRefresh.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					parseConfig();
-				}
-			});
+	public void setServiceInterface(ServiceInterface si) {
+		this.si = si;
+		for (AbstractWidget w : widgets) {
+			w.setServiceInterface(si);
 		}
-		return btnRefresh;
 	}
+	private void submit() {
 
-	private JLabel getErrorLabel() {
-		if (errorLabel == null) {
-			errorLabel = new JLabel("");
-			errorLabel.setForeground(Color.RED);
+		final GoldJob job;
+		;
+		try {
+			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
+			job.setCustomLibraryFiles(getGoldLibrarySelectPanel().getSelectedLibraryFiles());
+			job.setCustomDockingAmount(getDockingAmoungCombo().getDockingAmount());
+		} catch (FileTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
 		}
-		return errorLabel;
+
+		job.setCpus(getCpus().getCpus());
+		job.setWalltime(getWalltime().getWalltimeInSeconds());
+
+		new Thread() {
+			@Override
+			public void run() {
+
+				try {
+					lockUI(true);
+
+					getSubmissionLogPanel().setJobObject(job.getJobObject());
+					job.createAndSubmitJob();
+
+					for (AbstractWidget w : widgets) {
+						w.saveItemToHistory();
+					}
+					getConfFileInput().setInputFile(null);
+				} catch (Exception e) {
+					String message = "\nJob creation / submission failed: "
+							+ e.getLocalizedMessage() + "\n";
+					e.printStackTrace();
+					getErrorLabel().setText(message);
+					getSubmissionLogPanel().appendMessage(message);
+				} finally {
+					lockUI(false);
+					getBtnSubmit().setEnabled(false);
+					getBtnRefresh().setEnabled(false);
+				}
+			}
+		}.start();
+
+	}
+	private DockingAmoungCombo getDockingAmoungCombo() {
+		if (dockingAmoungCombo == null) {
+			dockingAmoungCombo = new DockingAmoungCombo();
+			
+		}
+		return dockingAmoungCombo;
 	}
 }

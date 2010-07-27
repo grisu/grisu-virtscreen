@@ -60,6 +60,14 @@ public class GoldJob {
 		job = new JobObject(si);
 
 	}
+	
+	public void setCustomLibraryFiles(String[] files) {
+		this.goldConfFile.setCostumLigandDataFiles(files);
+	}
+	
+	public void setCustomDockingAmount(int amount){
+		this.goldConfFile.setCostumLigandAmount(amount);
+	}
 
 	private void setParameter(GoldConfFile.PARAMETER key, String value) {
 		this.goldConfFile.setParameter(key, value);
