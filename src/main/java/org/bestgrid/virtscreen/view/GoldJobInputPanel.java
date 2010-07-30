@@ -75,7 +75,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(28dlu;min)"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -85,10 +85,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2, default, top");
-		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, fill");
+		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, center");
 		add(getDockingAmoungCombo(), "2, 6, left, top");
-		add(getCpus(), "4, 6, fill, fill");
-		add(getWalltime(), "6, 6, 3, 1, fill, fill");
+		add(getCpus(), "4, 6, fill, top");
+		add(getWalltime(), "6, 6, 3, 1, fill, top");
 		add(getErrorLabel(), "2, 8, 5, 1");
 		add(getBtnSubmit(), "8, 8, right, default");
 		add(getSubmissionLogPanel(), "2, 10, 7, 1, fill, fill");

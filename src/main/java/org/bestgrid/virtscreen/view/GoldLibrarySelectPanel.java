@@ -1,5 +1,7 @@
 package org.bestgrid.virtscreen.view;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +27,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.border.TitledBorder;
 
 public class GoldLibrarySelectPanel extends AbstractWidget {
-
+	
+	public final String N_A_MESSAGE = "Specified library not available.";
 	private final DefaultListModel ligandModel;
 	private final JList list;
 
@@ -37,6 +40,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 	private JScrollPane scrollPane;
 	private final Boolean useComboBox;
 	private JComboBox comboBox;
+	private JComboBox comboBox_1;
 
 	public GoldLibrarySelectPanel() {
 		this(true);
@@ -47,6 +51,22 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		if (useCombo) {
 			ligandModelCombo = new DefaultComboBoxModel();
 			combo = new JComboBox(ligandModelCombo);
+			combo.addItemListener(new ItemListener() {
+				
+				public void itemStateChanged(ItemEvent e) {
+					if ( e.getStateChange() == ItemEvent.SELECTED ) {
+						if ( ! e.getItem().equals(N_A_MESSAGE) ) {
+							ligandModelCombo.removeElement(N_A_MESSAGE);
+						}
+						
+						if ( confFile == null ) {
+							return;
+						}
+						
+						confFile.setCostumLigandDataFiles(new String[]{(String)e.getItem()});
+					}
+				}
+			});
 			ligandModel = null;
 			list = null;
 		} else {
@@ -63,17 +83,18 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 
-		if (useCombo) {
+		if (useComboBox) {
 			setLayout(new FormLayout(new ColumnSpec[] {
 					FormFactory.RELATED_GAP_COLSPEC,
 					ColumnSpec.decode("max(36dlu;default)"),
 					FormFactory.RELATED_GAP_COLSPEC,
 					ColumnSpec.decode("default:grow"),
-					FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+					FormFactory.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
 					FormFactory.RELATED_GAP_ROWSPEC,
-					RowSpec.decode("max(18dlu;default)"),
-					FormFactory.RELATED_GAP_ROWSPEC, }));
-			add(getScrollPane(), "2, 2, 3, 1, fill, default");
+					FormFactory.MIN_ROWSPEC,
+					FormFactory.RELATED_GAP_ROWSPEC,}));
+			add(getScrollPane(), "2, 2, 3, 1, fill, fill");
 		} else {
 			setLayout(new FormLayout(new ColumnSpec[] {
 					FormFactory.RELATED_GAP_COLSPEC,
@@ -97,7 +118,18 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 
 	private void loadLibraries() {
 		if (confFile == null || getServiceInterface() == null) {
+			if ( useComboBox ) {
+				combo.setEnabled(false);
+			} else {
+				list.setEnabled(false);
+			}
 			return;
+		}
+		
+		if ( useComboBox ) {
+			combo.setEnabled(true);
+		} else {
+			list.setEnabled(true);
 		}
 
 		String[] ligandFiles = confFile.getLigandUrls();
@@ -105,7 +137,15 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		if (useComboBox) {
 			// only use first one...
 			if (ligandFiles.length > 0) {
-				combo.setSelectedItem(FileManager.getFilename(ligandFiles[0]));
+				String lib = FileManager.getFilename(ligandFiles[0]);
+				if ( ligandModelCombo.getIndexOf(lib) < 0 ) {
+					if ( ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0 ) {
+						ligandModelCombo.addElement(N_A_MESSAGE);
+					}
+					ligandModelCombo.setSelectedItem(N_A_MESSAGE);
+				} else {
+					combo.setSelectedItem(FileManager.getFilename(ligandFiles[0]));
+				}
 			}
 		} else {
 			int[] temp = {};
@@ -180,6 +220,8 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
+//			scrollPane.setViewportView(getComboBox_1());
+
 			if (useComboBox) {
 				scrollPane.setViewportView(combo);
 			} else {
@@ -188,5 +230,10 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		}
 		return scrollPane;
 	}
-
+	private JComboBox getComboBox_1() {
+		if (comboBox_1 == null) {
+			comboBox_1 = new JComboBox();
+		}
+		return comboBox_1;
+	}
 }
