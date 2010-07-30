@@ -3,6 +3,8 @@ package org.bestgrid.virtscreen.view;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +34,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
+public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
+		PropertyChangeListener {
 
 	private ServiceInterface si;
 	private ConfFileInputFile confFileInput;
@@ -52,6 +55,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 	private GoldLibrarySelectPanel goldLibrarySelectPanel;
 	private DockingAmoungCombo dockingAmoungCombo;
 
+	private GoldConfFile currentConfFile = null;
+
 	/**
 	 * Create the panel.
 	 */
@@ -64,25 +69,20 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(56dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(64dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(28dlu;min)"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormFactory.RELATED_GAP_ROWSPEC, }));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2, default, top");
 		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, center");
@@ -238,11 +238,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			new Thread() {
 				@Override
 				public void run() {
-					GoldConfFile temp = null;
 					try {
-						temp = new GoldConfFile(si, confUrl);
-						getGoldLibrarySelectPanel().setGoldConfFile(temp);
-						getDockingAmoungCombo().setGoldConfFile(temp);
+						if (currentConfFile != null) {
+							currentConfFile
+									.removeListener(GoldJobInputPanel.this);
+						}
+						currentConfFile = new GoldConfFile(si, confUrl);
+						currentConfFile.addListener(GoldJobInputPanel.this);
+						getGoldLibrarySelectPanel().setGoldConfFile(
+								currentConfFile);
+						getDockingAmoungCombo()
+								.setGoldConfFile(currentConfFile);
 					} catch (FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());
@@ -260,8 +266,11 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 						lockUI(false);
 					}
 
-					boolean success = temp.checkForValidity(logMessage, fixes);
-					setParseResult(success, logMessage, fixes);
+					boolean success = currentConfFile.checkForValidity();
+
+					// logMessage.append(currentConfFile.getLogMessage());
+					// fixes.append(currentConfFile.getFixes());
+
 				}
 			}.start();
 		}
@@ -293,14 +302,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 			w.setServiceInterface(si);
 		}
 	}
+
 	private void submit() {
 
 		final GoldJob job;
 		;
 		try {
 			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
-			job.setCustomLibraryFiles(getGoldLibrarySelectPanel().getSelectedLibraryFiles());
-			job.setCustomDockingAmount(getDockingAmoungCombo().getDockingAmount());
+			job.setCustomLibraryFiles(getGoldLibrarySelectPanel()
+					.getSelectedLibraryFiles());
+			job.setCustomDockingAmount(getDockingAmoungCombo()
+					.getDockingAmount());
 		} catch (FileTransactionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -339,11 +351,19 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel {
 		}.start();
 
 	}
+
 	private DockingAmoungCombo getDockingAmoungCombo() {
 		if (dockingAmoungCombo == null) {
 			dockingAmoungCombo = new DockingAmoungCombo();
-			
+
 		}
 		return dockingAmoungCombo;
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		setParseResult((Boolean) evt.getNewValue(),
+				currentConfFile.getLogMessage(), currentConfFile.getFixes());
+
 	}
 }
