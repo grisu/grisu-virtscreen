@@ -93,7 +93,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 					FormFactory.RELATED_GAP_ROWSPEC,
 					FormFactory.DEFAULT_ROWSPEC,
 					FormFactory.RELATED_GAP_ROWSPEC, }));
-			add(getScrollPane(), "2, 2, 3, 1, fill, fill");
+			add(combo, "2, 2, 3, 1, fill, fill");
 		} else {
 			setLayout(new FormLayout(new ColumnSpec[] {
 					FormFactory.RELATED_GAP_COLSPEC,

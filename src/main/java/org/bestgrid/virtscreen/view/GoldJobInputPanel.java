@@ -110,7 +110,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 
 	private JButton getBtnRefresh() {
 		if (btnRefresh == null) {
-			btnRefresh = new JButton("Refresh");
+			btnRefresh = new JButton("Reload");
 			btnRefresh.setEnabled(false);
 			btnRefresh.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -290,7 +290,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 					.setText(
 							"Error when parsing .conf file. Please check log below for details.");
 			logMessage
-					.append("\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Refresh\":\n");
+					.append("\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n");
 		}
 		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
 
