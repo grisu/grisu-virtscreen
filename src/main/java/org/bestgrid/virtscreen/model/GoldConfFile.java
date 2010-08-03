@@ -377,7 +377,9 @@ public class GoldConfFile {
 		parameters.put(PARAMETER.directory, newResultsPath);
 
 		String concat = getParameter(PARAMETER.concatenated_output);
-		String newConcat = newResultsPath + "/" + FilenameUtils.getName(concat);
+		// String newConcat = newResultsPath + "/" +
+		// FilenameUtils.getName(concat);
+		String newConcat = "./" + FilenameUtils.getName(concat);
 
 		parameters.put(PARAMETER.concatenated_output, newConcat);
 

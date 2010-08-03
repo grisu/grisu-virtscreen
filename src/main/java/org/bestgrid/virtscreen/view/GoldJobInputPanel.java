@@ -355,6 +355,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 	private DockingAmoungCombo getDockingAmoungCombo() {
 		if (dockingAmoungCombo == null) {
 			dockingAmoungCombo = new DockingAmoungCombo();
+			widgets.add(dockingAmoungCombo);
 
 		}
 		return dockingAmoungCombo;
