@@ -24,5 +24,5 @@ $GOLD_DIR/bin/parallel_gold_auto ${NO_OF_CPUS} $INDIR/$1 $INDIR/gold.hosts $INDI
 
 # lets calculate number of components in processed library
 
-OUTDIR=$(grep 'directory =' /home/jfla018/grisu-dir/gold_s135261_fragsol_2010.07.27_16.47.916/*.conf|awk '{print $3}')
+OUTDIR=$(grep 'directory =' $CONF_FILE|awk '{print $3}')
 cat $OUTDIR/gold.out|grep 'Ligand counter'|awk '{print $8}'|sort -n -u > $OUTDIR/number_of_ligands_in_library
