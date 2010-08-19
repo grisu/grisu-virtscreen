@@ -14,6 +14,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
@@ -70,7 +71,7 @@ public class Gold extends AppSpecificViewerPanel {
 
 	private String ligandFileNoPath = null;
 	private String goldFilePath = null;
-	private Thread updateThread = null;
+	private Thread ligandUpdateThread = null;
 	private JmolPanel jmolPanel;
 	private JmolPanel jmolPanel_1;
 	private JLabel label_2;
@@ -134,8 +135,8 @@ public class Gold extends AppSpecificViewerPanel {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
 			progressBar.setMinimum(0);
-			// progressBar.setMaximum(20000);
-			progressBar.setMaximum(20);
+			progressBar.setMaximum(20000);
+			// progressBar.setMaximum(20);
 		}
 		return progressBar;
 	}
@@ -160,11 +161,17 @@ public class Gold extends AppSpecificViewerPanel {
 				+ "gold.out";
 		updateProgress();
 
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new UpdateProgressTask(),
-				PROGRESS_CHECK_INTERVALL * 1000,
-				PROGRESS_CHECK_INTERVALL * 1000);
+		if (getJob().getStatus(false) < JobConstants.FINISHED_EITHER_WAY) {
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new UpdateProgressTask(),
+					PROGRESS_CHECK_INTERVALL * 1000,
+					PROGRESS_CHECK_INTERVALL * 1000);
 
+		}
+
+		if (getJob().getStatus(false) == JobConstants.DONE) {
+			downloadAndDisplayMolecules();
+		}
 	}
 
 	@Override
@@ -187,15 +194,23 @@ public class Gold extends AppSpecificViewerPanel {
 
 	private void downloadAndDisplayMolecules() {
 
-		String conc = getJob().getJobProperty("result_directory")
-				+ "/"
-				+ getJob().getJobProperty(
-						PARAMETER.concatenated_output.toString());
+		String resDir = getJob().getJobProperty("result_directory");
+		String concOut = getJob().getJobProperty(
+				PARAMETER.concatenated_output.toString());
+
+		if (StringUtils.isBlank(resDir) || StringUtils.isBlank(concOut)) {
+			return;
+		}
+		final String conc = resDir + "/" + concOut;
 		System.out.println("conc: " + conc);
 
-		File file = getJob().downloadAndCacheOutputFile(conc);
-
-		getJmolPanel_1().setFile(file.getPath());
+		new Thread() {
+			@Override
+			public void run() {
+				File file = getJob().downloadAndCacheOutputFile(conc);
+				getJmolPanel_1().setFile(file.getPath());
+			}
+		}.start();
 
 	}
 
@@ -206,12 +221,12 @@ public class Gold extends AppSpecificViewerPanel {
 			return;
 		}
 
-		if (updateThread != null && updateThread.isAlive()) {
+		if (ligandUpdateThread != null && ligandUpdateThread.isAlive()) {
 			System.out.println("Updating already...");
 			return;
 		}
 
-		updateThread = new Thread() {
+		ligandUpdateThread = new Thread() {
 			@Override
 			public void run() {
 
@@ -219,10 +234,15 @@ public class Gold extends AppSpecificViewerPanel {
 			}
 		};
 
-		updateThread.start();
+		ligandUpdateThread.start();
 	}
 
 	private void calculateCurrentLigandNo() {
+
+		if (StringUtils.isBlank(goldFilePath)) {
+			return;
+		}
+
 		long size = getJob().getFileSize(goldFilePath);
 		System.out.println("Size: " + size);
 

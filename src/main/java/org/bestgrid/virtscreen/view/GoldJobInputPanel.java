@@ -23,6 +23,7 @@ import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Cpus;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Email;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
@@ -56,6 +57,8 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 	private DockingAmoungCombo dockingAmoungCombo;
 
 	private GoldConfFile currentConfFile = null;
+	private Email email;
+	private Email email_1;
 
 	/**
 	 * Create the panel.
@@ -77,8 +80,9 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(28dlu;min)"),
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("max(31dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
@@ -89,9 +93,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		add(getDockingAmoungCombo(), "2, 6, left, top");
 		add(getCpus(), "4, 6, fill, top");
 		add(getWalltime(), "6, 6, 3, 1, fill, top");
-		add(getErrorLabel(), "2, 8, 5, 1");
-		add(getBtnSubmit(), "8, 8, right, default");
-		add(getSubmissionLogPanel(), "2, 10, 7, 1, fill, fill");
+		add(getEmail_1(), "2, 8, 7, 1, fill, fill");
+		add(getErrorLabel(), "2, 10, 5, 1");
+		add(getBtnSubmit(), "8, 10, right, default");
+		add(getSubmissionLogPanel(), "2, 12, 7, 1, fill, fill");
 
 	}
 
@@ -322,6 +327,15 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		job.setCpus(getCpus().getCpus());
 		job.setWalltime(getWalltime().getWalltimeInSeconds());
 
+		String email = getEmail_1().getEmailAddress();
+		if (StringUtils.isNotBlank(email)
+				&& (getEmail_1().sendEmailWhenJobFinished() || getEmail_1()
+						.sendEmailWhenJobIsStarted())) {
+			job.setEmail(email);
+			job.sendEmailOnJobFinish(getEmail_1().sendEmailWhenJobFinished());
+			job.sendEmailOnJobStart(getEmail_1().sendEmailWhenJobIsStarted());
+		}
+
 		new Thread() {
 			@Override
 			public void run() {
@@ -366,5 +380,13 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		setParseResult((Boolean) evt.getNewValue(),
 				currentConfFile.getLogMessage(), currentConfFile.getFixes());
 
+	}
+
+	private Email getEmail_1() {
+		if (email_1 == null) {
+			email_1 = new Email();
+			widgets.add(email_1);
+		}
+		return email_1;
 	}
 }

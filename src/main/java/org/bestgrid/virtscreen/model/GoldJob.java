@@ -138,4 +138,16 @@ public class GoldJob {
 		job = null;
 
 	}
+
+	public void setEmail(String email) {
+		job.setEmail_address(email);
+	}
+
+	public void sendEmailOnJobStart(boolean send) {
+		job.setEmail_on_job_start(send);
+	}
+
+	public void sendEmailOnJobFinish(boolean send) {
+		job.setEmail_on_job_finish(send);
+	}
 }
