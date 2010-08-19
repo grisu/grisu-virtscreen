@@ -3,13 +3,17 @@ package org.bestgrid.virtscreen.model;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
+import org.vpac.grisu.frontend.control.jobMonitoring.RunningJobManager;
 import org.vpac.grisu.frontend.model.job.JobObject;
 import org.vpac.grisu.settings.Environment;
 
@@ -60,12 +64,12 @@ public class GoldJob {
 		job = new JobObject(si);
 
 	}
-	
+
 	public void setCustomLibraryFiles(String[] files) {
 		this.goldConfFile.setCostumLigandDataFiles(files);
 	}
-	
-	public void setCustomDockingAmount(int amount){
+
+	public void setCustomDockingAmount(int amount) {
 		this.goldConfFile.setCostumLigandAmount(amount);
 	}
 
@@ -104,31 +108,29 @@ public class GoldJob {
 		job.addInputFileUrl(VIRTSCREEN_HELPER_PY_SCRIPT.getPath());
 		job.addInputFileUrl(goldConfFile.getConfFile().getPath());
 
-		// for (String url : goldConfFile.getLigandUrls()) {
-		// System.out.println(url);
-		// job.addInputFileUrl(url);
-		// }
-
 		for (String url : goldConfFile.getFilesToStageIn()) {
 			job.addInputFileUrl(url);
 		}
 
-		// job.createJob("/ARCS/BeSTGRID/Drug_discovery");
-		job.createJob("/ARCS/BeSTGRID/Drug_discovery/Local");
-		// job.createJob("/ARCS/BeSTGRID/UoA/LocalUsers");
-		// job.createJob("/ARCS/BeSTGRID");
-
-		// String resultsDir = "./Results";
-		// String concOut = "./Results/test.sdf";
-		// setParameter(GoldConfFile.PARAMETER.directory, resultsDir);
-		// setParameter(GoldConfFile.PARAMETER.concatenated_output, concOut);
+		RunningJobManager.getDefault(si).createJob(job,
+				"/ARCS/BeSTGRID/Drug_discovery/Local");
+		// job.createJob("/ARCS/BeSTGRID/Drug_discovery/Local");
 
 		// need to do this after we get the files to stage in, otherwise the new
 		// paths would be already there
 		this.goldConfFile.updateConfFile();
 
+		Map<String, String> additionalJobProperties = new HashMap<String, String>();
+
+		String dir = this.goldConfFile.getParameter(PARAMETER.directory);
+		String conc = this.goldConfFile
+				.getParameter(PARAMETER.concatenated_output);
+		additionalJobProperties.put("result_directory", dir);
+		additionalJobProperties.put(PARAMETER.concatenated_output.toString(),
+				conc);
+
 		try {
-			job.submitJob();
+			job.submitJob(additionalJobProperties);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

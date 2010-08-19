@@ -284,7 +284,7 @@ public class GoldConfFile {
 		return this.templateFile.getName();
 	}
 
-	private String getParameter(PARAMETER key) {
+	public String getParameter(PARAMETER key) {
 
 		if (PARAMETER.ligand_data_file.equals(key)) {
 
