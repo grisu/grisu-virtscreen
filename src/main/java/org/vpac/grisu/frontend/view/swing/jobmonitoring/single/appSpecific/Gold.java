@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
 import org.jmol.api.JmolSimpleViewer;
@@ -73,8 +71,6 @@ public class Gold extends AppSpecificViewerPanel {
 	private String goldFilePath = null;
 	private Thread ligandUpdateThread = null;
 	private JmolPanel jmolPanel;
-	private JmolPanel jmolPanel_1;
-	private JLabel label_2;
 	private Timer timer;
 	private final int PROGRESS_CHECK_INTERVALL = 120;
 
@@ -96,18 +92,7 @@ public class Gold extends AppSpecificViewerPanel {
 		add(getProgressBar(), "2, 4, 3, 1");
 		add(getLabel_1(), "2, 6, right, default");
 		add(getTextField(), "4, 6, fill, default");
-		add(getLabel_2(), "2, 8");
-		add(getJmolPanel_1(), "2, 10, 3, 1, fill, fill");
 		// TODO Auto-generated constructor stub
-	}
-
-	private JmolPanel getJmolPanel_1() {
-		if (jmolPanel_1 == null) {
-			jmolPanel_1 = new JmolPanel();
-			jmolPanel_1.setLayout(new FormLayout(new ColumnSpec[] {},
-					new RowSpec[] {}));
-		}
-		return jmolPanel_1;
 	}
 
 	private JLabel getLabel() {
@@ -122,13 +107,6 @@ public class Gold extends AppSpecificViewerPanel {
 			label_1 = new JLabel("Ligands finished (approx.):");
 		}
 		return label_1;
-	}
-
-	private JLabel getLabel_2() {
-		if (label_2 == null) {
-			label_2 = new JLabel("Concatenated output:");
-		}
-		return label_2;
 	}
 
 	private JProgressBar getProgressBar() {
@@ -169,9 +147,9 @@ public class Gold extends AppSpecificViewerPanel {
 
 		}
 
-		if (getJob().getStatus(false) == JobConstants.DONE) {
-			downloadAndDisplayMolecules();
-		}
+		// if (getJob().getStatus(false) == JobConstants.DONE) {
+		// downloadAndDisplayMolecules();
+		// }
 	}
 
 	@Override
@@ -184,7 +162,7 @@ public class Gold extends AppSpecificViewerPanel {
 			int status = getJob().getStatus(false);
 			if (status >= JobConstants.FINISHED_EITHER_WAY) {
 				if (status == JobConstants.DONE) {
-					downloadAndDisplayMolecules();
+					// downloadAndDisplayMolecules();
 				}
 
 				timer.cancel();
@@ -192,27 +170,27 @@ public class Gold extends AppSpecificViewerPanel {
 		}
 	}
 
-	private void downloadAndDisplayMolecules() {
-
-		String resDir = getJob().getJobProperty("result_directory");
-		String concOut = getJob().getJobProperty(
-				PARAMETER.concatenated_output.toString());
-
-		if (StringUtils.isBlank(resDir) || StringUtils.isBlank(concOut)) {
-			return;
-		}
-		final String conc = resDir + "/" + concOut;
-		System.out.println("conc: " + conc);
-
-		new Thread() {
-			@Override
-			public void run() {
-				File file = getJob().downloadAndCacheOutputFile(conc);
-				getJmolPanel_1().setFile(file.getPath());
-			}
-		}.start();
-
-	}
+	// private void downloadAndDisplayMolecules() {
+	//
+	// String resDir = getJob().getJobProperty("result_directory");
+	// String concOut = getJob().getJobProperty(
+	// PARAMETER.concatenated_output.toString());
+	//
+	// if (StringUtils.isBlank(resDir) || StringUtils.isBlank(concOut)) {
+	// return;
+	// }
+	// final String conc = resDir + "/" + concOut;
+	// System.out.println("conc: " + conc);
+	//
+	// new Thread() {
+	// @Override
+	// public void run() {
+	// File file = getJob().downloadAndCacheOutputFile(conc);
+	// getJmolPanel_1().setFile(file.getPath());
+	// }
+	// }.start();
+	//
+	// }
 
 	private void updateProgress() {
 
