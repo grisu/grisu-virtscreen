@@ -27,6 +27,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class Gold extends AppSpecificViewerPanel {
 	static class JmolPanel extends JPanel {
+
 		private static final long serialVersionUID = -3661941083797644242L;
 		JmolSimpleViewer viewer;
 		JmolAdapter adapter;

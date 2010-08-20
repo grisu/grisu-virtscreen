@@ -40,7 +40,7 @@
 		<!-- the main grisu dependency. -->
 		<dependency>
 			<groupId>org.vpac.grisu</groupId>
-			<artifactId>grisu-client</artifactId>
+			<artifactId>grisu-client-swing</artifactId>
 			<version>0.3-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
@@ -71,13 +71,14 @@
 			local backend (which is the only supported backend for grisu 0.3 at
 			the moment
 		-->
+<!--
 		<dependency>
 			<groupId>org.vpac.grisu</groupId>
 			<artifactId>grisu-core</artifactId>
 			<version>0.3-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 		<!--
 			this is needed for shibboleth login don't disable it for now even if
 			you don't want to use shibboleth, I reckon you'll get classpath
@@ -89,41 +90,6 @@
 			<version>1.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.jgoodies</groupId>
-			<artifactId>forms</artifactId>
-			<version>1.2.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swingx</artifactId>
-			<version>1.6</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.jidesoft</groupId>
-			<artifactId>jide-oss</artifactId>
-			<version>2.7.3</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>furbelow</groupId>
-			<artifactId>furbelow</artifactId>
-			<version>1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.kenai</groupId>
-			<artifactId>validationAPI</artifactId>
-			<version>0.4</version>
-			<scope>compile</scope>
-		</dependency>
-
 
 
 		<!--  test dependencies -->
@@ -173,7 +139,7 @@
 									<mainClass>org.bestgrid.virtscreen.view.GrisuVirtScreen</mainClass>
 								</manifest>
 								<manifestEntries>
-									<Class-Path>bcprov.jar bcprov-jdk15-143.jar local-backend.jar grisu-client-dependencies.jar
+									<Class-Path>bcprov.jar bcprov-jdk15-143.jar local-backend.jar grisu-client-swing-library.jar
 									</Class-Path>
 								</manifestEntries>
 							</archive>

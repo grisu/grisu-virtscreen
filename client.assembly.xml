@@ -7,14 +7,13 @@
 	<dependencySets>
 		<dependencySet>
 			<unpack>true</unpack>
-			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveDependencies>true</useTransitiveDependencies>
 			<useTransitiveFiltering>true</useTransitiveFiltering>
 			<useProjectArtifact>true</useProjectArtifact>
 			<outputDirectory>/</outputDirectory>
 			<excludes>
 				<exclude>junit:junit</exclude>
 				<exclude>bouncycastle:bcprov-jdk15</exclude>
-<!--				<exclude>org.vpac.grisu:grisu-client</exclude>-->
 			</excludes>
 			<unpackOptions>
 				<excludes>
