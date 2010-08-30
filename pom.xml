@@ -44,6 +44,12 @@
 			<version>0.3-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>java-getopt</artifactId>
+					<groupId>urbanophile</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--
