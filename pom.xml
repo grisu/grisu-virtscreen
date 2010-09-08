@@ -18,22 +18,20 @@
 		</repository>
 	</repositories>
 
-	<!--
-		we can help you publish your artifact into our maven repository if you
-		want. Write an email to markus.binsteiner@arcs.org.au and request a
-		username/password for the ARCS maven repository. Then uncomment this
-		part and edit your $HOME/.m2/settings.xml file with your
-		username/password. Deployment is done via 'mvn clean install deploy'
-		<distributionManagement> <repository> <id>arcs.release</id> <name>ARCS
-		Release Repository</name>
-		<url>http://code.arcs.org.au/nexus/content/repositories/releases
-		</url> <uniqueVersion>false</uniqueVersion> </repository>
-		<snapshotRepository> <id>arcs.snapshot</id> <name>ARCS SNAPSHOT
-		Repository</name>
-		<url>http://code.arcs.org.au/nexus/content/repositories/snapshots
-		</url> <uniqueVersion>false</uniqueVersion> </snapshotRepository>
-		</distributionManagement>
-	-->
+	<distributionManagement>
+		<repository>
+			<id>arcs.release</id>
+			<name>ARCS Release Repository</name>
+			<url>http://code.arcs.org.au/nexus/content/repositories/releases</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+		<snapshotRepository>
+			<id>arcs.snapshot</id>
+			<name>ARCS SNAPSHOT Repository</name>
+			<url>http://code.arcs.org.au/nexus/content/repositories/snapshots</url>
+			<uniqueVersion>true</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 
@@ -63,7 +61,7 @@
 		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
-			<version>140</version>
+			<version>145</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
@@ -93,7 +91,7 @@
 		<dependency>
 			<groupId>au.org.arcs.auth</groupId>
 			<artifactId>arcs-gsi</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>1.2</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -104,11 +102,6 @@
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmol</groupId>
-			<artifactId>jmol</artifactId>
-			<version>12.0.7</version>
 		</dependency>
 	</dependencies>
 

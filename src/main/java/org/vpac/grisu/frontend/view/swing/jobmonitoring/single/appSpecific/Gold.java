@@ -1,7 +1,6 @@
 package org.vpac.grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.util.Timer;
@@ -14,9 +13,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
-import org.jmol.adapter.smarter.SmarterJmolAdapter;
-import org.jmol.api.JmolAdapter;
-import org.jmol.api.JmolSimpleViewer;
 import org.vpac.grisu.control.JobConstants;
 import org.vpac.grisu.control.ServiceInterface;
 
@@ -29,37 +25,15 @@ public class Gold extends AppSpecificViewerPanel {
 	static class JmolPanel extends JPanel {
 
 		private static final long serialVersionUID = -3661941083797644242L;
-		JmolSimpleViewer viewer;
-		JmolAdapter adapter;
 
 		final Dimension currentSize = new Dimension();
 
 		final Rectangle rectClip = new Rectangle();
 
 		JmolPanel() {
-			adapter = new SmarterJmolAdapter();
-			viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
 
 		}
 
-		public void executeCmd(String rasmolScript) {
-			viewer.evalString(rasmolScript);
-		}
-
-		public JmolSimpleViewer getViewer() {
-			return viewer;
-		}
-
-		public void setFile(String path) {
-			viewer.openFile(path);
-		}
-
-		@Override
-		public void paint(Graphics g) {
-			getSize(currentSize);
-			g.getClipBounds(rectClip);
-			viewer.renderScreenImage(g, currentSize, rectClip);
-		}
 	}
 
 	private JLabel label;
