@@ -26,6 +26,8 @@ public class GrisuVirtScreen implements WindowListener {
 	 */
 	public static void main(String[] args) {
 
+		System.out.println("New version....");
+
 		LoginManager.initEnvironment();
 
 		Toolkit tk = Toolkit.getDefaultToolkit();
