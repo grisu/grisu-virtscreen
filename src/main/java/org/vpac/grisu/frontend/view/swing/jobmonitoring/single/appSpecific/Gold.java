@@ -36,17 +36,26 @@ public class Gold extends AppSpecificViewerPanel {
 
 	}
 
+	class UpdateProgressTask extends TimerTask {
+
+		@Override
+		public void run() {
+
+			calculateCurrentLigandNo();
+		}
+
+	}
+
 	private JLabel label;
 	private JProgressBar progressBar;
+
 	private JLabel label_1;
 
 	private JTextField textField;
-
-	private String ligandFileNoPath = null;
 	private String goldFilePath = null;
 	private Thread ligandUpdateThread = null;
-	private JmolPanel jmolPanel;
 	private Timer timer;
+
 	private final int PROGRESS_CHECK_INTERVALL = 120;
 
 	public Gold(ServiceInterface si) {
@@ -68,6 +77,25 @@ public class Gold extends AppSpecificViewerPanel {
 		add(getLabel_1(), "2, 6, right, default");
 		add(getTextField(), "4, 6, fill, default");
 		// TODO Auto-generated constructor stub
+	}
+
+	private void calculateCurrentLigandNo() {
+
+		if (StringUtils.isBlank(goldFilePath)) {
+			return;
+		}
+
+		long size = getJob().getFileSize(goldFilePath);
+
+		if (size <= 520) {
+			return;
+		}
+
+		size = size - 520L;
+		Integer ligands = new Double(size / 117.5).intValue();
+		getTextField().setText(ligands.toString());
+		getProgressBar().setValue(ligands);
+
 	}
 
 	private JLabel getLabel() {
@@ -105,46 +133,6 @@ public class Gold extends AppSpecificViewerPanel {
 		return textField;
 	}
 
-	@Override
-	public void initialize() {
-
-		ligandFileNoPath = getJob().getJobProperty("result_directory") + "/"
-				+ "number_of_ligands_in_library";
-		goldFilePath = getJob().getJobProperty("result_directory") + "/"
-				+ "gold.out";
-		updateProgress();
-
-		if (getJob().getStatus(false) < JobConstants.FINISHED_EITHER_WAY) {
-			timer = new Timer();
-			timer.scheduleAtFixedRate(new UpdateProgressTask(),
-					PROGRESS_CHECK_INTERVALL * 1000,
-					PROGRESS_CHECK_INTERVALL * 1000);
-
-		}
-
-		// if (getJob().getStatus(false) == JobConstants.DONE) {
-		// downloadAndDisplayMolecules();
-		// }
-	}
-
-	@Override
-	public void jobUpdated(PropertyChangeEvent evt) {
-
-		System.out.println("Property: " + evt.getPropertyName());
-		if ("status".equals(evt.getPropertyName())) {
-			updateProgress();
-
-			int status = getJob().getStatus(false);
-			if (status >= JobConstants.FINISHED_EITHER_WAY) {
-				if (status == JobConstants.DONE) {
-					// downloadAndDisplayMolecules();
-				}
-
-				timer.cancel();
-			}
-		}
-	}
-
 	// private void downloadAndDisplayMolecules() {
 	//
 	// String resDir = getJob().getJobProperty("result_directory");
@@ -167,6 +155,45 @@ public class Gold extends AppSpecificViewerPanel {
 	//
 	// }
 
+	@Override
+	public void initialize() {
+
+		// ligandFileNoPath = getJob().getJobProperty("result_directory") + "/"
+		// + "number_of_ligands_in_library";
+		goldFilePath = getJob().getJobProperty("result_directory") + "/"
+				+ "gold.out";
+		updateProgress();
+
+		if (getJob().getStatus(false) < JobConstants.FINISHED_EITHER_WAY) {
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new UpdateProgressTask(),
+					PROGRESS_CHECK_INTERVALL * 1000,
+					PROGRESS_CHECK_INTERVALL * 1000);
+
+		}
+
+		// if (getJob().getStatus(false) == JobConstants.DONE) {
+		// downloadAndDisplayMolecules();
+		// }
+	}
+
+	@Override
+	public void jobUpdated(PropertyChangeEvent evt) {
+
+		if ("status".equals(evt.getPropertyName())) {
+			updateProgress();
+
+			int status = getJob().getStatus(false);
+			if (status >= JobConstants.FINISHED_EITHER_WAY) {
+				if (status == JobConstants.DONE) {
+					// downloadAndDisplayMolecules();
+				}
+
+				timer.cancel();
+			}
+		}
+	}
+
 	private void updateProgress() {
 
 		if (getJob() == null) {
@@ -174,7 +201,7 @@ public class Gold extends AppSpecificViewerPanel {
 			return;
 		}
 
-		if (ligandUpdateThread != null && ligandUpdateThread.isAlive()) {
+		if ((ligandUpdateThread != null) && ligandUpdateThread.isAlive()) {
 			System.out.println("Updating already...");
 			return;
 		}
@@ -188,35 +215,5 @@ public class Gold extends AppSpecificViewerPanel {
 		};
 
 		ligandUpdateThread.start();
-	}
-
-	private void calculateCurrentLigandNo() {
-
-		if (StringUtils.isBlank(goldFilePath)) {
-			return;
-		}
-
-		long size = getJob().getFileSize(goldFilePath);
-		System.out.println("Size: " + size);
-
-		if (size <= 520) {
-			return;
-		}
-
-		size = size - 520L;
-		Integer ligands = new Double(size / 117.5).intValue();
-		getTextField().setText(ligands.toString());
-		getProgressBar().setValue(ligands);
-
-	}
-
-	class UpdateProgressTask extends TimerTask {
-
-		@Override
-		public void run() {
-
-			calculateCurrentLigandNo();
-		}
-
 	}
 }
