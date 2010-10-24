@@ -33,6 +33,13 @@
 			<uniqueVersion>true</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
+	
+	<scm>
+		<connection>scm:git:git://code.arcs.org.au/jgridauth/jgridauth.git
+		</connection>
+		<url>scm:git:git://code.arcs.org.au/jgridauth/jgridauth.git
+		</url>
+	</scm>	
 
 	<properties>
 		<grisu.version>0.3-beta2</grisu.version>
