@@ -1,4 +1,5 @@
-<project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
@@ -33,13 +34,18 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<properties>
+		<grisu.version>0.3-beta2</grisu.version>
+	</properties>
+
+
 	<dependencies>
 
 		<!-- the main grisu dependency. -->
 		<dependency>
 			<groupId>org.vpac.grisu</groupId>
 			<artifactId>grisu-client-swing</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<version>${grisu.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
@@ -88,12 +94,6 @@
 			you don't want to use shibboleth, I reckon you'll get classpath
 			errors
 		-->
-		<dependency>
-			<groupId>au.org.arcs.auth</groupId>
-			<artifactId>arcs-gsi</artifactId>
-			<version>1.2</version>
-			<scope>compile</scope>
-		</dependency>
 
 
 		<!--  test dependencies -->

@@ -3,7 +3,6 @@ package org.vpac.grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JLabel;
@@ -13,7 +12,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.control.JobConstants;
 import org.vpac.grisu.control.ServiceInterface;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -53,10 +51,6 @@ public class Gold extends AppSpecificViewerPanel {
 
 	private JTextField textField;
 	private String goldFilePath = null;
-	private Thread ligandUpdateThread = null;
-	private Timer timer;
-
-	private final int PROGRESS_CHECK_INTERVALL = 120;
 
 	public Gold(ServiceInterface si) {
 		super(si);
@@ -158,62 +152,38 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	public void initialize() {
 
-		// ligandFileNoPath = getJob().getJobProperty("result_directory") + "/"
-		// + "number_of_ligands_in_library";
 		goldFilePath = getJob().getJobProperty("result_directory") + "/"
 				+ "gold.out";
+	}
+
+	@Override
+	void jobFinished() {
 		updateProgress();
+	}
 
-		if (getJob().getStatus(false) < JobConstants.FINISHED_EITHER_WAY) {
-			timer = new Timer();
-			timer.scheduleAtFixedRate(new UpdateProgressTask(),
-					PROGRESS_CHECK_INTERVALL * 1000,
-					PROGRESS_CHECK_INTERVALL * 1000);
-
-		}
-
-		// if (getJob().getStatus(false) == JobConstants.DONE) {
-		// downloadAndDisplayMolecules();
-		// }
+	@Override
+	public void jobStarted() {
+		updateProgress();
 	}
 
 	@Override
 	public void jobUpdated(PropertyChangeEvent evt) {
 
-		if ("status".equals(evt.getPropertyName())) {
-			updateProgress();
+	}
 
-			int status = getJob().getStatus(false);
-			if (status >= JobConstants.FINISHED_EITHER_WAY) {
-				if (status == JobConstants.DONE) {
-					// downloadAndDisplayMolecules();
-				}
-
-				timer.cancel();
-			}
-		}
+	@Override
+	void progressUpdate() {
+		updateProgress();
 	}
 
 	private void updateProgress() {
 
-		if (getJob() == null) {
-			System.out.println("Job not set yet...");
-			return;
-		}
-
-		if ((ligandUpdateThread != null) && ligandUpdateThread.isAlive()) {
-			System.out.println("Updating already...");
-			return;
-		}
-
-		ligandUpdateThread = new Thread() {
+		new Thread() {
 			@Override
 			public void run() {
-
 				calculateCurrentLigandNo();
 			}
-		};
+		}.start();
 
-		ligandUpdateThread.start();
 	}
 }
