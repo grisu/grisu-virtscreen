@@ -4,7 +4,7 @@
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2</version>
+	<version>0.3-SNAPSHOT</version>
 	<name>a grisu client</name>
 
 	<repositories>
