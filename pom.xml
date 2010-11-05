@@ -37,12 +37,12 @@
 	<scm>
 		<connection>scm:git:git://code.arcs.org.au/bestgrid-grid-clients/grisu-virtscreen.git
 		</connection>
-		<url>scm:git:git://code.arcs.org.au/bestgrid-grid-clients/grisu-virtscreen.git
+		<url>scm:git:git@code.arcs.org.au:~markus/grisu/grisu-clients-bestgrid.git
 		</url>
 	</scm>	
 
 	<properties>
-		<grisu.version>0.3-beta2</grisu.version>
+		<grisu.version>0.3-beta3</grisu.version>
 	</properties>
 
 
@@ -157,6 +157,14 @@
 					</execution>
 				</executions>
 			</plugin>
+
+               <plugins>
+                                                <plugin>
+                                  <groupId>org.apache.maven.plugins</groupId>
+                                  <artifactId>maven-release-plugin</artifactId>
+                                  <version>2.1</version>
+                        </plugin>
+
 
 		</plugins>
 	</build>
