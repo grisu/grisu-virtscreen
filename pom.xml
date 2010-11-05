@@ -37,7 +37,7 @@
 	<scm>
 		<connection>scm:git:git://code.arcs.org.au/bestgrid-grid-clients/grisu-virtscreen.git
 		</connection>
-		<url>scm:git:git@code.arcs.org.au:~markus/grisu/grisu-clients-bestgrid.git
+                <developerConnection>scm:git:git@code.arcs.org.au:~markus/grisu/grisu-clients-bestgrid.git</developerConnection>
 		</url>
 	</scm>	
 
