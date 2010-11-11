@@ -1,10 +1,14 @@
 killall -9 pvmd3
 rm -Rf /tmp/pvm*
 
+export GOLD_DIR=/share/apps/gold/GOLD
+export CCDC_LICENSE_FILE=27000@er171.ceres.auckland.ac.nz
 export PVM_ROOT=/share/apps/gold/GOLD/pvm3
+
 nohup /share/apps/gold/GOLD/pvm3/lib/LINUX64/pvmd3  &
 
-GOLD_DIR=/share/apps/gold/GOLD
+
+
 
 INDIR=`pwd`
 CONF_FILE=$1
