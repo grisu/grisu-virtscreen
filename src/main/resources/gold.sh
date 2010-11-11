@@ -1,10 +1,10 @@
 killall -9 pvmd3
 rm -Rf /tmp/pvm*
 
-export PVM_ROOT=/share/apps/gold/GOLD_Suite/GOLD/pvm3
-nohup /share/apps/gold/GOLD_Suite/GOLD/pvm3/lib/LINUX64/pvmd3  &
+export PVM_ROOT=/share/apps/gold/GOLD/pvm3
+nohup /share/apps/gold/GOLD/pvm3/lib/LINUX64/pvmd3  &
 
-GOLD_DIR=/share/apps/gold/GOLD_Suite
+GOLD_DIR=/share/apps/gold/GOLD
 
 INDIR=`pwd`
 CONF_FILE=$1
