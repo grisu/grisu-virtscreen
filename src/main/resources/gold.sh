@@ -4,7 +4,7 @@ rm -Rf /tmp/pvm*
 export PVM_ROOT=/share/apps/gold/GOLD/pvm3
 nohup /share/apps/gold/GOLD/pvm3/lib/LINUX64/pvmd3  &
 
-GOLD_DIR=/share/apps/gold/GOLD
+export GOLD_DIR=/share/apps/gold/GOLD
 
 INDIR=`pwd`
 CONF_FILE=$1
