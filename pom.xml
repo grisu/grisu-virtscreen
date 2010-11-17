@@ -41,7 +41,7 @@
 	</scm>	
 
 	<properties>
-		<grisu.version>0.3-beta3</grisu.version>
+		<grisu.version>0.3-beta4-SNAPSHOT</grisu.version>
 	</properties>
 
 
