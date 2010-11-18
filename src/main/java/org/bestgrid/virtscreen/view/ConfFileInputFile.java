@@ -1,9 +1,9 @@
 package org.bestgrid.virtscreen.view;
 
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
+import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
 
-public class ConfFileInputFile extends SingleInputFile {
+public class ConfFileInputFile extends SingleInputGridFile {
 
 	private final GoldJobInputPanel parent;
 

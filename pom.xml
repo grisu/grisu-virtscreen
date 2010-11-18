@@ -30,7 +30,7 @@
 			<id>arcs.snapshot</id>
 			<name>ARCS SNAPSHOT Repository</name>
 			<url>http://code.arcs.org.au/nexus/content/repositories/snapshots</url>
-			<uniqueVersion>true</uniqueVersion>
+			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
 	
