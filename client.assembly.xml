@@ -21,7 +21,14 @@
 					<exclude>**/MANIFEST.MF</exclude>
 					<exclude>**/LICENSE.txt</exclude>
 					<exclude>**/NOTICE.txt</exclude>
-					<exclude>**/log4j.properties</exclude>
+					<exclude>**/LICENSE</exclude>
+					<exclude>**/NOTICE</exclude>
+					<exclude>log4j.properties</exclude>
+					<exclude>certificates.zip</exclude>
+					<exclude>vomses.zip</exclude>
+					<exclude>arcs/__init__.py</exclude>
+					<exclude>gluev12r2-ext-class-map.properties</exclude>
+					<exclude>rebel.xml</exclude>
 				</excludes>
 			</unpackOptions>
 		</dependencySet>
@@ -32,6 +39,11 @@
 		<file>
 			<source>src/main/resources/log4j.properties</source>
 			<outputDirectory>/</outputDirectory>
+		</file>
+		<!-- just a zip weirdness  otherwise it would be in the jar twice and jarsigner wouldn't sign it... -->
+		<file>
+			<source>__init__.py</source>
+			<outputDirectory>/arcs</outputDirectory>
 		</file>
 	</files>
 
