@@ -65,37 +65,13 @@ public class GoldJob {
 
 	}
 
-	public void setCustomLibraryFiles(String[] files) {
-		this.goldConfFile.setCostumLigandDataFiles(files);
-	}
-
-	public void setCustomDockingAmount(int amount) {
-		this.goldConfFile.setCostumLigandAmount(amount);
-	}
-
-	private void setParameter(GoldConfFile.PARAMETER key, String value) {
-		this.goldConfFile.setParameter(key, value);
-	}
-
-	public void setWalltime(int inSeconds) {
-		this.walltimeInSeconds = inSeconds;
-	}
-
-	public void setCpus(int cpus) {
-		this.cpus = cpus;
-	}
-
-	public JobObject getJobObject() {
-		return this.job;
-	}
-
 	public void createAndSubmitJob() throws JobSubmissionException,
 			JobPropertiesException {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(goldConfFile
 				.getName()));
 		job.setApplication("Gold");
-		job.setApplicationVersion("1.3.2");
+		job.setApplicationVersion("5.0");
 		job.setSubmissionLocation("gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
 		job.setCommandline("sh gold.sh " + this.goldConfFile.getName());
@@ -139,15 +115,39 @@ public class GoldJob {
 
 	}
 
-	public void setEmail(String email) {
-		job.setEmail_address(email);
+	public JobObject getJobObject() {
+		return this.job;
+	}
+
+	public void sendEmailOnJobFinish(boolean send) {
+		job.setEmail_on_job_finish(send);
 	}
 
 	public void sendEmailOnJobStart(boolean send) {
 		job.setEmail_on_job_start(send);
 	}
 
-	public void sendEmailOnJobFinish(boolean send) {
-		job.setEmail_on_job_finish(send);
+	public void setCpus(int cpus) {
+		this.cpus = cpus;
+	}
+
+	public void setCustomDockingAmount(int amount) {
+		this.goldConfFile.setCostumLigandAmount(amount);
+	}
+
+	public void setCustomLibraryFiles(String[] files) {
+		this.goldConfFile.setCostumLigandDataFiles(files);
+	}
+
+	public void setEmail(String email) {
+		job.setEmail_address(email);
+	}
+
+	private void setParameter(GoldConfFile.PARAMETER key, String value) {
+		this.goldConfFile.setParameter(key, value);
+	}
+
+	public void setWalltime(int inSeconds) {
+		this.walltimeInSeconds = inSeconds;
 	}
 }

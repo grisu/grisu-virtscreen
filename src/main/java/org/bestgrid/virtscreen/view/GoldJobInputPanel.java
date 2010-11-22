@@ -28,8 +28,6 @@ import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
 
-import au.org.arcs.jcommons.constants.Constants;
-
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -163,6 +161,23 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		return cpus;
 	}
 
+	private DockingAmoungCombo getDockingAmoungCombo() {
+		if (dockingAmoungCombo == null) {
+			dockingAmoungCombo = new DockingAmoungCombo();
+			widgets.add(dockingAmoungCombo);
+
+		}
+		return dockingAmoungCombo;
+	}
+
+	private Email getEmail_1() {
+		if (email_1 == null) {
+			email_1 = new Email();
+			widgets.add(email_1);
+		}
+		return email_1;
+	}
+
 	private JLabel getErrorLabel() {
 		if (errorLabel == null) {
 			errorLabel = new JLabel("");
@@ -195,7 +210,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 	}
 
 	public String getSupportedApplication() {
-		return Constants.GENERIC_APPLICATION_NAME;
+		return "Gold";
 	}
 
 	private Walltime getWalltime() {
@@ -282,6 +297,13 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 
 	}
 
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		setParseResult((Boolean) evt.getNewValue(),
+				currentConfFile.getLogMessage(), currentConfFile.getFixes());
+
+	}
+
 	private void setParseResult(boolean success, StringBuffer logMessage,
 			StringBuffer fixes) {
 
@@ -364,29 +386,5 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 			}
 		}.start();
 
-	}
-
-	private DockingAmoungCombo getDockingAmoungCombo() {
-		if (dockingAmoungCombo == null) {
-			dockingAmoungCombo = new DockingAmoungCombo();
-			widgets.add(dockingAmoungCombo);
-
-		}
-		return dockingAmoungCombo;
-	}
-
-	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		setParseResult((Boolean) evt.getNewValue(),
-				currentConfFile.getLogMessage(), currentConfFile.getFixes());
-
-	}
-
-	private Email getEmail_1() {
-		if (email_1 == null) {
-			email_1 = new Email();
-			widgets.add(email_1);
-		}
-		return email_1;
 	}
 }
