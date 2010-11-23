@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.view.GoldLibrarySelectPanel;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
@@ -144,7 +145,7 @@ public class GoldConfFile {
 		// check whether ligand files exist remotely
 		logMessage.append("Checking " + PARAMETER.ligand_data_file + "...\n");
 
-		if (externalLigand != null && externalLigand.length > 0) {
+		if ((externalLigand != null) && (externalLigand.length > 0)) {
 
 		} else {
 			for (String url : libFile.getRemoteUrls()) {
@@ -330,7 +331,9 @@ public class GoldConfFile {
 
 	public void setCostumLigandDataFiles(String[] ligand) {
 
-		if (ligand == null || ligand.length == 0
+		X.p("Costum: " + StringUtils.join(ligand, ","));
+
+		if ((ligand == null) || (ligand.length == 0)
 				|| GoldLibrarySelectPanel.N_A_MESSAGE.equals(ligand[0])) {
 			this.externalLigand = null;
 		} else {
@@ -388,7 +391,7 @@ public class GoldConfFile {
 			switch (key) {
 
 			case ligand_data_file:
-				if (externalLigand != null && externalLigand.length > 0) {
+				if ((externalLigand != null) && (externalLigand.length > 0)) {
 					String temp = StringUtils.join(externalLigand, " ") + " "
 							+ new Integer(getLigandDockingAmount()).toString();
 					setLigand_data_file(temp);

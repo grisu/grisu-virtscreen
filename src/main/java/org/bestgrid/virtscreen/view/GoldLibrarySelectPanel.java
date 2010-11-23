@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.bestgrid.virtscreen.model.GoldConfFileNew;
 import org.bestgrid.virtscreen.model.LigandFiles;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
@@ -35,7 +35,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 	private final JComboBox combo;
 
 	private final ServiceInterface si = null;
-	private GoldConfFile confFile = null;
+	private GoldConfFileNew confFile = null;
 	private JScrollPane scrollPane;
 	private final Boolean useComboBox;
 	private JComboBox comboBox;
@@ -62,8 +62,8 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 						if (confFile == null) {
 							return;
 						}
-						confFile.setCostumLigandDataFiles(new String[] { (String) e
-								.getItem() });
+						confFile.getLigandFile().setLigandFiles(
+								new String[] { (String) e.getItem() });
 					}
 				}
 			});
@@ -109,14 +109,50 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 
 	}
 
-	@Override
-	public void setValue(String value) {
-		// TODO Auto-generated method stub
+	private JComboBox getComboBox_1() {
+		if (comboBox_1 == null) {
+			comboBox_1 = new JComboBox();
+		}
+		return comboBox_1;
+	}
 
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			// scrollPane.setViewportView(getComboBox_1());
+
+			if (useComboBox) {
+				scrollPane.setViewportView(combo);
+			} else {
+				scrollPane.setViewportView(list);
+			}
+		}
+		return scrollPane;
+	}
+
+	public String[] getSelectedLibraryFiles() {
+
+		if (useComboBox) {
+			String libFile = (String) combo.getSelectedItem();
+			return new String[] { libFile };
+		} else {
+			Object[] o = list.getSelectedValues();
+			String[] result = new String[o.length];
+			for (int i = 0; i < o.length; i++) {
+				result[i] = (String) o[i];
+			}
+			return result;
+		}
+	}
+
+	@Override
+	public String getValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void loadLibraries() {
-		if (confFile == null || getServiceInterface() == null) {
+		if ((confFile == null) || (getServiceInterface() == null)) {
 			if (useComboBox) {
 				combo.setEnabled(false);
 			} else {
@@ -131,7 +167,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			list.setEnabled(true);
 		}
 
-		String[] ligandFiles = confFile.getLigandUrls();
+		String[] ligandFiles = confFile.getLigandFile().getLigandFiles();
 
 		if (useComboBox) {
 			// only use first one...
@@ -163,19 +199,9 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		}
 	}
 
-	public String[] getSelectedLibraryFiles() {
-
-		if (useComboBox) {
-			String libFile = (String) combo.getSelectedItem();
-			return new String[] { libFile };
-		} else {
-			Object[] o = list.getSelectedValues();
-			String[] result = new String[o.length];
-			for (int i = 0; i < o.length; i++) {
-				result[i] = (String) o[i];
-			}
-			return result;
-		}
+	public void setGoldConfFile(GoldConfFileNew confFile) {
+		this.confFile = confFile;
+		loadLibraries();
 	}
 
 	@Override
@@ -204,35 +230,9 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		loadLibraries();
 	}
 
-	public void setGoldConfFile(GoldConfFile confFile) {
-		this.confFile = confFile;
-		loadLibraries();
-	}
-
 	@Override
-	public String getValue() {
+	public void setValue(String value) {
 		// TODO Auto-generated method stub
-		return null;
-	}
 
-	private JScrollPane getScrollPane() {
-		if (scrollPane == null) {
-			scrollPane = new JScrollPane();
-			// scrollPane.setViewportView(getComboBox_1());
-
-			if (useComboBox) {
-				scrollPane.setViewportView(combo);
-			} else {
-				scrollPane.setViewportView(list);
-			}
-		}
-		return scrollPane;
-	}
-
-	private JComboBox getComboBox_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-		}
-		return comboBox_1;
 	}
 }

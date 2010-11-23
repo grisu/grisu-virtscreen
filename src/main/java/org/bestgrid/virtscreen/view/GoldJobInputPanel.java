@@ -144,7 +144,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 
 	private ConfFileInputFile getConfFileInput() {
 		if (confFileInput == null) {
-			confFileInput = new ConfFileInputFile(this);
+			// confFileInput = new ConfFileInputFile(this);
 			confFileInput.setTitle(".conf file");
 			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
 			addWidget(confFileInput);
@@ -265,10 +265,10 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 						}
 						currentConfFile = new GoldConfFile(si, confUrl);
 						currentConfFile.addListener(GoldJobInputPanel.this);
-						getGoldLibrarySelectPanel().setGoldConfFile(
-								currentConfFile);
-						getDockingAmoungCombo()
-								.setGoldConfFile(currentConfFile);
+						// getGoldLibrarySelectPanel().setGoldConfFile(
+						// currentConfFile);
+						// getDockingAmoungCombo()
+						// .setGoldConfFile(currentConfFile);
 					} catch (FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());

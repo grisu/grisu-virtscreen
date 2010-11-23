@@ -55,7 +55,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	private JobCreationPanel getGoldJobCreationPanel() {
 		if (gold == null) {
-			gold = new GoldJobInputPanel();
+			gold = new GoldJobInputPanelNew();
 		}
 		return gold;
 	}
