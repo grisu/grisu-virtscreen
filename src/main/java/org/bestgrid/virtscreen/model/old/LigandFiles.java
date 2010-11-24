@@ -1,6 +1,8 @@
-package org.bestgrid.virtscreen.model;
+package org.bestgrid.virtscreen.model.old;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.model.FileManager;
@@ -23,7 +25,32 @@ public class LigandFiles {
 		this.fm = GrisuRegistryManager.getDefault(si).getFileManager();
 	}
 
+	public String[] getRemotePaths() {
+		X.p("REMOTE PATH: " + StringUtils.join(this.remoteFiles));
+		return this.remoteFiles;
+	}
+
+	public String[] getRemoteUrls() {
+
+		X.p("FILES OUTPUT: " + StringUtils.join(this.remoteUrls, ","));
+		return this.remoteUrls;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String[] getStageInLigands() {
+		return null;
+	}
+
+	public boolean isValid() {
+		return this.valid;
+	}
+
 	public void setFiles(String[] files) {
+
+		X.p("FILES INPUT: " + StringUtils.join(files, ","));
 
 		this.origFiles = files;
 		this.remoteFiles = new String[files.length];
@@ -53,18 +80,6 @@ public class LigandFiles {
 				break;
 			}
 		}
-	}
-
-	public boolean isValid() {
-		return this.valid;
-	}
-
-	public String[] getRemotePaths() {
-		return this.remoteFiles;
-	}
-
-	public String[] getRemoteUrls() {
-		return this.remoteUrls;
 	}
 
 }

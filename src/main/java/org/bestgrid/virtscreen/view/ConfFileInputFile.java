@@ -5,9 +5,9 @@ import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFil
 
 public class ConfFileInputFile extends SingleInputGridFile {
 
-	private final GoldJobInputPanel parent;
+	private final GoldJobInputPanelNew parent;
 
-	public ConfFileInputFile(GoldJobInputPanel parent) {
+	public ConfFileInputFile(GoldJobInputPanelNew parent) {
 		this.parent = parent;
 		setExtensionsToDisplay(new String[] { ".conf" });
 	}

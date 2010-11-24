@@ -14,10 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
-import org.bestgrid.virtscreen.model.old.GoldConfFile;
-import org.bestgrid.virtscreen.model.old.GoldJob;
+import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.bestgrid.virtscreen.model.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
@@ -33,7 +34,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
+public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		PropertyChangeListener {
 
 	private ServiceInterface si;
@@ -51,17 +52,19 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 	private final ValidationGroup validationGroup;
 	private JButton btnRefresh;
 	private JLabel errorLabel;
-	private GoldLibrarySelectPanel goldLibrarySelectPanel;
+	private AdvancedLibrarySelectPanel goldLibrarySelectPanel;
 	private DockingAmoungCombo dockingAmoungCombo;
 
-	private GoldConfFile currentConfFile = null;
+	// private GoldConfFileNew currentConfFile = null;
 	private Email email;
 	private Email email_1;
+
+	private GoldConfFile goldConfFile;
 
 	/**
 	 * Create the panel.
 	 */
-	public GoldJobInputPanel() {
+	public GoldJobInputPanelNew() {
 		super();
 
 		validationPanel.setInnerComponent(this);
@@ -87,7 +90,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 				FormFactory.RELATED_GAP_ROWSPEC, }));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2, default, top");
-		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, center");
+		add(getLigandFileSelectPanel(), "2, 4, 7, 1, fill, center");
 		add(getDockingAmoungCombo(), "2, 6, left, top");
 		add(getCpus(), "4, 6, fill, top");
 		add(getWalltime(), "6, 6, 3, 1, fill, top");
@@ -144,7 +147,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 
 	private ConfFileInputFile getConfFileInput() {
 		if (confFileInput == null) {
-			// confFileInput = new ConfFileInputFile(this);
+			confFileInput = new ConfFileInputFile(this);
 			confFileInput.setTitle(".conf file");
 			confFileInput.setHistoryKey(HISTORY_KEY + "_conf_file");
 			addWidget(confFileInput);
@@ -186,9 +189,17 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		return errorLabel;
 	}
 
-	private GoldLibrarySelectPanel getGoldLibrarySelectPanel() {
+	// private GoldLibrarySelectPanel getGoldLibrarySelectPanel() {
+	// if (goldLibrarySelectPanel == null) {
+	// goldLibrarySelectPanel = new GoldLibrarySelectPanel();
+	// addWidget(goldLibrarySelectPanel);
+	// }
+	// return goldLibrarySelectPanel;
+	// }
+
+	private AdvancedLibrarySelectPanel getLigandFileSelectPanel() {
 		if (goldLibrarySelectPanel == null) {
-			goldLibrarySelectPanel = new GoldLibrarySelectPanel();
+			goldLibrarySelectPanel = new AdvancedLibrarySelectPanel();
 			addWidget(goldLibrarySelectPanel);
 		}
 		return goldLibrarySelectPanel;
@@ -227,7 +238,11 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 		SwingUtilities.invokeLater(new Thread() {
 			@Override
 			public void run() {
-				getBtnSubmit().setEnabled(!lock);
+				if (goldConfFile.isValid()) {
+					getBtnSubmit().setEnabled(!lock);
+				} else {
+					getBtnSubmit().setEnabled(false);
+				}
 				getBtnRefresh().setEnabled(!lock);
 				for (AbstractWidget w : widgets) {
 					w.lockIUI(lock);
@@ -239,12 +254,14 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 
 	public void parseConfig() {
 
+		getLigandFileSelectPanel().reset();
+
 		final String confUrl = getConfFileInput().getInputFileUrl();
 		getErrorLabel().setText("");
 
 		if (StringUtils.isBlank(confUrl)) {
-			setParseResult(false, new StringBuffer("No .conf file specified."),
-					new StringBuffer("Select .conf file."));
+			setParseResult(false, "No .conf file specified.",
+					"Select .conf file.");
 			getBtnRefresh().setEnabled(false);
 		} else {
 			final StringBuffer logMessage = new StringBuffer(
@@ -259,37 +276,35 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 				@Override
 				public void run() {
 					try {
-						if (currentConfFile != null) {
-							currentConfFile
-									.removeListener(GoldJobInputPanel.this);
-						}
-						currentConfFile = new GoldConfFile(si, confUrl);
-						currentConfFile.addListener(GoldJobInputPanel.this);
-						// getGoldLibrarySelectPanel().setGoldConfFile(
-						// currentConfFile);
-						// getDockingAmoungCombo()
-						// .setGoldConfFile(currentConfFile);
+						boolean checkValid = false;
+						goldConfFile.setConfFile(confUrl);
+
+						getLigandFileSelectPanel()
+								.setGoldConfFile(goldConfFile);
+						getDockingAmoungCombo().setGoldConfFile(goldConfFile);
+						checkValid = true;
+						lockUI(false);
 					} catch (FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());
 						fixes.append("Select an existing file.");
-						setParseResult(false, logMessage, fixes);
+						setParseResult(false, logMessage.toString(),
+								fixes.toString());
+						lockUI(false);
+						getBtnSubmit().setEnabled(false);
 						return;
 					} catch (Exception e) {
+						e.printStackTrace();
 						logMessage.append("Error opening .conf file: "
 								+ e.getLocalizedMessage());
 						fixes.append("Please check syntax of .conf file "
 								+ confUrl);
-						setParseResult(false, logMessage, fixes);
-						return;
-					} finally {
+						setParseResult(false, logMessage.toString(),
+								fixes.toString());
 						lockUI(false);
+						getBtnSubmit().setEnabled(false);
+						return;
 					}
-
-					boolean success = currentConfFile.checkForValidity();
-
-					// logMessage.append(currentConfFile.getLogMessage());
-					// fixes.append(currentConfFile.getFixes());
 
 				}
 			}.start();
@@ -298,48 +313,58 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		setParseResult((Boolean) evt.getNewValue(),
-				currentConfFile.getLogMessage(), currentConfFile.getFixes());
+		// // TODO Auto-generated method stub
+		// setParseResult((Boolean) evt.getNewValue(),
+		// currentConfFile.getLogMessage(), currentConfFile.getFixes());
+
+		X.p("Property changed.");
+		boolean success = goldConfFile.isValid();
+
+		String msg = goldConfFile.getParseMessages();
+
+		String fixes = goldConfFile.getFixes();
+
+		setParseResult(success, msg, fixes);
+		X.p("Success: " + success);
+		getBtnSubmit().setEnabled(success);
 
 	}
 
-	private void setParseResult(boolean success, StringBuffer logMessage,
-			StringBuffer fixes) {
+	private void setParseResult(boolean success, String logMessage, String fixes) {
 
 		getBtnSubmit().setEnabled(success);
 		if (success) {
 			getErrorLabel().setText("");
-			logMessage
-					.append("\n\nConfig file parsed successful. Job ready for submission.\n");
+			logMessage = logMessage
+					+ "Config file parsed successful. Job ready for submission.\n";
 		} else {
 			getErrorLabel()
 					.setText(
 							"Error when parsing .conf file. Please check log below for details.");
-			logMessage
-					.append("\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n");
+			logMessage = logMessage
+					+ "=====================================================================================\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n";
 		}
-		getSubmissionLogPanel().setText(logMessage.toString() + "\n" + fixes);
+		getSubmissionLogPanel().setText(logMessage + "\n" + fixes);
 
 	}
 
 	public void setServiceInterface(ServiceInterface si) {
 		this.si = si;
+		this.goldConfFile = new GoldConfFile(si);
+		this.goldConfFile.addListener(this);
 		for (AbstractWidget w : widgets) {
 			w.setServiceInterface(si);
 		}
+
 	}
 
 	private void submit() {
 
 		final GoldJob job;
-		;
+
 		try {
-			job = new GoldJob(si, getConfFileInput().getInputFileUrl());
-			job.setCustomLibraryFiles(getGoldLibrarySelectPanel()
-					.getSelectedLibraryFiles());
-			job.setCustomDockingAmount(getDockingAmoungCombo()
-					.getDockingAmount());
+			job = new GoldJob(si, goldConfFile);
+
 		} catch (FileTransactionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
