@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.model.FileManager;
 import org.vpac.grisu.model.dto.GridFile;
@@ -88,9 +89,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 	}
 
 	@Override
-	public void init(String configLine) {
-		super.init(configLine);
-		setNewValue(configLine);
+	public void initParameter() {
+		setNewValue(getOriginalLine());
 	}
 
 	@Override
@@ -115,6 +115,10 @@ public class LigandDataFile extends AbstractGoldParameter {
 
 	public void setLigandFiles(String[] files) {
 
+		for (String f : files) {
+			X.p("FILE: " + f);
+		}
+
 		removeMessage("files");
 		removeFix("files");
 
@@ -124,6 +128,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 		clearStageInFiles();
 
 		List<String> newFiles = new LinkedList<String>();
+		getFilesToStageIn().clear();
 
 		boolean parsingSuccessful = true;
 
@@ -154,6 +159,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 							+ FilenameUtils.getName(file));
 					msg.append("     -> Found in common library location, using remote library file.\n");
 				} else {
+					msg.append("     -> Not found in common librarying. Checking alternative paths...\n");
 					if (FileManager.isLocal(file)) {
 						try {
 							final File localFile = new File(new URI(
@@ -162,15 +168,22 @@ public class LigandDataFile extends AbstractGoldParameter {
 								msg.append("     -> File "
 										+ file
 										+ " exists on local filesystem. File will be uploaded when job is created.\n");
+								addFileToStageIn(file);
+								newFiles.add(file);
+							} else {
+								msg.append("     -> File "
+										+ file
+										+ " does not exist on local filesystem.\n");
+								fix.append("Please check ligand data file path: "
+										+ file);
+								parsingSuccessful = false;
 							}
-							addFileToStageIn(file);
-							newFiles.add(file);
+
 						} catch (URISyntaxException e) {
 							msg.append("     -> Could not parse url for file: "
 									+ file + "\n");
 							parsingSuccessful = false;
 							fix.append("   Please check url: " + file);
-
 						}
 					} else {
 						if (getFileManager().isFile(file)) {
@@ -186,6 +199,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 							parsingSuccessful = false;
 							fix.append("Please change path of make sure file exists: "
 									+ file);
+							parsingSuccessful = false;
 						}
 
 					}
@@ -200,12 +214,14 @@ public class LigandDataFile extends AbstractGoldParameter {
 		if (!parsingSuccessful) {
 			valid = false;
 			msg.append("\nAt least one of the specified ligand data files is not valid or inaccessable.\n");
+			getFilesToStageIn().clear();
 		} else {
-			msg.append("\nAll specified ligand data files are valid and accessable.\n");
+			// msg.append("\nAll specified ligand data files are valid and accessable.\n");
 			valid = true;
 			newLine = LIGAND_PARAMETER_NAME + " "
 					+ StringUtils.join(newFiles, " ") + " "
 					+ getLigandDockingAmount();
+			// getFilesToStageIn().addAll(newFiles);
 		}
 
 		addMessage("files", msg.toString());

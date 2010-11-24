@@ -1,6 +1,6 @@
 package org.bestgrid.virtscreen.control;
 
-import org.bestgrid.virtscreen.model.GoldJob;
+import org.bestgrid.virtscreen.model.old.GoldJob;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.login.LoginManager;
 

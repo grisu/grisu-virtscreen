@@ -8,7 +8,7 @@ public class Directory extends AbstractGoldParameter {
 
 	@Override
 	protected boolean configLineIsValid() {
-		return StringUtils.isNotBlank(getValue(getConfigLine()));
+		return true;
 	}
 
 	@Override
@@ -19,6 +19,13 @@ public class Directory extends AbstractGoldParameter {
 	@Override
 	public String getParameterName() {
 		return "directory";
+	}
+
+	@Override
+	public void initParameter() {
+		setNewValue("./Results");
+		addMessage("static",
+				"  -> Set output directory to be named \"Results\"\n");
 	}
 
 	@Override

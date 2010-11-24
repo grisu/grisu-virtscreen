@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile;
-import org.bestgrid.virtscreen.model.GoldJob;
+import org.bestgrid.virtscreen.model.old.GoldConfFile;
+import org.bestgrid.virtscreen.model.old.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
 import org.vpac.grisu.control.ServiceInterface;

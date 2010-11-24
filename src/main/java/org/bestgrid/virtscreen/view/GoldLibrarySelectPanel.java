@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.bestgrid.virtscreen.model.GoldConfFileNew;
-import org.bestgrid.virtscreen.model.LigandFiles;
+import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.bestgrid.virtscreen.model.old.LigandFiles;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
@@ -35,7 +35,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 	private final JComboBox combo;
 
 	private final ServiceInterface si = null;
-	private GoldConfFileNew confFile = null;
+	private GoldConfFile confFile = null;
 	private JScrollPane scrollPane;
 	private final Boolean useComboBox;
 	private JComboBox comboBox;
@@ -62,8 +62,8 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 						if (confFile == null) {
 							return;
 						}
-						confFile.getLigandFile().setLigandFiles(
-								new String[] { (String) e.getItem() });
+						confFile.setLigandDataFiles(new String[] { (String) e
+								.getItem() });
 					}
 				}
 			});
@@ -167,7 +167,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			list.setEnabled(true);
 		}
 
-		String[] ligandFiles = confFile.getLigandFile().getLigandFiles();
+		String[] ligandFiles = confFile.getLigandDataFiles();
 
 		if (useComboBox) {
 			// only use first one...
@@ -199,7 +199,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		}
 	}
 
-	public void setGoldConfFile(GoldConfFileNew confFile) {
+	public void setGoldConfFile(GoldConfFile confFile) {
 		this.confFile = confFile;
 		loadLibraries();
 	}

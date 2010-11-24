@@ -32,6 +32,10 @@ public class GenericGoldParameter extends AbstractGoldParameter {
 	}
 
 	@Override
+	void initParameter() {
+	}
+
+	@Override
 	boolean isOptional() {
 		return false;
 	}
@@ -43,7 +47,6 @@ public class GenericGoldParameter extends AbstractGoldParameter {
 
 	@Override
 	protected void setNewConfigValue(String value) {
-		// do nothing, not supported nor necessary
 	}
 
 }

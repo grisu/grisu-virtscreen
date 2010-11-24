@@ -156,8 +156,10 @@ public abstract class AbstractGoldParameter {
 		}
 
 		this.origLine = configLine;
-
+		initParameter();
 	}
+
+	abstract void initParameter();
 
 	abstract boolean isOptional();
 

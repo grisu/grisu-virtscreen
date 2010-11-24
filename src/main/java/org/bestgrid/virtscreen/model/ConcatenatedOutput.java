@@ -1,5 +1,6 @@
 package org.bestgrid.virtscreen.model;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class ConcatenatedOutput extends AbstractGoldParameter {
@@ -8,7 +9,7 @@ public class ConcatenatedOutput extends AbstractGoldParameter {
 
 	@Override
 	protected boolean configLineIsValid() {
-		return StringUtils.isNotBlank(getValue(getConfigLine()));
+		return true;
 	}
 
 	@Override
@@ -19,6 +20,12 @@ public class ConcatenatedOutput extends AbstractGoldParameter {
 	@Override
 	public String getParameterName() {
 		return "concatenated_output";
+	}
+
+	@Override
+	void initParameter() {
+		setNewValue("./" + FilenameUtils.getName(getValue(getConfigLine())));
+
 	}
 
 	@Override
@@ -34,12 +41,15 @@ public class ConcatenatedOutput extends AbstractGoldParameter {
 	@Override
 	protected void setNewConfigValue(String value) {
 
+		removeMessage("static");
 		if (StringUtils.isBlank(value)) {
 			throw new IllegalArgumentException(
 					"New value for concatenated_output is blank");
 		}
 
 		newLine = replaceValue(getOriginalLine(), value);
+		addMessage("static", "  -> Setting concatenated_output to be: " + value
+				+ "\n");
 	}
 
 }

@@ -3,7 +3,7 @@ package org.bestgrid.virtscreen.view;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import org.bestgrid.virtscreen.model.GoldConfFileNew;
+import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -15,7 +15,7 @@ public class DockingAmoungCombo extends AbstractWidget {
 	private JSpinner spinner;
 	private final SpinnerNumberModel dockModel = new SpinnerNumberModel(0, 0,
 			1000, 1);
-	private GoldConfFileNew confFile = null;
+	private GoldConfFile confFile = null;
 
 	public DockingAmoungCombo() {
 		setLayout(new FormLayout(new ColumnSpec[] {
@@ -45,9 +45,9 @@ public class DockingAmoungCombo extends AbstractWidget {
 		return null;
 	}
 
-	public void setGoldConfFile(GoldConfFileNew confFile) {
+	public void setGoldConfFile(GoldConfFile confFile) {
 		this.confFile = confFile;
-		dockModel.setValue(confFile.getLigandFile().getLigandDockingAmount());
+		dockModel.setValue(confFile.getLigandDockingAmount());
 	}
 
 	@Override

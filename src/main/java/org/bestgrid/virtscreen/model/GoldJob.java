@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile.PARAMETER;
+import org.bestgrid.virtscreen.model.old.GoldConfFile.PARAMETER;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
@@ -51,16 +51,13 @@ public class GoldJob {
 	private final GoldConfFile goldConfFile;
 	private final ServiceInterface si;
 
-	private String molFile1;
-	private String molFile2;
-
 	private int cpus = 1;
 	private int walltimeInSeconds = 600;
 
-	public GoldJob(ServiceInterface si, String confFileTemplate)
+	public GoldJob(ServiceInterface si, GoldConfFile confFileTemplate)
 			throws FileTransactionException {
 		this.si = si;
-		this.goldConfFile = new GoldConfFile(this.si, confFileTemplate);
+		this.goldConfFile = confFileTemplate;
 		job = new JobObject(si);
 
 	}
@@ -82,7 +79,7 @@ public class GoldJob {
 
 		job.addInputFileUrl(VIRTSCREEN_JOB_CONTROL_SCRIPT.getPath());
 		job.addInputFileUrl(VIRTSCREEN_HELPER_PY_SCRIPT.getPath());
-		job.addInputFileUrl(goldConfFile.getConfFile().getPath());
+		job.addInputFileUrl(goldConfFile.getJobConfFile().getPath());
 
 		for (String url : goldConfFile.getFilesToStageIn()) {
 			job.addInputFileUrl(url);
@@ -90,17 +87,12 @@ public class GoldJob {
 
 		RunningJobManager.getDefault(si).createJob(job,
 				"/ARCS/BeSTGRID/Drug_discovery/Local");
-		// job.createJob("/ARCS/BeSTGRID/Drug_discovery/Local");
-
-		// need to do this after we get the files to stage in, otherwise the new
-		// paths would be already there
-		this.goldConfFile.updateConfFile();
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
-		String dir = this.goldConfFile.getParameter(PARAMETER.directory);
-		String conc = this.goldConfFile
-				.getParameter(PARAMETER.concatenated_output);
+		String dir = this.goldConfFile.getDirectory();
+		String conc = this.goldConfFile.getConcatenatedOutput();
+
 		additionalJobProperties.put("result_directory", dir);
 		additionalJobProperties.put(PARAMETER.concatenated_output.toString(),
 				conc);
@@ -127,24 +119,36 @@ public class GoldJob {
 		job.setEmail_on_job_start(send);
 	}
 
+	public void setConcatenatedOutput(String conc) {
+		this.goldConfFile.setConcatenatedOutput(conc);
+	}
+
 	public void setCpus(int cpus) {
 		this.cpus = cpus;
 	}
 
 	public void setCustomDockingAmount(int amount) {
-		this.goldConfFile.setCostumLigandAmount(amount);
+		this.goldConfFile.setLigandDockingAmount(amount);
 	}
 
 	public void setCustomLibraryFiles(String[] files) {
-		this.goldConfFile.setCostumLigandDataFiles(files);
+		this.goldConfFile.setLigandDataFiles(files);
+	}
+
+	public void setDirectory(String dir) {
+		this.goldConfFile.setDirectory(dir);
 	}
 
 	public void setEmail(String email) {
 		job.setEmail_address(email);
 	}
 
-	private void setParameter(GoldConfFile.PARAMETER key, String value) {
-		this.goldConfFile.setParameter(key, value);
+	public void setProteinDataFile(String file) {
+		this.goldConfFile.setProteinDataFile(file);
+	}
+
+	public void setScoreParamFile(String file) {
+		this.goldConfFile.setScoreParamFile(file);
 	}
 
 	public void setWalltime(int inSeconds) {
