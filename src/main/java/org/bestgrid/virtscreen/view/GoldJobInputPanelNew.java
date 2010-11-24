@@ -52,7 +52,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 	private final ValidationGroup validationGroup;
 	private JButton btnRefresh;
 	private JLabel errorLabel;
-	private GoldLibrarySelectPanel goldLibrarySelectPanel;
+	private AdvancedLibrarySelectPanel goldLibrarySelectPanel;
 	private DockingAmoungCombo dockingAmoungCombo;
 
 	// private GoldConfFileNew currentConfFile = null;
@@ -90,7 +90,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 				FormFactory.RELATED_GAP_ROWSPEC, }));
 		add(getConfFileInput(), "2, 2, 5, 1, fill, fill");
 		add(getBtnRefresh(), "8, 2, default, top");
-		add(getGoldLibrarySelectPanel(), "2, 4, 7, 1, fill, center");
+		add(getLigandFileSelectPanel(), "2, 4, 7, 1, fill, center");
 		add(getDockingAmoungCombo(), "2, 6, left, top");
 		add(getCpus(), "4, 6, fill, top");
 		add(getWalltime(), "6, 6, 3, 1, fill, top");
@@ -189,9 +189,17 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		return errorLabel;
 	}
 
-	private GoldLibrarySelectPanel getGoldLibrarySelectPanel() {
+	// private GoldLibrarySelectPanel getGoldLibrarySelectPanel() {
+	// if (goldLibrarySelectPanel == null) {
+	// goldLibrarySelectPanel = new GoldLibrarySelectPanel();
+	// addWidget(goldLibrarySelectPanel);
+	// }
+	// return goldLibrarySelectPanel;
+	// }
+
+	private AdvancedLibrarySelectPanel getLigandFileSelectPanel() {
 		if (goldLibrarySelectPanel == null) {
-			goldLibrarySelectPanel = new GoldLibrarySelectPanel();
+			goldLibrarySelectPanel = new AdvancedLibrarySelectPanel();
 			addWidget(goldLibrarySelectPanel);
 		}
 		return goldLibrarySelectPanel;
@@ -246,6 +254,8 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 
 	public void parseConfig() {
 
+		getLigandFileSelectPanel().reset();
+
 		final String confUrl = getConfFileInput().getInputFileUrl();
 		getErrorLabel().setText("");
 
@@ -269,8 +279,8 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 						boolean checkValid = false;
 						goldConfFile.setConfFile(confUrl);
 
-						getGoldLibrarySelectPanel().setGoldConfFile(
-								goldConfFile);
+						getLigandFileSelectPanel()
+								.setGoldConfFile(goldConfFile);
 						getDockingAmoungCombo().setGoldConfFile(goldConfFile);
 						checkValid = true;
 						lockUI(false);
@@ -354,10 +364,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 
 		try {
 			job = new GoldJob(si, goldConfFile);
-			job.setCustomLibraryFiles(getGoldLibrarySelectPanel()
-					.getSelectedLibraryFiles());
-			job.setCustomDockingAmount(getDockingAmoungCombo()
-					.getDockingAmount());
+
 		} catch (FileTransactionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

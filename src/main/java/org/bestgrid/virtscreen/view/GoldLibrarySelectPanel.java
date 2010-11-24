@@ -10,7 +10,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile;
@@ -76,12 +75,12 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			combo = null;
 		}
 
-		String title = "Library";
-		if (!useCombo) {
-			title = "Libraries";
-		}
-		setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
+		// String title = "Library";
+		// if (!useCombo) {
+		// title = "Libraries";
+		// }
+		// setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
+		// TitledBorder.TOP, null, null));
 
 		if (useComboBox) {
 			setLayout(new FormLayout(new ColumnSpec[] {

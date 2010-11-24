@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.vpac.grisu.X;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.model.FileManager;
 import org.vpac.grisu.model.dto.GridFile;
@@ -110,15 +109,12 @@ public class LigandDataFile extends AbstractGoldParameter {
 		removeMessage("amount");
 		newLine = LIGAND_PARAMETER_NAME + " "
 				+ StringUtils.join(getLigandFiles(), " ") + " " + amount;
-		addMessage("amount", "  Set ligand docking amount to " + amount);
+		addMessage("amount", "  Set ligand docking amount to " + amount + "\n");
 	}
 
 	public void setLigandFiles(String[] files) {
 
-		for (String f : files) {
-			X.p("FILE: " + f);
-		}
-
+		valid = false;
 		removeMessage("files");
 		removeFix("files");
 
@@ -127,8 +123,18 @@ public class LigandDataFile extends AbstractGoldParameter {
 
 		clearStageInFiles();
 
+		if ((files == null) || (files.length == 0)
+				|| ((files.length == 1) && StringUtils.isBlank(files[0]))) {
+
+			addMessage("files", "   No ligand data file selected.\n");
+			addFix("files", "   Please specify ligand data file(s) to use.");
+
+			valid = false;
+			return;
+
+		}
+
 		List<String> newFiles = new LinkedList<String>();
-		getFilesToStageIn().clear();
 
 		boolean parsingSuccessful = true;
 
@@ -169,7 +175,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 										+ file
 										+ " exists on local filesystem. File will be uploaded when job is created.\n");
 								addFileToStageIn(file);
-								newFiles.add(file);
+								newFiles.add(FilenameUtils.getName(file));
 							} else {
 								msg.append("     -> File "
 										+ file
@@ -191,7 +197,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 									+ file
 									+ " exists on remote filesystem. File will be copied to job directory when job is created.\n");
 							addFileToStageIn(file);
-							newFiles.add(file);
+							newFiles.add(FilenameUtils.getName(file));
 						} else {
 							msg.append("     -> File "
 									+ file

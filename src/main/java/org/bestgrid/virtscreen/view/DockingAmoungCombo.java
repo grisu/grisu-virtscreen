@@ -2,6 +2,8 @@ package org.bestgrid.virtscreen.view;
 
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
@@ -35,6 +37,19 @@ public class DockingAmoungCombo extends AbstractWidget {
 	private JSpinner getSpinner() {
 		if (spinner == null) {
 			spinner = new JSpinner(dockModel);
+			spinner.addChangeListener(new ChangeListener() {
+
+				public void stateChanged(ChangeEvent e) {
+
+					if (confFile == null) {
+						return;
+					}
+
+					confFile.setLigandDockingAmount((Integer) spinner
+							.getValue());
+
+				}
+			});
 		}
 		return spinner;
 	}
@@ -46,8 +61,8 @@ public class DockingAmoungCombo extends AbstractWidget {
 	}
 
 	public void setGoldConfFile(GoldConfFile confFile) {
-		this.confFile = confFile;
 		dockModel.setValue(confFile.getLigandDockingAmount());
+		this.confFile = confFile;
 	}
 
 	@Override
