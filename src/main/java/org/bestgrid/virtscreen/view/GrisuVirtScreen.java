@@ -1,10 +1,14 @@
 package org.bestgrid.virtscreen.view;
 
 import java.awt.EventQueue;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.view.swing.GrisuApplicationWindow;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
+import org.vpac.grisu.model.GrisuRegistryManager;
+import org.vpac.grisu.model.dto.GridFile;
 import org.vpac.security.light.Init;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
@@ -35,7 +39,6 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	 */
 	public GrisuVirtScreen() {
 		super();
-
 	}
 
 	@Override
@@ -73,58 +76,24 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	@Override
 	protected void initOptionalStuff(ServiceInterface si) {
 
+		GridFile p = new GridFile(
+				"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		p.setIsVirtual(false);
+		p.setName("Personal files");
+		p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+
+		GridFile f = new GridFile(
+				"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+
+		f.setIsVirtual(true);
+		f.setPath(f.getUrl());
+		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
+				.getLocalRoot();
+		List<GridFile> files = new LinkedList<GridFile>();
+		files.add(p);
+		files.add(f);
+		files.add(l);
+		addGroupFileListPanel(files, files);
+
 	}
-
-	// private void exit() {
-	// try {
-	// System.out.println("Exiting...");
-	//
-	// if (si != null) {
-	// si.logout();
-	// }
-	//
-	// } finally {
-	// WindowSaver.saveSettings();
-	// System.exit(0);
-	// }
-	// }
-
-	// /**
-	// * Initialize the contents of the frame.
-	// */
-	// private void initialize() {
-	// frame = new JXFrame();
-	// frame.addWindowListener(this);
-	// // frame.setBounds(100, 100, 450, 300);
-	// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	//
-	// frame.setTitle("Virtual screening / Drug discovery grid client");
-	//
-	// frame.getContentPane().setLayout(new BorderLayout());
-	// Set<String> apps = new HashSet<String>();
-	// apps.add("generic");
-	// mainPanel = new GrisuMainPanel(true, false, false, apps, false, false,
-	// false, null, true);
-	// mainPanel.addJobCreationPanel(new GoldJobInputPanel());
-	// // mainPanel.addJobCreationPanel(new BlenderJobCreationPanel());
-	// // TODO add creationpanel
-	// // LoginPanel lp = new LoginPanel(mainPanel, true);
-	// LoginPanel lp = new LoginPanel(mainPanel);
-	// frame.getContentPane().add(lp, BorderLayout.CENTER);
-	// }
-
-	// public void setServiceInterface(ServiceInterface si) {
-	//
-	// if (lp == null) {
-	// throw new IllegalStateException("LoginPanel not initialized.");
-	// }
-	//
-	// if (si == null) {
-	// throw new NullPointerException("ServiceInterface can't be null");
-	// }
-	//
-	// lp.setServiceInterface(si);
-	//
-	// }
-
 }
