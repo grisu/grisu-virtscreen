@@ -13,6 +13,8 @@ import org.vpac.security.light.Init;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 
+	public static final String VIRTSCREEN_ROOTS = "virtscreen_roots";
+
 	/**
 	 * Launch the application.
 	 */
@@ -93,6 +95,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		files.add(p);
 		files.add(f);
 		files.add(l);
+
+		GrisuRegistryManager.getDefault(si).set(VIRTSCREEN_ROOTS, files);
 		addGroupFileListPanel(files, files);
 
 	}

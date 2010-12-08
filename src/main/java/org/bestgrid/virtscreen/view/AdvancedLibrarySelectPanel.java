@@ -8,8 +8,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
+import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -102,7 +106,41 @@ public class AdvancedLibrarySelectPanel extends AbstractWidget {
 	}
 
 	public void reset() {
-		getChckbxAdvancedSelection().setSelected(false);
+
+		X.p("LIGAND: "
+				+ StringUtils.join(this.confFile.getLigandDataFiles(), ","));
+
+		boolean found = true;
+		for (String s : getGoldLibrarySelectPanel().getSelectedLibraryFiles()) {
+			if (GoldLibrarySelectPanel.N_A_MESSAGE.equals(s)) {
+				found = false;
+				break;
+			}
+		}
+
+		if (confFile.getLigandDataFiles().length != 1) {
+			found = true;
+		}
+		if (!found) {
+			String s = confFile.getLigandDataFiles()[0];
+			if (StringUtils.isBlank(s) || !s.equals(FilenameUtils.getName(s))) {
+				getLigandFileInputFile().setValue(null);
+			} else {
+				s = confFile.getConfFileDir() + "/" + s;
+				try {
+					if (getFileManager().fileExists(s)) {
+						getLigandFileInputFile().setValue(s);
+						getChckbxAdvancedSelection().setSelected(true);
+						return;
+					}
+				} catch (RemoteFileSystemException e) {
+					getLigandFileInputFile().setValue(null);
+				}
+				getChckbxAdvancedSelection().setSelected(false);
+			}
+		} else {
+			getChckbxAdvancedSelection().setSelected(false);
+		}
 	}
 
 	public void setGoldConfFile(GoldConfFile confFile) {

@@ -64,6 +64,8 @@ public abstract class AbstractGoldParameter {
 	private String newValue;
 	private boolean valueChanged = false;
 
+	private String workingDir = null;
+
 	private final Map<String, String> parseMessage = new LinkedHashMap<String, String>();
 	private final Map<String, String> fixes = new LinkedHashMap<String, String>();
 
@@ -146,7 +148,13 @@ public abstract class AbstractGoldParameter {
 		}
 	}
 
-	public void init(String configLine) {
+	protected String getWorkingDir() {
+		return workingDir;
+	}
+
+	public void init(String configLine, String workingDir) {
+		this.workingDir = workingDir;
+
 		if (StringUtils.isBlank(configLine)) {
 			throw new IllegalArgumentException("Config line is blank");
 		}

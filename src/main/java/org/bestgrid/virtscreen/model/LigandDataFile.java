@@ -166,6 +166,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 					msg.append("     -> Found in common library location, using remote library file.\n");
 				} else {
 					msg.append("     -> Not found in common librarying. Checking alternative paths...\n");
+					boolean isLocalFile = false;
+
 					if (FileManager.isLocal(file)) {
 						try {
 							final File localFile = new File(new URI(
@@ -176,13 +178,31 @@ public class LigandDataFile extends AbstractGoldParameter {
 										+ " exists on local filesystem. File will be uploaded when job is created.\n");
 								addFileToStageIn(file);
 								newFiles.add(FilenameUtils.getName(file));
+								isLocalFile = true;
+
 							} else {
-								msg.append("     -> File "
-										+ file
-										+ " does not exist on local filesystem.\n");
-								fix.append("Please check ligand data file path: "
-										+ file);
-								parsingSuccessful = false;
+
+								if (localFile.getName().equals(file)) {
+									// means it can also be remote file in
+									// remote working
+									// dir...
+									if (StringUtils.isNotBlank(getWorkingDir())) {
+										file = getWorkingDir() + "/" + file;
+										isLocalFile = false;
+									} else {
+										isLocalFile = true;
+									}
+								} else {
+									isLocalFile = true;
+								}
+								if (isLocalFile) {
+									msg.append("     -> File "
+											+ file
+											+ " does not exist on local filesystem.\n");
+									fix.append("Please check ligand data file path: "
+											+ file);
+									parsingSuccessful = false;
+								}
 							}
 
 						} catch (URISyntaxException e) {
@@ -190,8 +210,11 @@ public class LigandDataFile extends AbstractGoldParameter {
 									+ file + "\n");
 							parsingSuccessful = false;
 							fix.append("   Please check url: " + file);
+							isLocalFile = true;
 						}
-					} else {
+					}
+
+					if (!isLocalFile) {
 						if (getFileManager().isFile(file)) {
 							msg.append("     -> File "
 									+ file

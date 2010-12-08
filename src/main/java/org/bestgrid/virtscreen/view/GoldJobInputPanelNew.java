@@ -254,8 +254,6 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 
 	public void parseConfig() {
 
-		getLigandFileSelectPanel().reset();
-
 		final String confUrl = getConfFileInput().getInputFileUrl();
 		getErrorLabel().setText("");
 
@@ -284,6 +282,9 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 						getDockingAmoungCombo().setGoldConfFile(goldConfFile);
 						checkValid = true;
 						lockUI(false);
+
+						getLigandFileSelectPanel().reset();
+
 					} catch (FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());

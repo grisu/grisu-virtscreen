@@ -91,6 +91,10 @@ public class GoldConfFile {
 		return this.url;
 	}
 
+	public String getConfFileDir() {
+		return parentUrl;
+	}
+
 	public String getDirectory() {
 		return getDirectoryObject().getValue();
 	}
@@ -264,7 +268,7 @@ public class GoldConfFile {
 				AbstractGoldParameter temp = i.next();
 				if (temp.isResponsibleForLine(line)) {
 					temp.setServiceInterface(si);
-					temp.init(line);
+					temp.init(line, parentUrl);
 					parameters.add(temp);
 					custom = true;
 					i.remove();
@@ -273,7 +277,7 @@ public class GoldConfFile {
 			}
 
 			if (!custom) {
-				parameters.add(new GenericGoldParameter(si, line));
+				parameters.add(new GenericGoldParameter(si, line, parentUrl));
 			}
 
 		}

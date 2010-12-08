@@ -75,6 +75,8 @@ public class ScoreParamFile extends AbstractGoldParameter {
 
 		getFilesToStageIn().clear();
 
+		boolean isLocalFile = false;
+
 		if (FileManager.isLocal(file)) {
 			try {
 				final File localFile = new File(new URI(
@@ -84,13 +86,32 @@ public class ScoreParamFile extends AbstractGoldParameter {
 							+ file
 							+ " exists on local filesystem. File will be uploaded when job is created.\n");
 					addFileToStageIn(file);
+					isLocalFile = true;
+
 				} else {
-					msg.append("     -> File "
-							+ file
-							+ " does not exist on local filesystem or is directory.\n");
-					fix.append("Please check or change score_param_file path: "
-							+ file);
-					parsingSuccessful = false;
+
+					if (localFile.getName().equals(file)) {
+						// means it can also be remote file in
+						// remote working
+						// dir...
+						if (StringUtils.isNotBlank(getWorkingDir())) {
+							file = getWorkingDir() + "/" + file;
+							isLocalFile = false;
+						} else {
+							isLocalFile = true;
+						}
+					} else {
+						isLocalFile = true;
+					}
+					if (isLocalFile) {
+
+						msg.append("     -> File "
+								+ file
+								+ " does not exist on local filesystem or is directory.\n");
+						fix.append("Please check or change score_param_file path: "
+								+ file);
+						parsingSuccessful = false;
+					}
 				}
 
 			} catch (URISyntaxException e) {
@@ -100,7 +121,8 @@ public class ScoreParamFile extends AbstractGoldParameter {
 				fix.append("   Please check url: " + file);
 
 			}
-		} else {
+		}
+		if (!isLocalFile) {
 			if (getFileManager().isFile(file)) {
 				msg.append("     -> File "
 						+ file

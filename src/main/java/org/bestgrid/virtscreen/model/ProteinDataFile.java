@@ -57,6 +57,8 @@ public class ProteinDataFile extends AbstractGoldParameter {
 
 	public void setProteinDataFile(String file) {
 
+		X.p("Setting file: " + file);
+
 		removeMessage("parse");
 
 		X.p("INPUT: " + file);
@@ -65,25 +67,43 @@ public class ProteinDataFile extends AbstractGoldParameter {
 		StringBuffer fix = new StringBuffer();
 
 		boolean parsingSuccessful = true;
-
+		boolean isLocalFile = false;
 		getFilesToStageIn().clear();
 
 		if (FileManager.isLocal(file)) {
 			try {
 				final File localFile = new File(new URI(
 						FileManager.ensureUriFormat(file)));
+
 				if (localFile.exists() && localFile.isFile()) {
 					msg.append("     -> File "
 							+ file
 							+ " exists on local filesystem. File will be uploaded when job is created.\n");
 					addFileToStageIn(file);
+					isLocalFile = true;
 				} else {
-					msg.append("     -> File "
-							+ file
-							+ " does not exist on local filesystem or is directory.\n");
-					fix.append("Please check or change protein data file path: "
-							+ file);
-					parsingSuccessful = false;
+					if (localFile.getName().equals(file)) {
+						// means it can also be remote file in remote working
+						// dir...
+						if (StringUtils.isNotBlank(getWorkingDir())) {
+							file = getWorkingDir() + "/" + file;
+							isLocalFile = false;
+						} else {
+							isLocalFile = true;
+						}
+					} else {
+						isLocalFile = true;
+					}
+
+					if (isLocalFile) {
+
+						msg.append("     -> File "
+								+ file
+								+ " does not exist on local filesystem or is directory.\n");
+						fix.append("Please check or change protein data file path: "
+								+ file);
+						parsingSuccessful = false;
+					}
 				}
 
 			} catch (URISyntaxException e) {
@@ -91,9 +111,11 @@ public class ProteinDataFile extends AbstractGoldParameter {
 						+ "\n");
 				parsingSuccessful = false;
 				fix.append("   Please check url: " + file);
+				isLocalFile = true;
 
 			}
-		} else {
+		}
+		if (!isLocalFile) {
 			if (getFileManager().isFile(file)) {
 				msg.append("     -> File "
 						+ file

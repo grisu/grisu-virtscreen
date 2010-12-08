@@ -5,9 +5,10 @@ import org.vpac.grisu.control.ServiceInterface;
 
 public class GenericGoldParameter extends AbstractGoldParameter {
 
-	public GenericGoldParameter(ServiceInterface si, String configLine) {
+	public GenericGoldParameter(ServiceInterface si, String configLine,
+			String parentUrl) {
 		super();
-		init(configLine);
+		init(configLine, parentUrl);
 		setServiceInterface(si);
 	}
 
