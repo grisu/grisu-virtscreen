@@ -18,7 +18,6 @@ import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
-import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
@@ -317,8 +316,6 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		// // TODO Auto-generated method stub
 		// setParseResult((Boolean) evt.getNewValue(),
 		// currentConfFile.getLogMessage(), currentConfFile.getFixes());
-
-		X.p("Property changed.");
 		boolean success = goldConfFile.isValid();
 
 		String msg = goldConfFile.getParseMessages();
@@ -326,7 +323,6 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		String fixes = goldConfFile.getFixes();
 
 		setParseResult(success, msg, fixes);
-		X.p("Success: " + success);
 		getBtnSubmit().setEnabled(success);
 
 	}

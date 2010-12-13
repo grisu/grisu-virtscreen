@@ -11,7 +11,6 @@ import javax.swing.border.TitledBorder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.GoldConfFile;
-import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
@@ -106,9 +105,6 @@ public class AdvancedLibrarySelectPanel extends AbstractWidget {
 	}
 
 	public void reset() {
-
-		X.p("LIGAND: "
-				+ StringUtils.join(this.confFile.getLigandDataFiles(), ","));
 
 		boolean found = true;
 		for (String s : getGoldLibrarySelectPanel().getSelectedLibraryFiles()) {

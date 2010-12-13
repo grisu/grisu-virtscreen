@@ -1,8 +1,6 @@
 package org.bestgrid.virtscreen.model.old;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.model.FileManager;
@@ -26,13 +24,11 @@ public class LigandFiles {
 	}
 
 	public String[] getRemotePaths() {
-		X.p("REMOTE PATH: " + StringUtils.join(this.remoteFiles));
 		return this.remoteFiles;
 	}
 
 	public String[] getRemoteUrls() {
 
-		X.p("FILES OUTPUT: " + StringUtils.join(this.remoteUrls, ","));
 		return this.remoteUrls;
 	}
 
@@ -49,8 +45,6 @@ public class LigandFiles {
 	}
 
 	public void setFiles(String[] files) {
-
-		X.p("FILES INPUT: " + StringUtils.join(files, ","));
 
 		this.origFiles = files;
 		this.remoteFiles = new String[files.length];

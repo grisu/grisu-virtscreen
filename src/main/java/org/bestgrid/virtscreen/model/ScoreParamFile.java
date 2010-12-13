@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.X;
 import org.vpac.grisu.model.FileManager;
 
 public class ScoreParamFile extends AbstractGoldParameter {
@@ -65,8 +64,6 @@ public class ScoreParamFile extends AbstractGoldParameter {
 					+ "\" as score_parm_file value.");
 			return;
 		}
-
-		X.p("INPUT: " + file);
 
 		StringBuffer msg = new StringBuffer();
 		StringBuffer fix = new StringBuffer();

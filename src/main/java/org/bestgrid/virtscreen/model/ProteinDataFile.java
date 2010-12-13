@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.X;
 import org.vpac.grisu.model.FileManager;
 
 public class ProteinDataFile extends AbstractGoldParameter {
@@ -57,11 +56,7 @@ public class ProteinDataFile extends AbstractGoldParameter {
 
 	public void setProteinDataFile(String file) {
 
-		X.p("Setting file: " + file);
-
 		removeMessage("parse");
-
-		X.p("INPUT: " + file);
 
 		StringBuffer msg = new StringBuffer();
 		StringBuffer fix = new StringBuffer();
