@@ -81,7 +81,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile p = new GridFile(
 				"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 		p.setIsVirtual(false);
-		p.setName("Personal files");
+		p.setName("Personal remote files");
 		p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 
 		GridFile f = new GridFile(
