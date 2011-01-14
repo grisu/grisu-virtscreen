@@ -88,7 +88,7 @@ public class Gold extends AppSpecificViewerPanel {
 		size = size - 520L;
 		Integer ligands = new Double(size / 117.5).intValue();
 		getTextField().setText(ligands.toString());
-		getProgressBar().setValue(ligands);
+		// getProgressBar().setValue(ligands);
 
 	}
 
@@ -109,8 +109,8 @@ public class Gold extends AppSpecificViewerPanel {
 	private JProgressBar getProgressBar() {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
-			progressBar.setMinimum(0);
-			progressBar.setMaximum(20000);
+			// progressBar.setMinimum(0);
+			// progressBar.setMaximum(20000);
 			// progressBar.setMaximum(20);
 		}
 		return progressBar;
@@ -159,11 +159,13 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	void jobFinished() {
 		updateProgress();
+		getProgressBar().setIndeterminate(false);
 	}
 
 	@Override
 	public void jobStarted() {
 		updateProgress();
+		getProgressBar().setIndeterminate(true);
 	}
 
 	@Override
