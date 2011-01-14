@@ -230,7 +230,7 @@ public class GoldJobInputPanel extends JPanel implements JobCreationPanel,
 				getBtnSubmit().setEnabled(!lock);
 				getBtnRefresh().setEnabled(!lock);
 				for (AbstractWidget w : widgets) {
-					w.lockIUI(lock);
+					w.lockUI(lock);
 				}
 			}
 		});

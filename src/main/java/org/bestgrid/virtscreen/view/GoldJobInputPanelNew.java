@@ -18,6 +18,7 @@ import org.bestgrid.virtscreen.model.GoldConfFile;
 import org.bestgrid.virtscreen.model.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
@@ -244,7 +245,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 				}
 				getBtnRefresh().setEnabled(!lock);
 				for (AbstractWidget w : widgets) {
-					w.lockIUI(lock);
+					w.lockUI(lock);
 				}
 			}
 		});
@@ -260,6 +261,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 			setParseResult(false, "No .conf file specified.",
 					"Select .conf file.");
 			getBtnRefresh().setEnabled(false);
+			getBtnSubmit().setEnabled(false);
 		} else {
 			final StringBuffer logMessage = new StringBuffer(
 					"Parse log:\n\nLoading conf file...\n");
@@ -273,13 +275,13 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 				@Override
 				public void run() {
 					try {
-						boolean checkValid = false;
+						// boolean checkValid = false;
 						goldConfFile.setConfFile(confUrl);
 
 						getLigandFileSelectPanel()
 								.setGoldConfFile(goldConfFile);
 						getDockingAmoungCombo().setGoldConfFile(goldConfFile);
-						checkValid = true;
+						// checkValid = true;
 						lockUI(false);
 
 						getLigandFileSelectPanel().reset();
@@ -324,6 +326,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 
 		setParseResult(success, msg, fixes);
 		getBtnSubmit().setEnabled(success);
+		X.p("Property change: " + success);
 
 	}
 
@@ -394,6 +397,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 						w.saveItemToHistory();
 					}
 					getConfFileInput().setInputFile(null);
+					getLigandFileSelectPanel().setGoldConfFile(null);
 				} catch (Exception e) {
 					String message = "\nJob creation / submission failed: "
 							+ e.getLocalizedMessage() + "\n";
@@ -402,8 +406,16 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 					getSubmissionLogPanel().appendMessage(message);
 				} finally {
 					lockUI(false);
-					getBtnSubmit().setEnabled(false);
-					getBtnRefresh().setEnabled(false);
+					SwingUtilities.invokeLater(new Thread() {
+						@Override
+						public void run() {
+							getBtnSubmit().setEnabled(false);
+							getBtnRefresh().setEnabled(false);
+							getLigandFileSelectPanel().lockUI(true);
+							getDockingAmoungCombo().lockUI(true);
+						}
+					});
+
 				}
 			}
 		}.start();

@@ -104,6 +104,14 @@ public class AdvancedLibrarySelectPanel extends AbstractWidget {
 		return null;
 	}
 
+	@Override
+	public void lockUI(final boolean lock) {
+
+		getGoldLibrarySelectPanel().lockUI(lock);
+		getLigandFileInputFile().lockUI(lock);
+		getChckbxAdvancedSelection().setEnabled(!lock);
+	}
+
 	public void reset() {
 
 		boolean found = true;
