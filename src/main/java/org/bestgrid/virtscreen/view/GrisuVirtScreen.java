@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.vpac.grisu.control.ServiceInterface;
+import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.GrisuApplicationWindow;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import org.vpac.grisu.model.GrisuRegistryManager;
@@ -78,24 +79,45 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	@Override
 	protected void initOptionalStuff(ServiceInterface si) {
 
-		GridFile p = new GridFile(
-				"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-		p.setIsVirtual(false);
-		p.setName("Personal remote files");
-		p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		GridFile p = null;
+		try {
+			p = GrisuRegistryManager
+					.getDefault(si)
+					.getFileManager()
+					.createGridFile(
+							"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+			p.setName("Personal remote files");
+		} catch (RemoteFileSystemException e) {
+			e.printStackTrace();
+			// p = new GridFile(
+			// "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+			// p.setIsVirtual(false);
+			// p.setName("Personal remote files");
+			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		}
+		GridFile f = null;
+		try {
+			f = GrisuRegistryManager
+					.getDefault(si)
+					.getFileManager()
+					.createGridFile(
+							"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+			f.setName("Drug_discovery");
+		} catch (RemoteFileSystemException e) {
+			e.printStackTrace();
+			// f = new GridFile("grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+			//
+			// f.setIsVirtual(true);
+			// f.setPath(f.getUrl());
+		}
 
-		GridFile f = new GridFile(
-				"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
-
-		f.setIsVirtual(true);
-		f.setPath(f.getUrl());
 		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
 				.getLocalRoot();
 		List<GridFile> files = new LinkedList<GridFile>();
 		files.add(p);
 		files.add(f);
 		files.add(l);
-
+		//
 		GrisuRegistryManager.getDefault(si).set(VIRTSCREEN_ROOTS, files);
 		addGroupFileListPanel(files, files);
 
