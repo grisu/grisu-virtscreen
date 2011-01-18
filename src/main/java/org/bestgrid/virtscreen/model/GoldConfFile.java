@@ -52,7 +52,8 @@ public class GoldConfFile {
 
 	private ScoreParamFile scoreParamFile = null;
 
-	private final Set<AbstractGoldParameter> customparameters = new HashSet<AbstractGoldParameter>();
+	private final Set<AbstractGoldParameter> customparameters = Collections
+			.synchronizedSet(new HashSet<AbstractGoldParameter>());
 
 	// internal variables
 	private final ServiceInterface si;
