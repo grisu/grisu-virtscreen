@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,7 +64,8 @@ public class GoldConfFile {
 	private File templateFile;
 
 	private List<String> configLines;
-	private final List<AbstractGoldParameter> parameters = new LinkedList<AbstractGoldParameter>();
+	private final List<AbstractGoldParameter> parameters = Collections
+			.synchronizedList(new LinkedList<AbstractGoldParameter>());
 
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 

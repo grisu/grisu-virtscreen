@@ -65,7 +65,12 @@ public class ProteinDataFile extends AbstractGoldParameter {
 		boolean isLocalFile = false;
 		getFilesToStageIn().clear();
 
+		if (!file.contains("/") && !file.contains("\\")) {
+			file = getWorkingDir() + file;
+		}
+
 		if (FileManager.isLocal(file)) {
+
 			try {
 				final File localFile = new File(new URI(
 						FileManager.ensureUriFormat(file)));
