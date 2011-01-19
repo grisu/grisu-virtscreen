@@ -169,8 +169,13 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		String[] ligandFiles = confFile.getLigandDataFiles();
 
 		if (useComboBox) {
-			// only use first one...
-			if (ligandFiles.length > 0) {
+			if (ligandFiles.length == 0) {
+				if (ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0) {
+					ligandModelCombo.addElement(N_A_MESSAGE);
+				}
+				ligandModelCombo.setSelectedItem(N_A_MESSAGE);
+			} else {
+				// only use first one...
 				String lib = FileManager.getFilename(ligandFiles[0]);
 				if (ligandModelCombo.getIndexOf(lib) < 0) {
 					if (ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0) {

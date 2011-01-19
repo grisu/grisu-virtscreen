@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.vpac.grisu.X;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.model.FileManager;
 import org.vpac.grisu.model.dto.GridFile;
@@ -25,19 +26,47 @@ public class LigandDataFile extends AbstractGoldParameter {
 	public static final String LIGAND_PARAMETER_NAME = "ligand_data_file";
 
 	public static int getLigandDockingAmount(String configLine) {
+		X.p(configLine);
 		String[] temp = configLine.split("\\s");
 		String temp2 = temp[temp.length - 1];
+
+		if (temp.length == 0) {
+			return 1;
+		}
+
+		if (temp.length == 1) {
+			try {
+				int n = Integer.parseInt(temp[0]);
+				return n;
+			} catch (NumberFormatException e) {
+				return 1;
+			}
+		}
+
 		try {
 			return Integer.parseInt(temp2);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return -1;
+			return 1;
 		}
 	}
 
 	public static String[] getLigandFiles(String configLine) {
 		String[] temp = configLine.substring(LIGAND_PARAMETER_NAME.length())
 				.trim().split("\\s");
+
+		if (temp.length == 0) {
+			return new String[] {};
+		}
+
+		if (temp.length == 1) {
+
+			try {
+				Integer.parseInt(temp[0]);
+				return new String[] {};
+			} catch (NumberFormatException e) {
+				return new String[] { temp[0] };
+			}
+		}
 
 		return Arrays.copyOf(temp, temp.length - 1);
 	}
