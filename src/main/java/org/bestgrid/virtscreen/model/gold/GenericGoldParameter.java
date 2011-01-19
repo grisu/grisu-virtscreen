@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.model;
+package org.bestgrid.virtscreen.model.gold;
 
 import org.apache.commons.lang.StringUtils;
 import org.vpac.grisu.control.ServiceInterface;

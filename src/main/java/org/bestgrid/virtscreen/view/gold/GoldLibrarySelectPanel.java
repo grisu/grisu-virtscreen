@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -12,8 +12,8 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile;
-import org.bestgrid.virtscreen.model.old.LigandFiles;
+import org.bestgrid.virtscreen.model.gold.GoldConfFile;
+import org.bestgrid.virtscreen.model.gold.LigandDataFile;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
@@ -215,7 +215,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 
 		try {
 			allLigands = getFileManager().listAllChildrenFilesOfRemoteFolder(
-					LigandFiles.VS_LIBRARY_FILES_URL);
+					LigandDataFile.VS_LIBRARY_FILES_URL);
 			if (useComboBox) {
 				ligandModelCombo.removeAllElements();
 				for (String ligand : allLigands) {

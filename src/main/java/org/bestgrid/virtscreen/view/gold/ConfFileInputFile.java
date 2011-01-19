@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
 
 import java.util.List;
 

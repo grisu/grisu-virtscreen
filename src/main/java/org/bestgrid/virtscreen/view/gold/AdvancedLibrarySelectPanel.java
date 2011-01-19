@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
 
 import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
@@ -10,7 +10,7 @@ import javax.swing.border.TitledBorder;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;

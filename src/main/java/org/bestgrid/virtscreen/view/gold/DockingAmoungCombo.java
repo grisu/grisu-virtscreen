@@ -1,11 +1,11 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
 
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.bestgrid.virtscreen.model.GoldConfFile;
+import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 
 import com.jgoodies.forms.factories.FormFactory;

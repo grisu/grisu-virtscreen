@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
 
 import org.netbeans.validation.api.Problems;
 import org.netbeans.validation.api.Validator;

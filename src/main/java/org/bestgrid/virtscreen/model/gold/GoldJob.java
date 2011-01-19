@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.model;
+package org.bestgrid.virtscreen.model.gold;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.bestgrid.virtscreen.model.old.GoldConfFile.PARAMETER;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.JobPropertiesException;
 import org.vpac.grisu.control.exceptions.JobSubmissionException;
@@ -95,8 +94,7 @@ public class GoldJob {
 		String conc = this.goldConfFile.getConcatenatedOutput();
 
 		additionalJobProperties.put("result_directory", dir);
-		additionalJobProperties.put(PARAMETER.concatenated_output.toString(),
-				conc);
+		additionalJobProperties.put("concatenated_output", conc);
 
 		try {
 			job.submitJob(additionalJobProperties);

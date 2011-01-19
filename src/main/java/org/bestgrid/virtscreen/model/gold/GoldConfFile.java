@@ -1,4 +1,4 @@
-package org.bestgrid.virtscreen.model;
+package org.bestgrid.virtscreen.model.gold;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
