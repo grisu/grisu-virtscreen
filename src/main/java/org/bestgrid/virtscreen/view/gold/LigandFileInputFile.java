@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
+import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
 import org.vpac.grisu.model.GrisuRegistryManager;

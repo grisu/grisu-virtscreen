@@ -1,9 +1,10 @@
-package org.bestgrid.virtscreen.view.gold;
+package org.bestgrid.virtscreen.view;
 
 import java.awt.EventQueue;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
 import org.vpac.grisu.frontend.view.swing.GrisuApplicationWindow;
