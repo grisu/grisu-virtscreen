@@ -1,5 +1,7 @@
 package org.bestgrid.virtscreen.view;
 
+import grith.jgrith.Init;
+
 import java.awt.EventQueue;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +14,6 @@ import org.vpac.grisu.frontend.view.swing.GrisuApplicationWindow;
 import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import org.vpac.grisu.model.GrisuRegistryManager;
 import org.vpac.grisu.model.dto.GridFile;
-import org.vpac.security.light.Init;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 
