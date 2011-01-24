@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
@@ -23,6 +24,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	public static void main(String[] args) {
 
 		Init.initBouncyCastle();
+
+		VirtScreenEnvironment.init();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
