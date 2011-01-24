@@ -1,10 +1,8 @@
 package org.bestgrid.virtscreen.model.szybki;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.vpac.grisu.control.ServiceInterface;
 import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
 import org.vpac.grisu.model.FileManager;
@@ -28,20 +26,23 @@ public class SzybkiInputFile {
 
 	public File getJobConfFile() {
 
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File newConfFile = new File(tmpDir, templateFile.getName());
+		// File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		// File newConfFile = new File(tmpDir, templateFile.getName());
+		//
+		// newConfFile.delete();
+		// newConfFile.deleteOnExit();
+		//
+		// try {
+		// FileUtils.writeLines(newConfFile,
+		// SzybkiParameter.createSyzbkiParamFileContent(parameters));
+		// } catch (IOException e) {
+		// throw new RuntimeException(e);
+		// }
+		//
+		// return newConfFile;
 
-		newConfFile.delete();
-		newConfFile.deleteOnExit();
+		return templateFile;
 
-		try {
-			FileUtils.writeLines(newConfFile,
-					SzybkiParameter.createSyzbkiParamFileContent(parameters));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		return newConfFile;
 	}
 
 	public String getName() {

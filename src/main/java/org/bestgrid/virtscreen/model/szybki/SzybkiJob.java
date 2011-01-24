@@ -58,7 +58,7 @@ public class SzybkiJob {
 				.getName()));
 		job.setApplication("szybki");
 		job.setApplicationVersion("1.3.4");
-		job.setSubmissionLocation("gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
+		job.setSubmissionLocation("szybki@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
 		job.setCommandline("sh szybki " + this.szybkiInputFile.getName());
 		job.setCpus(this.cpus);
