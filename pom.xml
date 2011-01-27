@@ -6,7 +6,7 @@
 	<artifactId>grisu-virtscreen</artifactId>
 	<packaging>jar</packaging>
 	<version>0.4.2-SNAPSHOT</version>
-	<name>a grisu client</name>
+	<name>A Grid client to support high troughput virtual screening.</name>
 
 	<repositories>
 		<repository>
@@ -42,7 +42,7 @@
 	</scm>
 
 	<properties>
-		<grisu.version>0.3-beta4-SNAPSHOT</grisu.version>
+		<grisu.version>0.3-beta5-SNAPSHOT</grisu.version>
 	</properties>
 
 
@@ -50,7 +50,7 @@
 
 		<!-- the main grisu dependency. -->
 		<dependency>
-			<groupId>org.vpac.grisu</groupId>
+			<groupId>grisu.frontend</groupId>
 			<artifactId>grisu-client-swing</artifactId>
 			<version>${grisu.version}</version>
 			<type>jar</type>
