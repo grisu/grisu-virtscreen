@@ -1,5 +1,10 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.X;
+import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.model.FileManager;
+import grisu.model.dto.GridFile;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,10 +15,6 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.vpac.grisu.X;
-import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
-import org.vpac.grisu.model.FileManager;
-import org.vpac.grisu.model.dto.GridFile;
 
 public class LigandDataFile extends AbstractGoldParameter {
 

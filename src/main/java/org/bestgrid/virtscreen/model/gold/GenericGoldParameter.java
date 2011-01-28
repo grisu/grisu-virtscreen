@@ -1,7 +1,8 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.control.ServiceInterface;
+
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.control.ServiceInterface;
 
 public class GenericGoldParameter extends AbstractGoldParameter {
 

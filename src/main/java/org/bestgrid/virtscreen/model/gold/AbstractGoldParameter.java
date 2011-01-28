@@ -1,14 +1,15 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.model.FileManager;
+import grisu.model.GrisuRegistryManager;
+
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.model.FileManager;
-import org.vpac.grisu.model.GrisuRegistryManager;
 
 public abstract class AbstractGoldParameter {
 

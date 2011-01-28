@@ -1,4 +1,7 @@
-package org.vpac.grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
+package grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
+
+import grisu.control.ServiceInterface;
+import grisu.frontend.view.swing.jobmonitoring.single.appSpecific.AppSpecificViewerPanel;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -12,7 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.control.ServiceInterface;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;

@@ -1,5 +1,11 @@
 package org.bestgrid.virtscreen.view;
 
+import grisu.control.ServiceInterface;
+import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.frontend.view.swing.GrisuApplicationWindow;
+import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
+import grisu.model.GrisuRegistryManager;
+import grisu.model.dto.GridFile;
 import grith.jgrith.Init;
 
 import java.awt.EventQueue;
@@ -8,12 +14,6 @@ import java.util.List;
 
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
-import org.vpac.grisu.frontend.view.swing.GrisuApplicationWindow;
-import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
-import org.vpac.grisu.model.GrisuRegistryManager;
-import org.vpac.grisu.model.dto.GridFile;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 

@@ -1,12 +1,13 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.model.FileManager;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.model.FileManager;
 
 public class ProteinDataFile extends AbstractGoldParameter {
 

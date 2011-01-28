@@ -1,10 +1,11 @@
 package org.bestgrid.virtscreen.view.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.model.FileManager;
+import grisu.model.GrisuRegistryManager;
+
 import org.netbeans.validation.api.Problems;
 import org.netbeans.validation.api.Validator;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.model.FileManager;
-import org.vpac.grisu.model.GrisuRegistryManager;
 
 public class FileExistsInGridspaceOrLocal implements Validator<String> {
 

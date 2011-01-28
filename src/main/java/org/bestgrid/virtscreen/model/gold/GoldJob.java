@@ -1,17 +1,18 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.control.exceptions.JobPropertiesException;
+import grisu.control.exceptions.JobSubmissionException;
+import grisu.frontend.control.clientexceptions.FileTransactionException;
+import grisu.frontend.control.jobMonitoring.RunningJobManager;
+import grisu.frontend.model.job.JobObject;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.control.exceptions.JobPropertiesException;
-import org.vpac.grisu.control.exceptions.JobSubmissionException;
-import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
-import org.vpac.grisu.frontend.control.jobMonitoring.RunningJobManager;
-import org.vpac.grisu.frontend.model.job.JobObject;
 
 public class GoldJob {
 

@@ -1,13 +1,14 @@
 package org.bestgrid.virtscreen.view.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
+import grisu.model.GrisuRegistryManager;
+import grisu.model.dto.GridFile;
+
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
-import org.vpac.grisu.model.GrisuRegistryManager;
-import org.vpac.grisu.model.dto.GridFile;
 
 public class ConfFileInputFile extends SingleInputGridFile {
 

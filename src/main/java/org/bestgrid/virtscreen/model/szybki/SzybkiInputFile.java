@@ -1,12 +1,13 @@
 package org.bestgrid.virtscreen.model.szybki;
 
+import grisu.control.ServiceInterface;
+import grisu.frontend.control.clientexceptions.FileTransactionException;
+import grisu.model.FileManager;
+import grisu.model.GrisuRegistryManager;
+
 import java.io.File;
 import java.util.List;
 
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
-import org.vpac.grisu.model.FileManager;
-import org.vpac.grisu.model.GrisuRegistryManager;
 
 public class SzybkiInputFile {
 

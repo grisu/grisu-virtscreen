@@ -1,5 +1,10 @@
 package org.bestgrid.virtscreen.view.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
+import grisu.model.FileManager;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
@@ -14,10 +19,6 @@ import javax.swing.JScrollPane;
 import org.apache.commons.lang.ArrayUtils;
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.bestgrid.virtscreen.model.gold.LigandDataFile;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
-import org.vpac.grisu.model.FileManager;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;

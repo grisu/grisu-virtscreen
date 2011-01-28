@@ -1,5 +1,12 @@
 package org.bestgrid.virtscreen.model.gold;
 
+import grisu.X;
+import grisu.control.ServiceInterface;
+import grisu.frontend.control.clientexceptions.FileTransactionException;
+import grisu.frontend.control.login.LoginManager;
+import grisu.model.FileManager;
+import grisu.model.GrisuRegistryManager;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -13,12 +20,6 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.X;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
-import org.vpac.grisu.frontend.control.login.LoginManager;
-import org.vpac.grisu.model.FileManager;
-import org.vpac.grisu.model.GrisuRegistryManager;
 
 public class GoldConfFile {
 

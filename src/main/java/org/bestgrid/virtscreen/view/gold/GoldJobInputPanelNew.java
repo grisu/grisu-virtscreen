@@ -1,5 +1,15 @@
 package org.bestgrid.virtscreen.view.gold;
 
+import grisu.control.ServiceInterface;
+import grisu.frontend.control.clientexceptions.FileTransactionException;
+import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
+import grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
+import grisu.frontend.view.swing.jobcreation.widgets.Cpus;
+import grisu.frontend.view.swing.jobcreation.widgets.Email;
+import grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
+import grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
+import grisu.frontend.view.swing.jobcreation.widgets.Walltime;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,15 +28,6 @@ import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.bestgrid.virtscreen.model.gold.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.ValidationPanel;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.frontend.control.clientexceptions.FileTransactionException;
-import org.vpac.grisu.frontend.view.swing.jobcreation.JobCreationPanel;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Cpus;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Email;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.Walltime;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;

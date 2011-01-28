@@ -80,7 +80,7 @@
 			if not needed and you want a smaller assembly -->
 		<!-- the grisu-core dependency is needed when you want to connect to a 
 			local backend (which is the only supported backend for grisu 0.3 at the moment -->
-		<!-- <dependency> <groupId>org.vpac.grisu</groupId> <artifactId>grisu-core</artifactId> 
+		<!-- <dependency> <groupId>grisu</groupId> <artifactId>grisu-core</artifactId> 
 			<version>0.3-SNAPSHOT</version> <type>jar</type> <scope>compile</scope> </dependency> -->
 		<!-- this is needed for shibboleth login don't disable it for now even 
 			if you don't want to use shibboleth, I reckon you'll get classpath errors -->

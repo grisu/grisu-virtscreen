@@ -1,5 +1,7 @@
 package org.bestgrid.virtscreen.control;
 
+import grisu.settings.Environment;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -7,7 +9,6 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.bestgrid.virtscreen.model.gold.GoldJob;
 import org.bestgrid.virtscreen.model.szybki.SzybkiJob;
-import org.vpac.grisu.settings.Environment;
 
 public class VirtScreenEnvironment {
 
