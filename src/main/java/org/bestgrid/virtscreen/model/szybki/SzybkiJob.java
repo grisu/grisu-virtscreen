@@ -17,10 +17,10 @@ import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 public class SzybkiJob {
 
 	public static final File SZYBKI_JOB_CONTROL_SCRIPT = new File(
-			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "gold.sh");
+			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "szybki.sh");
 
 	public static final File SZYBKI_HELPER_PY_SCRIPT = new File(
-			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "gold.py");
+			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "szybki.py");
 
 	public static void main(String[] args) throws Exception {
 
@@ -53,7 +53,7 @@ public class SzybkiJob {
 	}
 
 	public void createAndSubmitJob() throws JobSubmissionException,
-			JobPropertiesException {
+	JobPropertiesException {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(szybkiInputFile
 				.getName()));
@@ -77,7 +77,7 @@ public class SzybkiJob {
 		// }
 
 		RunningJobManager.getDefault(si).createJob(job,
-				"/ARCS/BeSTGRID/Drug_discovery/Local");
+		"/ARCS/BeSTGRID/Drug_discovery/Local");
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
