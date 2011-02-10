@@ -1,10 +1,13 @@
-package org.vpac.grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
+package grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
+
+import grisu.control.ServiceInterface;
+import grisu.frontend.view.swing.jobmonitoring.single.appSpecific.AppSpecificViewerPanel;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.util.TimerTask;
-
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -12,8 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
-import org.vpac.grisu.control.ServiceInterface;
-
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -51,6 +52,7 @@ public class Gold extends AppSpecificViewerPanel {
 
 	private JTextField textField;
 	private String goldFilePath = null;
+	private JButton btnArchive;
 
 	public Gold(ServiceInterface si) {
 		super(si);
@@ -70,7 +72,7 @@ public class Gold extends AppSpecificViewerPanel {
 		add(getProgressBar(), "2, 4, 3, 1");
 		add(getLabel_1(), "2, 6, right, default");
 		add(getTextField(), "4, 6, fill, default");
-		// TODO Auto-generated constructor stub
+		// add(getBtnArchive(), "4, 10, right, top");
 	}
 
 	private void calculateCurrentLigandNo() {
@@ -88,9 +90,65 @@ public class Gold extends AppSpecificViewerPanel {
 		size = size - 520L;
 		Integer ligands = new Double(size / 117.5).intValue();
 		getTextField().setText(ligands.toString());
-		getProgressBar().setValue(ligands);
+		// getProgressBar().setValue(ligands);
 
 	}
+
+	// private JButton getBtnArchive() {
+	// if (btnArchive == null) {
+	// btnArchive = new JButton("Archive");
+	// btnArchive.setEnabled(false);
+	// btnArchive.addActionListener(new ActionListener() {
+	// public void actionPerformed(ActionEvent e) {
+	//
+	// new Thread() {
+	// @Override
+	// public void run() {
+	// try {
+	//
+	// getBtnArchive().setEnabled(false);
+	//
+	// BackgroundActionProgressDialogSmall d = new
+	// BackgroundActionProgressDialogSmall(
+	// "Archiving job:", getJob().getJobname());
+	// getJob().archive(null, true);
+	// d.close();
+	//
+	// } catch (JobPropertiesException e1) {
+	// ErrorInfo info = new ErrorInfo(
+	// "Job archive error",
+	// "Can't archive job:\n\n"
+	// + e1.getLocalizedMessage(),
+	// null, "Error", e1, Level.SEVERE, null);
+	//
+	// JXErrorPane pane = new JXErrorPane();
+	// pane.setErrorInfo(info);
+	//
+	// JXErrorPane.showDialog(Gold.this.getRootPane(),
+	// pane);
+	// getBtnArchive().setEnabled(true);
+	// } catch (RemoteFileSystemException e1) {
+	// ErrorInfo info = new ErrorInfo(
+	// "Job archive error",
+	// "Can't archive job:\n\n"
+	// + e1.getLocalizedMessage(),
+	// null, "Error", e1, Level.SEVERE, null);
+	//
+	// JXErrorPane pane = new JXErrorPane();
+	// pane.setErrorInfo(info);
+	//
+	// JXErrorPane.showDialog(Gold.this.getRootPane(),
+	// pane);
+	// getBtnArchive().setEnabled(true);
+	// }
+	// }
+	// }.start();
+	//
+	// }
+	// });
+	// }
+	// return btnArchive;
+	// }
 
 	private JLabel getLabel() {
 		if (label == null) {
@@ -109,22 +167,11 @@ public class Gold extends AppSpecificViewerPanel {
 	private JProgressBar getProgressBar() {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
-			progressBar.setMinimum(0);
-			progressBar.setMaximum(20000);
+			// progressBar.setMinimum(0);
+			// progressBar.setMaximum(20000);
 			// progressBar.setMaximum(20);
 		}
 		return progressBar;
-	}
-
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setHorizontalAlignment(SwingConstants.CENTER);
-			textField.setEditable(false);
-			textField.setColumns(10);
-			textField.setText("n/a");
-		}
-		return textField;
 	}
 
 	// private void downloadAndDisplayMolecules() {
@@ -149,6 +196,17 @@ public class Gold extends AppSpecificViewerPanel {
 	//
 	// }
 
+	private JTextField getTextField() {
+		if (textField == null) {
+			textField = new JTextField();
+			textField.setHorizontalAlignment(SwingConstants.CENTER);
+			textField.setEditable(false);
+			textField.setColumns(10);
+			textField.setText("n/a");
+		}
+		return textField;
+	}
+
 	@Override
 	public void initialize() {
 
@@ -159,11 +217,14 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	void jobFinished() {
 		updateProgress();
+		getProgressBar().setIndeterminate(false);
+		// getBtnArchive().setEnabled(true);
 	}
 
 	@Override
 	public void jobStarted() {
 		updateProgress();
+		getProgressBar().setIndeterminate(true);
 	}
 
 	@Override

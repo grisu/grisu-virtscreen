@@ -1,4 +1,9 @@
-package org.bestgrid.virtscreen.view;
+package org.bestgrid.virtscreen.view.gold;
+
+import grisu.control.ServiceInterface;
+import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
+import grisu.model.FileManager;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -10,15 +15,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.bestgrid.virtscreen.model.GoldConfFile;
-import org.bestgrid.virtscreen.model.LigandFiles;
-import org.vpac.grisu.control.ServiceInterface;
-import org.vpac.grisu.control.exceptions.RemoteFileSystemException;
-import org.vpac.grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
-import org.vpac.grisu.model.FileManager;
+import org.bestgrid.virtscreen.model.gold.GoldConfFile;
+import org.bestgrid.virtscreen.model.gold.LigandDataFile;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -62,7 +62,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 						if (confFile == null) {
 							return;
 						}
-						confFile.setCostumLigandDataFiles(new String[] { (String) e
+						confFile.setLigandDataFiles(new String[] { (String) e
 								.getItem() });
 					}
 				}
@@ -76,12 +76,12 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			combo = null;
 		}
 
-		String title = "Library";
-		if (!useCombo) {
-			title = "Libraries";
-		}
-		setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
+		// String title = "Library";
+		// if (!useCombo) {
+		// title = "Libraries";
+		// }
+		// setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
+		// TitledBorder.TOP, null, null));
 
 		if (useComboBox) {
 			setLayout(new FormLayout(new ColumnSpec[] {
@@ -109,14 +109,50 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 
 	}
 
-	@Override
-	public void setValue(String value) {
-		// TODO Auto-generated method stub
+	private JComboBox getComboBox_1() {
+		if (comboBox_1 == null) {
+			comboBox_1 = new JComboBox();
+		}
+		return comboBox_1;
+	}
 
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			// scrollPane.setViewportView(getComboBox_1());
+
+			if (useComboBox) {
+				scrollPane.setViewportView(combo);
+			} else {
+				scrollPane.setViewportView(list);
+			}
+		}
+		return scrollPane;
+	}
+
+	public String[] getSelectedLibraryFiles() {
+
+		if (useComboBox) {
+			String libFile = (String) combo.getSelectedItem();
+			return new String[] { libFile };
+		} else {
+			Object[] o = list.getSelectedValues();
+			String[] result = new String[o.length];
+			for (int i = 0; i < o.length; i++) {
+				result[i] = (String) o[i];
+			}
+			return result;
+		}
+	}
+
+	@Override
+	public String getValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void loadLibraries() {
-		if (confFile == null || getServiceInterface() == null) {
+		if ((confFile == null) || (getServiceInterface() == null)) {
 			if (useComboBox) {
 				combo.setEnabled(false);
 			} else {
@@ -131,11 +167,16 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			list.setEnabled(true);
 		}
 
-		String[] ligandFiles = confFile.getLigandUrls();
+		String[] ligandFiles = confFile.getLigandDataFiles();
 
 		if (useComboBox) {
-			// only use first one...
-			if (ligandFiles.length > 0) {
+			if (ligandFiles.length == 0) {
+				if (ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0) {
+					ligandModelCombo.addElement(N_A_MESSAGE);
+				}
+				ligandModelCombo.setSelectedItem(N_A_MESSAGE);
+			} else {
+				// only use first one...
 				String lib = FileManager.getFilename(ligandFiles[0]);
 				if (ligandModelCombo.getIndexOf(lib) < 0) {
 					if (ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0) {
@@ -163,19 +204,9 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		}
 	}
 
-	public String[] getSelectedLibraryFiles() {
-
-		if (useComboBox) {
-			String libFile = (String) combo.getSelectedItem();
-			return new String[] { libFile };
-		} else {
-			Object[] o = list.getSelectedValues();
-			String[] result = new String[o.length];
-			for (int i = 0; i < o.length; i++) {
-				result[i] = (String) o[i];
-			}
-			return result;
-		}
+	public void setGoldConfFile(GoldConfFile confFile) {
+		this.confFile = confFile;
+		loadLibraries();
 	}
 
 	@Override
@@ -185,7 +216,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 
 		try {
 			allLigands = getFileManager().listAllChildrenFilesOfRemoteFolder(
-					LigandFiles.VS_LIBRARY_FILES_URL);
+					LigandDataFile.VS_LIBRARY_FILES_URL);
 			if (useComboBox) {
 				ligandModelCombo.removeAllElements();
 				for (String ligand : allLigands) {
@@ -204,35 +235,9 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 		loadLibraries();
 	}
 
-	public void setGoldConfFile(GoldConfFile confFile) {
-		this.confFile = confFile;
-		loadLibraries();
-	}
-
 	@Override
-	public String getValue() {
+	public void setValue(String value) {
 		// TODO Auto-generated method stub
-		return null;
-	}
 
-	private JScrollPane getScrollPane() {
-		if (scrollPane == null) {
-			scrollPane = new JScrollPane();
-			// scrollPane.setViewportView(getComboBox_1());
-
-			if (useComboBox) {
-				scrollPane.setViewportView(combo);
-			} else {
-				scrollPane.setViewportView(list);
-			}
-		}
-		return scrollPane;
-	}
-
-	private JComboBox getComboBox_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-		}
-		return comboBox_1;
 	}
 }

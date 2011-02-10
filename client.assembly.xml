@@ -11,6 +11,9 @@
 			<useTransitiveFiltering>true</useTransitiveFiltering>
 			<useProjectArtifact>true</useProjectArtifact>
 			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>org.bestgrid.virtscreen:grisu-virtscreen</include>
+			</includes>
 			<excludes>
 				<exclude>junit:junit</exclude>
 				<exclude>bouncycastle:bcprov-jdk15</exclude>
@@ -21,7 +24,27 @@
 					<exclude>**/MANIFEST.MF</exclude>
 					<exclude>**/LICENSE.txt</exclude>
 					<exclude>**/NOTICE.txt</exclude>
+					<exclude>**/LICENSE</exclude>
+					<exclude>**/NOTICE</exclude>
 					<exclude>**/log4j.properties</exclude>
+					<exclude>**/log4j.xml</exclude>
+					<exclude>META-INF/services/java.sql.Driver</exclude>
+					<exclude>overview.html</exclude>
+					<exclude>client-config.wsdd</exclude>
+					<exclude>ARCS.SF</exclude>
+					<exclude>ARCS.RSA</exclude>
+					<exclude>certificates.zip</exclude>
+					<exclude>vomses.zip</exclude>
+					<exclude>arcs/__init__.py</exclude>
+					<exclude>gsindl/__init__.py</exclude>
+					<exclude>arcs/shibboleth/__init__.py</exclude>
+					<exclude>arcs/shibboleth/client/__init__.py</exclude>
+					<exclude>gluev12r2-ext-class-map.properties</exclude>
+					<exclude>rebel.xml</exclude>
+					<exclude>META-INF/maven/**</exclude>
+					<exclude>**/README.txt</exclude>
+					<exclude>META-INF/services/**</exclude>
+					
 				</excludes>
 			</unpackOptions>
 		</dependencySet>
@@ -32,6 +55,23 @@
 		<file>
 			<source>src/main/resources/log4j.properties</source>
 			<outputDirectory>/</outputDirectory>
+		</file>
+		<!-- just a zip weirdness  otherwise it would be in the jar twice and jarsigner wouldn't sign it... -->
+		<file>
+			<source>__init__.py</source>
+			<outputDirectory>/arcs</outputDirectory>
+		</file>
+		<file>
+			<source>__init__.py</source>
+			<outputDirectory>/arcs/shibboleth</outputDirectory>
+		</file>
+		<file>
+			<source>__init__.py</source>
+			<outputDirectory>/arcs/shibboleth/client</outputDirectory>
+		</file>
+		<file>
+			<source>__init__.py</source>
+			<outputDirectory>/gsindl</outputDirectory>
 		</file>
 	</files>
 
