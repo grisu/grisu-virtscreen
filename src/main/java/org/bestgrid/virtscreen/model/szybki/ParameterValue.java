@@ -1,0 +1,121 @@
+package org.bestgrid.virtscreen.model.szybki;
+
+import grisu.control.ServiceInterface;
+import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.model.GrisuRegistryManager;
+
+import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
+import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
+
+public class ParameterValue {
+
+	private String stringValue;
+
+	private final PARAM param;
+
+	private Object value;
+
+	private final ServiceInterface si;
+
+	public ParameterValue(ServiceInterface si, PARAM p,
+			String value) {
+		this.si = si;
+		this.param = p;
+
+		setStringValue(value);
+
+	}
+
+	public PARAM getParameter() {
+		return this.param;
+	}
+
+	public String getStringValue() {
+		return stringValue;
+	}
+
+	public TYPE getType() {
+		return param.type;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setStringValue(String value) {
+
+		switch (param.type) {
+		case BOOLEAN:
+			try {
+				this.value = Boolean.parseBoolean(value);
+			} catch (Exception e) {
+				throw new IllegalArgumentException(
+				"Value needs to be of type Boolean.");
+			}
+			this.stringValue = value;
+			return;
+		case STRING:
+			this.value = value;
+			this.stringValue = value;
+			return;
+		case INTEGER:
+			try {
+				this.value = Integer.parseInt(value);
+			} catch (Exception e) {
+				throw new IllegalArgumentException(
+				"Value needs to be of type Integer.");
+			}
+			this.stringValue = value;
+			return;
+		case DOUBLE:
+			try {
+				this.value = Double.parseDouble(value);
+			} catch (Exception e) {
+				throw new IllegalArgumentException(
+				"Value needs to be of type Double.");
+			}
+			this.stringValue = value;
+			return;
+		case FILE:
+			try {
+				this.value = GrisuRegistryManager.getDefault(si)
+				.getFileManager().createGridFile(value);
+				this.stringValue = value;
+			} catch (RemoteFileSystemException e) {
+				throw new IllegalArgumentException(e);
+			}
+			this.stringValue = value;
+			return;
+		case UNDEF:
+			this.value = value;
+			this.stringValue = value;
+			return;
+		default:
+			this.value = value;
+			this.stringValue = value;
+		}
+
+	}
+
+	public void setValue(Object value) {
+
+		if (value instanceof String) {
+			setStringValue((String) value);
+			return;
+		}
+
+		if (!getType().valueClass.isInstance(value)) {
+			throw new IllegalArgumentException("Value needs to be of type "
+					+ getType().valueClass.getName());
+		}
+
+		this.value = value;
+		this.stringValue = value.toString();
+
+	}
+
+	@Override
+	public String toString() {
+		return getStringValue();
+	}
+}
