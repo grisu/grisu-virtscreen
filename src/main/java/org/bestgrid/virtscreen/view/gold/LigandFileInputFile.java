@@ -18,6 +18,8 @@ public class LigandFileInputFile extends SingleInputGridFile {
 		super();
 		setBorder(null);
 		setExtensionsToDisplay(new String[] { ".mol2" });
+		setFoldersSelectable(false);
+		setDisplayHiddenFiles(false);
 	}
 
 	public String getSelectedLigandFile() {

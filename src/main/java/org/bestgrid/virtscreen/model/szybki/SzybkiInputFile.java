@@ -6,6 +6,7 @@ import grisu.frontend.control.login.LoginManager;
 import grisu.model.FileManager;
 import grisu.model.GrisuRegistryManager;
 import grisu.model.UserEnvironmentManager;
+import grisu.model.dto.GridFile;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -173,6 +174,10 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		return result;
 	}
 
+	public String getInputFile() {
+		return url;
+	}
+
 	public File getJobConfFile() {
 
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
@@ -260,6 +265,11 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		pcs.removePropertyChangeListener(l);
 	}
 
+	public void setInputFile(GridFile file) throws SzybkiException {
+
+		setInputFile(file.getUrl());
+	}
+
 	public void setInputFile(String url) throws SzybkiException {
 
 		this.url = url;
@@ -271,6 +281,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		}
 
 		parseInputFile();
-	}
 
+		pcs.firePropertyChange("inputFile", null, this.url);
+	}
 }

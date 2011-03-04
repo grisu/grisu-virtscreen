@@ -44,4 +44,5 @@ public class FileSelectorPanelMini extends AbstractInputGridFile {
 		}
 		return button;
 	}
+
 }

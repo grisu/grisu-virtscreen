@@ -16,11 +16,12 @@ public class FileCellRenderer implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
+		panel.setConfiguration(((ParameterValue) value).getParameter().config);
+
 		panel.setInputFile((GridFile) (((ParameterValue) value).getValue()));
+
 		return panel;
 
 	}
-
-
 
 }

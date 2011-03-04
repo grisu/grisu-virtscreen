@@ -4,6 +4,7 @@ import grisu.control.ServiceInterface;
 import grisu.model.dto.GridFile;
 
 import java.awt.Component;
+import java.util.Map;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
@@ -29,6 +30,10 @@ TableCellEditor {
 		return this.panel;
 	}
 
+	public void setConfiguration(Map<String, String> config) {
+		panel.setConfiguration(config);
+	}
+
 	public void setHistoryKey(String key) {
 		panel.setHistoryKey(key);
 	}
@@ -37,6 +42,7 @@ TableCellEditor {
 		this.si = si;
 		this.panel.setServiceInterface(si);
 	}
+
 
 
 }

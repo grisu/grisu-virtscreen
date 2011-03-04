@@ -16,7 +16,8 @@ public class ConfFileInputFile extends SingleInputGridFile {
 	public ConfFileInputFile(GoldJobInputPanelNew parent) {
 		this.parent = parent;
 		setExtensionsToDisplay(new String[] { ".conf" });
-
+		setFoldersSelectable(false);
+		setDisplayHiddenFiles(false);
 	}
 
 	@Override

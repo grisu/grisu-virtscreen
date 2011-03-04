@@ -79,6 +79,7 @@ implements TableCellEditor {
 		case FILE:
 			FileCellEditor fce = getFileCellEditor(pv.getParameter());
 			currentEditor = fce;
+			fce.setConfiguration(pv.getParameter().config);
 			return fce.getTableCellEditorComponent(table, value, isSelected,
 					row,
 					column);
@@ -90,5 +91,6 @@ implements TableCellEditor {
 		}
 
 	}
+
 
 }

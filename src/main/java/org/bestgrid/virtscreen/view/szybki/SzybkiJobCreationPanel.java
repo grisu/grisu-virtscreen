@@ -3,21 +3,34 @@ package org.bestgrid.virtscreen.view.szybki;
 import grisu.control.ServiceInterface;
 import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
+import grisu.model.dto.GridFile;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+import org.bestgrid.virtscreen.model.szybki.SzybkiException;
+import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel {
+public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel,
+PropertyChangeListener {
 
 	private ServiceInterface si;
 	private SzybkiInputFileGrid szybkiInputFileGrid;
 	private SzybkiJobCreationHelperPanel szybkiJobCreationHelperPanel;
 	private SubmissionLogPanel submissionLogPanel;
 	private TableFilterControlPanel tableFilterControlPanel;
+	private JTabbedPane tabbedPane;
+	private SzybkiConfigViewerPanel szybkiConfigViewerPanel;
+
+	private SzybkiInputFile inputFile;
 
 	/**
 	 * Create the panel.
@@ -28,15 +41,15 @@ public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel {
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(27dlu;default):grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(50dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(95dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC, }));
-		add(getSzybkiInputFileGrid(), "2, 2, fill, fill");
+		add(getTabbedPane(), "2, 2, fill, fill");
 		add(getTableFilterControlPanel(), "2, 4, fill, fill");
 		add(getSzybkiJobCreationHelperPanel(), "2, 6, fill, fill");
 		add(getSubmissionLogPanel(), "2, 8, fill, fill");
@@ -48,6 +61,10 @@ public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel {
 
 	public boolean createsSingleJob() {
 		return true;
+	}
+
+	public SzybkiInputFile getInputFile() {
+		return this.inputFile;
 	}
 
 	public JPanel getPanel() {
@@ -69,6 +86,15 @@ public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel {
 		return "Szybki";
 	}
 
+	private SzybkiConfigViewerPanel getSzybkiConfigViewerPanel() {
+		if (szybkiConfigViewerPanel == null) {
+			szybkiConfigViewerPanel = new SzybkiConfigViewerPanel();
+			szybkiConfigViewerPanel.setLayout(new FormLayout(new ColumnSpec[] {},
+					new RowSpec[] {}));
+		}
+		return szybkiConfigViewerPanel;
+	}
+
 	private SzybkiInputFileGrid getSzybkiInputFileGrid() {
 		if (szybkiInputFileGrid == null) {
 			szybkiInputFileGrid = new SzybkiInputFileGrid();
@@ -84,19 +110,55 @@ public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel {
 		return szybkiJobCreationHelperPanel;
 	}
 
+	private JTabbedPane getTabbedPane() {
+		if (tabbedPane == null) {
+			tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
+			tabbedPane.addTab("Parameters", null, getSzybkiInputFileGrid(),
+					null);
+			tabbedPane.addTab("params file", null, getSzybkiConfigViewerPanel(), null);
+		}
+		return tabbedPane;
+	}
+
 	private TableFilterControlPanel getTableFilterControlPanel() {
 		if (tableFilterControlPanel == null) {
-			tableFilterControlPanel = new TableFilterControlPanel(
-					getSzybkiInputFileGrid());
+			tableFilterControlPanel = new TableFilterControlPanel(this);
 		}
 		return tableFilterControlPanel;
 	}
 
+	public void propertyChange(PropertyChangeEvent evt) {
+
+
+
+		if ("inputFile".equals(evt.getPropertyName())) {
+
+			if (evt.getNewValue() == null) {
+				return;
+			}
+
+			try {
+				this.inputFile.setInputFile((GridFile) evt.getNewValue());
+			} catch (SzybkiException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
 	public void setServiceInterface(ServiceInterface si) {
 		this.si = si;
-		getSzybkiInputFileGrid().setServiceInterface(si);
+
+		this.inputFile = new SzybkiInputFile(this.si);
+
+		getSzybkiInputFileGrid().setSzybkiInputFile(this.inputFile);
+		getSzybkiConfigViewerPanel().setSzybkiInputFile(this.inputFile);
+
 		getTableFilterControlPanel().setServiceInterface(si);
 
+	}
 
+	public void showDisabledParameters(boolean selected) {
+		getSzybkiInputFileGrid().showDisabledParameters(selected);
 	}
 }

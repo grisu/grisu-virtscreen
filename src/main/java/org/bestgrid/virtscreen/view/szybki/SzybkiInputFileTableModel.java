@@ -9,12 +9,10 @@ import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class SzybkiInputFileTableModel extends AbstractTableModel {
 
-	private final SzybkiInputFile inputFile;
+	private SzybkiInputFile inputFile;
 
-	public SzybkiInputFileTableModel(SzybkiInputFile inputFile) {
-		this.inputFile = inputFile;
+	public SzybkiInputFileTableModel() {
 	}
-
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
@@ -31,6 +29,7 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 			return Object.class;
 		}
 	}
+
 
 	public int getColumnCount() {
 		return 4;
@@ -135,6 +134,11 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 				return false;
 			}
 		}
+	}
+
+	public void setInputFile(SzybkiInputFile inputFile) {
+		this.inputFile = inputFile;
+
 	}
 
 	private void setParameterValue(SzybkiParameter param, Object value) {

@@ -1,8 +1,11 @@
 package org.bestgrid.virtscreen.view.szybki;
 
+import grisu.X;
 import grisu.control.ServiceInterface;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,10 +14,10 @@ import javax.swing.RowFilter;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import org.bestgrid.virtscreen.model.szybki.SzybkiException;
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
 
-public class SzybkiInputFileGrid extends JPanel {
+public class SzybkiInputFileGrid extends JPanel implements
+PropertyChangeListener {
 
 	public static final RowFilter<SzybkiInputFileTableModel, Integer> ENABLEDFILTER = new RowFilter<SzybkiInputFileTableModel, Integer>() {
 		@Override
@@ -35,6 +38,8 @@ public class SzybkiInputFileGrid extends JPanel {
 	private SzybkiInputFile inputFile;
 
 	private ServiceInterface si;
+
+	private SzybkiInputFileTableModel tm;
 
 	private TableRowSorter<SzybkiInputFileTableModel> sorter = null;
 
@@ -69,31 +74,20 @@ public class SzybkiInputFileGrid extends JPanel {
 		return table;
 	}
 
-	public void loadSzybkiInputFile(String inputFile) {
+	public void propertyChange(PropertyChangeEvent evt) {
 
-		if (si == null) {
-			throw new IllegalStateException(
-			"ServiceInterface not initialized yet.");
+		X.p("Changed in Grid: " + evt.getPropertyName());
+		if ( "inputFile".equals(evt.getPropertyName()) ) {
+			tm.fireTableDataChanged();
 		}
-
-		try {
-			this.inputFile.setInputFile(inputFile);
-			showDisabledParameters(false);
-
-		} catch (SzybkiException e) {
-			e.printStackTrace();
-		}
-
 
 	}
 
-	public void setServiceInterface(ServiceInterface si) {
+	private void setServiceInterface(ServiceInterface si) {
 
 		this.si = si;
 
-		this.inputFile = new SzybkiInputFile(si);
-
-		SzybkiInputFileTableModel tm = new SzybkiInputFileTableModel(inputFile);
+		tm = new SzybkiInputFileTableModel();
 		getTable().setModel(tm);
 
 		TableColumn tc0 = getTable().getColumnModel().getColumn(0);
@@ -116,7 +110,7 @@ public class SzybkiInputFileGrid extends JPanel {
 
 		SzybkiInputFileTableCellRenderer cr = new SzybkiInputFileTableCellRenderer();
 		SzybkiInputFileTableCellEditor ce = new SzybkiInputFileTableCellEditor(
-				inputFile.getServiceInterface());
+				this.si);
 		tc2.setCellRenderer(cr);
 		tc2.setCellEditor(ce);
 
@@ -126,6 +120,17 @@ public class SzybkiInputFileGrid extends JPanel {
 
 		getTable().setRowSorter(sorter);
 
+	}
+
+	public void setSzybkiInputFile(SzybkiInputFile inputFile) {
+
+		X.p("SETTTTT");
+
+		setServiceInterface(inputFile.getServiceInterface());
+		this.inputFile = inputFile;
+		this.inputFile.addPropertyChangeListener(this);
+		tm.setInputFile(this.inputFile);
+		showDisabledParameters(false);
 	}
 
 	public void showDisabledParameters(boolean show) {
