@@ -23,7 +23,7 @@ INDIR=`pwd`
 cat $PBS_NODEFILE|python $INDIR/oe_pvm.py > $INDIR/optH_mmpbsa.conf
 
 # kill remainig pvm nodes first
-cat $PBS_NODEFILE|sort -u|xargs -I {} -n 1 ssh {} "bash halt-pvm.sh"
+cat $PBS_NODEFILE|sort -u|xargs -I {} -n 1 ssh {} "echo halt|pvm"
 
 #start Szybki job
 ${SZYBKI_PATH}/bin/szybki -param $INDIR/s3_snanalog_cmplt_mmpbopt_in.param -pvmconf $INDIR/optH_mmpbsa.conf
