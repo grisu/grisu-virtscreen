@@ -1,5 +1,6 @@
 package org.bestgrid.virtscreen.view.szybki;
 
+import grisu.control.ServiceInterface;
 import grisu.model.dto.GridFile;
 
 import java.awt.Component;
@@ -13,12 +14,18 @@ public class FileCellRenderer implements TableCellRenderer {
 
 	private final FileSelectorPanelMini panel = new FileSelectorPanelMini();
 
+	public FileCellRenderer(ServiceInterface si) {
+		panel.setServiceInterface(si);
+	}
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
 		panel.setConfiguration(((ParameterValue) value).getParameter().config);
+		GridFile f = (GridFile) (((ParameterValue) value).getValue());
+		panel.setInputFile(f);
 
-		panel.setInputFile((GridFile) (((ParameterValue) value).getValue()));
+		panel.setToolTipText(f.getUrl());
 
 		return panel;
 

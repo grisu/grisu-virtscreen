@@ -12,4 +12,8 @@ public class SzybkiCommentLine implements SzybkiConfigLine {
 		return line;
 	}
 
+	public boolean isEnabled() {
+		return false;
+	}
+
 }

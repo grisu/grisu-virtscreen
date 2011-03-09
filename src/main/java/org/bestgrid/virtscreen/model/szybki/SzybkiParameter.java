@@ -1,5 +1,6 @@
 package org.bestgrid.virtscreen.model.szybki;
 
+import grisu.X;
 import grisu.frontend.view.swing.jobcreation.widgets.AbstractInputGridFile;
 import grisu.model.dto.GridFile;
 
@@ -8,75 +9,72 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.Map;
 
+import org.bestgrid.virtscreen.view.GrisuVirtScreen;
+
 import com.google.common.collect.ImmutableMap;
 
 public class SzybkiParameter implements SzybkiConfigLine {
 
 	public enum PARAM {
 
-		pvmconf(TYPE.FILE, ImmutableMap.of(
-				AbstractInputGridFile.EXTENSIONS_TO_DISPLAY, "conf",
-				AbstractInputGridFile.FOLDER_SELECTABLE, "false")),
-				complex(TYPE.UNDEF),
-				fix_file(TYPE.UNDEF),
-				heavy_rms(TYPE.BOOLEAN),
-				ligands(TYPE.FILE, ImmutableMap.of(
-						AbstractInputGridFile.EXTENSIONS_TO_DISPLAY, "mol2",
-						AbstractInputGridFile.FOLDER_SELECTABLE, "false")),
+		pvmconf(TYPE.FILE, getDefaultMap("conf")),
+		complex(TYPE.UNDEF),
+		fix_file(TYPE.UNDEF),
+		heavy_rms(TYPE.BOOLEAN),
+		ligands(TYPE.FILE, getDefaultMap("mol2")),
+		loadPG(TYPE.UNDEF),
+		log(TYPE.FILE),
+		out(TYPE.FILE),
+		out_protein(TYPE.FILE),
+		prefix(TYPE.FILE),
+		protein(TYPE.FILE),
+		report(TYPE.BOOLEAN, "true", false),
+		reportFile(TYPE.UNDEF),
+		savePG(TYPE.UNDEF),
+		sdtag(TYPE.UNDEF),
+		silent(TYPE.BOOLEAN, "false", false),
+		verbose(TYPE.BOOLEAN, "true", false),
 
-						loadPG(TYPE.UNDEF),
-						log(TYPE.FILE),
-						out(TYPE.FILE),
-						out_protein(TYPE.FILE),
-						prefix(TYPE.FILE),
-						protein(TYPE.FILE),
-						report(TYPE.BOOLEAN, "true", false),
-						reportFile(TYPE.UNDEF),
-						savePG(TYPE.UNDEF),
-						sdtag(TYPE.UNDEF),
-						silent(TYPE.BOOLEAN, "false", false),
-						verbose(TYPE.BOOLEAN, "true", false),
+		MMFF94S(TYPE.BOOLEAN),
+		am1bcc(TYPE.BOOLEAN, "false"),
+		exact_vdw(TYPE.BOOLEAN, "true"),
+		harm_constr1(TYPE.UNDEF),
+		harm_constr2(TYPE.UNDEF),
+		harm_smarts(TYPE.UNDEF),
+		mod_vdw(TYPE.UNDEF),
+		mol2charges(TYPE.UNDEF),
+		neglect_frozen(TYPE.BOOLEAN, "true"),
+		noCoulomb(TYPE.BOOLEAN, "false"),
+		prot_dielectric(TYPE.DOUBLE),
+		protein_elec(TYPE.STRING, "PB"),
+		protein_vdw(TYPE.DOUBLE),
+		shefA(TYPE.UNDEF),
+		shefB(TYPE.UNDEF),
+		sheffield(TYPE.UNDEF),
+		solv_dielectric(TYPE.UNDEF),
+		solventCA(TYPE.UNDEF),
+		solventPB(TYPE.UNDEF),
+		strict(TYPE.UNDEF),
 
-						MMFF94S(TYPE.BOOLEAN),
-						am1bcc(TYPE.BOOLEAN, "false"),
-						exact_vdw(TYPE.BOOLEAN, "true"),
-						harm_constr1(TYPE.UNDEF),
-						harm_constr2(TYPE.UNDEF),
-						harm_smarts(TYPE.UNDEF),
-						mod_vdw(TYPE.UNDEF),
-						mol2charges(TYPE.UNDEF),
-						neglect_frozen(TYPE.BOOLEAN, "true"),
-						noCoulomb(TYPE.BOOLEAN, "false"),
-						prot_dielectric(TYPE.DOUBLE),
-						protein_elec(TYPE.STRING, "PB"),
-						protein_vdw(TYPE.DOUBLE),
-						shefA(TYPE.UNDEF),
-						shefB(TYPE.UNDEF),
-						sheffield(TYPE.UNDEF),
-						solv_dielectric(TYPE.UNDEF),
-						solventCA(TYPE.UNDEF),
-						solventPB(TYPE.UNDEF),
-						strict(TYPE.UNDEF),
+		conj(TYPE.BOOLEAN, "true"),
+		fix_smarts(TYPE.UNDEF),
+		grad_conv(TYPE.DOUBLE, "0.05"),
+		largest_part(TYPE.BOOLEAN, "false"),
+		max_iter(TYPE.INTEGER, "100"),
+		no_opt(TYPE.BOOLEAN, "false"),
+		opt_cart(TYPE.BOOLEAN, "true"),
+		opt_solid(TYPE.BOOLEAN, "false"),
+		opt_torsions(TYPE.BOOLEAN, "false"),
+		polarH(TYPE.DOUBLE, "8.00"),
+		residue(TYPE.UNDEF),
+		sideC(TYPE.UNDEF),
+		strip_water(TYPE.BOOLEAN, "false"),
 
-						conj(TYPE.BOOLEAN, "true"),
-						fix_smarts(TYPE.UNDEF),
-						grad_conv(TYPE.DOUBLE, "0.05"),
-						largest_part(TYPE.BOOLEAN, "false"),
-						max_iter(TYPE.INTEGER, "100"),
-						no_opt(TYPE.BOOLEAN, "false"),
-						opt_cart(TYPE.BOOLEAN, "true"),
-						opt_solid(TYPE.BOOLEAN, "false"),
-						opt_torsions(TYPE.BOOLEAN, "false"),
-						polarH(TYPE.DOUBLE, "8.00"),
-						residue(TYPE.UNDEF),
-						sideC(TYPE.UNDEF),
-						strip_water(TYPE.BOOLEAN, "false"),
-
-						ent151(TYPE.UNDEF),
-						entropy(TYPE.UNDEF),
-						rws(TYPE.UNDEF),
-						sfp(TYPE.UNDEF),
-						t(TYPE.UNDEF);
+		ent151(TYPE.UNDEF),
+		entropy(TYPE.UNDEF),
+		rws(TYPE.UNDEF),
+		sfp(TYPE.UNDEF),
+		t(TYPE.UNDEF);
 
 		public static PARAM fromString(String paramName) {
 			try {
@@ -146,7 +144,13 @@ public class SzybkiParameter implements SzybkiConfigLine {
 		return null;
 	}
 
-	public static void main (String[] args) {
+	private static ImmutableMap getDefaultMap(String extension) {
+		return ImmutableMap.of(AbstractInputGridFile.EXTENSIONS_TO_DISPLAY,
+				extension, AbstractInputGridFile.FOLDER_SELECTABLE, "false",
+				AbstractInputGridFile.ROOTS, GrisuVirtScreen.VIRTSCREEN_ROOTS);
+	}
+
+	public static void main(String[] args) {
 
 		System.out.println(PARAM.fromString("dconj"));
 
@@ -235,6 +239,7 @@ public class SzybkiParameter implements SzybkiConfigLine {
 	}
 
 	public void setParameterValue(ParameterValue v) {
+		X.p("Sdfsdfdsfsdf");
 		Object oldValue = v;
 		this.parameterValue = v;
 		pcs.firePropertyChange("parameterValue", oldValue, this.parameterValue);

@@ -44,7 +44,6 @@ implements TableCellEditor {
 	public Object getCellEditorValue() {
 
 		return currentEditor.getCellEditorValue();
-
 	}
 
 	private FileCellEditor getFileCellEditor(PARAM p) {
@@ -52,7 +51,7 @@ implements TableCellEditor {
 		if (fces.get(p) == null) {
 			FileCellEditor temp = new FileCellEditor();
 			temp.setServiceInterface(si);
-			temp.setHistoryKey(p.toString());
+			temp.setHistoryKey("szybki_" + p.toString());
 
 			fces.put(p, temp);
 		}

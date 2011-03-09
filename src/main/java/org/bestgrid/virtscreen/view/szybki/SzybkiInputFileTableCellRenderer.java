@@ -1,5 +1,7 @@
 package org.bestgrid.virtscreen.view.szybki;
 
+import grisu.control.ServiceInterface;
+
 import java.awt.Component;
 
 import javax.swing.JCheckBox;
@@ -14,9 +16,10 @@ public class SzybkiInputFileTableCellRenderer implements TableCellRenderer {
 	private final DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 	private JCheckBox checkbox = null;
 
-	private final FileCellRenderer fcr = new FileCellRenderer();
+	private final FileCellRenderer fcr;
 
-	public SzybkiInputFileTableCellRenderer() {
+	public SzybkiInputFileTableCellRenderer(ServiceInterface si) {
+		fcr = new FileCellRenderer(si);
 	}
 
 	private JCheckBox getCheckBox() {

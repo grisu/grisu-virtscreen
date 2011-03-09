@@ -4,6 +4,9 @@ import grisu.control.ServiceInterface;
 import grisu.control.exceptions.RemoteFileSystemException;
 import grisu.model.GrisuRegistryManager;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
@@ -14,8 +17,11 @@ public class ParameterValue {
 	private final PARAM param;
 
 	private Object value;
+	private Object old;
 
 	private final ServiceInterface si;
+
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	public ParameterValue(ServiceInterface si, PARAM p,
 			String value) {
@@ -24,6 +30,10 @@ public class ParameterValue {
 
 		setStringValue(value);
 
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener l) {
+		pcs.addPropertyChangeListener(l);
 	}
 
 	public PARAM getParameter() {
@@ -40,6 +50,10 @@ public class ParameterValue {
 
 	public Object getValue() {
 		return value;
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener l) {
+		pcs.removePropertyChangeListener(l);
 	}
 
 	public void setStringValue(String value) {
@@ -99,8 +113,11 @@ public class ParameterValue {
 
 	public void setValue(Object value) {
 
+		old = this.value;
+
 		if (value instanceof String) {
 			setStringValue((String) value);
+			pcs.firePropertyChange("value", old, this.value);
 			return;
 		}
 
@@ -111,6 +128,8 @@ public class ParameterValue {
 
 		this.value = value;
 		this.stringValue = value.toString();
+
+		pcs.firePropertyChange("value", old, this.value);
 
 	}
 

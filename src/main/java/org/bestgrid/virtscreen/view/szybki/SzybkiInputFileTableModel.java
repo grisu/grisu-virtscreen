@@ -39,7 +39,7 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 	public String getColumnName(int col) {
 		switch (col) {
 		case 0:
-			return "";
+			return "Set";
 		case 1:
 			return "Parameter";
 		case 2:

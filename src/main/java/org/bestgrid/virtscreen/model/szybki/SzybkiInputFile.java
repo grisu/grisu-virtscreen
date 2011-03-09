@@ -165,13 +165,33 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		pcs.addPropertyChangeListener(l);
 	}
 
-	public List<String> createConfig() {
+	public List<String> createConfig(boolean allParameters) {
 
 		List<String> result = new LinkedList<String>();
 		for (SzybkiConfigLine line : allLines) {
-			result.add(line.getLine());
+			if (allParameters || line.isEnabled()) {
+				result.add(line.getLine());
+			}
 		}
 		return result;
+	}
+
+	public void createTempFileFromStrings(List<String> lines)
+	throws SzybkiException {
+
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File newConfFile = new File(tmpDir, "szybki_tmp_conf_file");
+
+		newConfFile.delete();
+
+		try {
+			FileUtils.writeLines(newConfFile, lines);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		setInputFile(newConfFile.toURI().toString());
+
 	}
 
 	public String getInputFile() {
@@ -187,7 +207,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		newConfFile.deleteOnExit();
 
 		try {
-			FileUtils.writeLines(newConfFile, createConfig());
+			FileUtils.writeLines(newConfFile, createConfig(true));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -204,18 +224,29 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		return this.parameters.get(index);
 	}
 
+	public SzybkiParameter getParameter(PARAM param) {
+
+		for ( SzybkiParameter p : parameters ) {
+			if ( p.getParameterName().equals(param) ) {
+				return p;
+			}
+		}
+		return null;
+
+	}
+
 	public List<SzybkiParameter> getParameters() {
 		return this.parameters;
 	}
 
-	public String getParametersAsString() {
+	public String getParametersAsString(boolean allParameters) {
 
 		StringBuffer r = new StringBuffer();
-		for (String l : createConfig()) {
+		for (String l : createConfig(allParameters)) {
 			r.append(l+"\n");
 		}
 
-		return null;
+		return r.toString();
 	}
 
 	public ServiceInterface getServiceInterface() {
@@ -223,6 +254,13 @@ public class SzybkiInputFile implements PropertyChangeListener {
 	}
 
 	private void parseInputFile() throws SzybkiException {
+
+		if (parameters != null) {
+			for (SzybkiParameter p : parameters) {
+				p.getParameterValue().removePropertyChangeListener(this);
+				p.removePropertyChangeListener(this);
+			}
+		}
 
 		allLines = new LinkedList<SzybkiConfigLine>();
 		parameters = new LinkedList<SzybkiParameter>();
@@ -250,6 +288,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 				SzybkiParameter sp = (SzybkiParameter)scl;
 				parameters.add(sp);
 				sp.addPropertyChangeListener(this);
+				sp.getParameterValue().addPropertyChangeListener(this);
 			}
 		}
 

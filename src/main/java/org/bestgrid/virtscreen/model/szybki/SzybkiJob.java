@@ -1,5 +1,6 @@
 package org.bestgrid.virtscreen.model.szybki;
 
+import grisu.X;
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
@@ -59,9 +60,16 @@ public class SzybkiJob {
 				.getName()));
 		job.setApplication("szybki");
 		job.setApplicationVersion("1.3.4");
-		job.setSubmissionLocation("szybki@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
+		// job.setSubmissionLocation("er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		job.setCommandline("sh szybki " + this.szybkiInputFile.getName());
+		String commandline = "sh szybki.sh "
+			+ this.szybkiInputFile.getName()
+			+ szybkiInputFile.getParameter(SzybkiParameter.PARAM.pvmconf)
+			.getParameterValue().toString();
+
+		X.p("Commandline: " + commandline);
+
+		job.setCommandline(commandline);
 		job.setCpus(this.cpus);
 		job.setMemory(2L * 2147483648L * new Long(this.cpus));
 		// job.setHostCount(1);
@@ -77,7 +85,8 @@ public class SzybkiJob {
 		// }
 
 		RunningJobManager.getDefault(si).createJob(job,
-		"/ARCS/BeSTGRID/Drug_discovery/Local");
+				// "/ARCS/BeSTGRID/Drug_discovery/Local");
+		"/ARCS/BeSTGRID");
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
@@ -89,5 +98,9 @@ public class SzybkiJob {
 
 		job = null;
 
+	}
+
+	public JobObject getJob() {
+		return job;
 	}
 }

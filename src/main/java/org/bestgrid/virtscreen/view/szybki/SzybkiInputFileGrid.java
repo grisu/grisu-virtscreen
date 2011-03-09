@@ -69,6 +69,7 @@ PropertyChangeListener {
 		if (table == null) {
 			table = new JTable();
 			table.setRowHeight(48);
+			table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 			// table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		}
 		return table;
@@ -78,6 +79,7 @@ PropertyChangeListener {
 
 		X.p("Changed in Grid: " + evt.getPropertyName());
 		if ( "inputFile".equals(evt.getPropertyName()) ) {
+			X.p("New: " + evt.getNewValue());
 			tm.fireTableDataChanged();
 		}
 
@@ -108,7 +110,8 @@ PropertyChangeListener {
 		tc3.setMaxWidth(60);
 		tc3.setMinWidth(60);
 
-		SzybkiInputFileTableCellRenderer cr = new SzybkiInputFileTableCellRenderer();
+		SzybkiInputFileTableCellRenderer cr = new SzybkiInputFileTableCellRenderer(
+				this.si);
 		SzybkiInputFileTableCellEditor ce = new SzybkiInputFileTableCellEditor(
 				this.si);
 		tc2.setCellRenderer(cr);
@@ -124,16 +127,15 @@ PropertyChangeListener {
 
 	public void setSzybkiInputFile(SzybkiInputFile inputFile) {
 
-		X.p("SETTTTT");
-
 		setServiceInterface(inputFile.getServiceInterface());
 		this.inputFile = inputFile;
 		this.inputFile.addPropertyChangeListener(this);
 		tm.setInputFile(this.inputFile);
-		showDisabledParameters(false);
+		showDisabledParameters(true);
 	}
 
 	public void showDisabledParameters(boolean show) {
+
 		if (show) {
 			sorter.setRowFilter(null);
 		} else {

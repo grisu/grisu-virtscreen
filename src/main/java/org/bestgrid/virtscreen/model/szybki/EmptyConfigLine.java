@@ -6,4 +6,8 @@ public class EmptyConfigLine implements SzybkiConfigLine {
 		return "";
 	}
 
+	public boolean isEnabled() {
+		return false;
+	}
+
 }

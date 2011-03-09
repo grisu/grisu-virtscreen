@@ -29,22 +29,20 @@ public class TableFilterControlPanel extends JPanel {
 		this.szybkiJobCreationPanel = szybkiJobCreationPanel;
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("185px:grow"),
 				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(23dlu;default)"),
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC, }));
-		add(getChckbxDisplayAllParameters(), "2, 2, left, top");
-		add(getSingleInputGridFile(), "4, 2, 1, 3, fill, fill");
+		// add(getChckbxDisplayAllParameters(), "2, 2, left, top");
+		add(getSingleInputGridFile(), "2, 2, fill, fill");
 	}
 
 
 	private JCheckBox getChckbxDisplayAllParameters() {
 		if (chckbxDisplayAllParameters == null) {
 			chckbxDisplayAllParameters = new JCheckBox("Display all params");
+			chckbxDisplayAllParameters.setSelected(true);
 			chckbxDisplayAllParameters.addItemListener(new ItemListener() {
 
 				public void itemStateChanged(ItemEvent e) {
@@ -53,15 +51,18 @@ public class TableFilterControlPanel extends JPanel {
 					.showDisabledParameters(chckbxDisplayAllParameters
 							.isSelected());
 
+
 				}
 			});
 		}
 		return chckbxDisplayAllParameters;
 	}
 
+
 	private SingleInputGridFile getSingleInputGridFile() {
 		if (singleInputGridFile == null) {
 			singleInputGridFile = new SingleInputGridFile();
+			singleInputGridFile.setHistoryKey("szybki_conf_file");
 			singleInputGridFile
 			.setExtensionsToDisplay(new String[] { "param" });
 

@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 
 import org.bestgrid.virtscreen.model.szybki.SzybkiException;
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
+import org.bestgrid.virtscreen.model.szybki.SzybkiJob;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -89,10 +90,13 @@ PropertyChangeListener {
 	private SzybkiConfigViewerPanel getSzybkiConfigViewerPanel() {
 		if (szybkiConfigViewerPanel == null) {
 			szybkiConfigViewerPanel = new SzybkiConfigViewerPanel();
-			szybkiConfigViewerPanel.setLayout(new FormLayout(new ColumnSpec[] {},
-					new RowSpec[] {}));
+
 		}
 		return szybkiConfigViewerPanel;
+	}
+
+	public SzybkiInputFile getSzybkiInputFile() {
+		return this.inputFile;
 	}
 
 	private SzybkiInputFileGrid getSzybkiInputFileGrid() {
@@ -105,7 +109,7 @@ PropertyChangeListener {
 	private SzybkiJobCreationHelperPanel getSzybkiJobCreationHelperPanel() {
 		if (szybkiJobCreationHelperPanel == null) {
 			szybkiJobCreationHelperPanel = new SzybkiJobCreationHelperPanel(
-					getSzybkiInputFileGrid());
+					this);
 		}
 		return szybkiJobCreationHelperPanel;
 	}
@@ -146,6 +150,12 @@ PropertyChangeListener {
 		}
 	}
 
+	public void setCurrentJob(SzybkiJob job) {
+
+		getSubmissionLogPanel().setJobObject(job.getJob());
+
+	}
+
 	public void setServiceInterface(ServiceInterface si) {
 		this.si = si;
 
@@ -153,6 +163,7 @@ PropertyChangeListener {
 
 		getSzybkiInputFileGrid().setSzybkiInputFile(this.inputFile);
 		getSzybkiConfigViewerPanel().setSzybkiInputFile(this.inputFile);
+		getSzybkiJobCreationHelperPanel().setServiceInterface(si);
 
 		getTableFilterControlPanel().setServiceInterface(si);
 
@@ -160,5 +171,6 @@ PropertyChangeListener {
 
 	public void showDisabledParameters(boolean selected) {
 		getSzybkiInputFileGrid().showDisabledParameters(selected);
+		getSzybkiConfigViewerPanel().showDisabledParameters(selected);
 	}
 }
