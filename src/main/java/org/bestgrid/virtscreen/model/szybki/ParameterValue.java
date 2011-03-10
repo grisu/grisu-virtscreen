@@ -2,6 +2,7 @@ package org.bestgrid.virtscreen.model.szybki;
 
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.RemoteFileSystemException;
+import grisu.model.FileManager;
 import grisu.model.GrisuRegistryManager;
 
 import java.beans.PropertyChangeListener;
@@ -11,6 +12,10 @@ import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class ParameterValue {
+
+	public enum FILTER {
+		BASENAME_FILTER;
+	}
 
 	private String stringValue;
 
@@ -28,12 +33,34 @@ public class ParameterValue {
 		this.si = si;
 		this.param = p;
 
-		setStringValue(value);
+		String newValue = filter(value);
+		setStringValue(newValue);
 
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		pcs.addPropertyChangeListener(l);
+	}
+
+	private String filter(String value) {
+
+		FILTER[] filters = this.param.filters;
+
+		if (filters == null) {
+			return value;
+		}
+
+		for (FILTER filter : filters) {
+			switch (filter) {
+			case BASENAME_FILTER:
+				value = FileManager.getFilename(value);
+				break;
+			default:
+				break;
+			}
+		}
+
+		return value;
 	}
 
 	public PARAM getParameter() {

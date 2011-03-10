@@ -32,6 +32,9 @@ public class LigandFileInputFile extends SingleInputGridFile {
 
 	@Override
 	public void setInputFile(GridFile f) {
+		if (f == null) {
+			return;
+		}
 		super.setInputFile(f);
 		confFile.setLigandDataFiles(new String[] { f.getUrl() });
 	}

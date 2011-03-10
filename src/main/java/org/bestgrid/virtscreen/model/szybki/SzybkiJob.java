@@ -7,6 +7,7 @@ import grisu.control.exceptions.JobSubmissionException;
 import grisu.frontend.control.jobMonitoring.RunningJobManager;
 import grisu.frontend.control.login.LoginManager;
 import grisu.frontend.model.job.JobObject;
+import grisu.model.dto.GridFile;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
+import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class SzybkiJob {
 
@@ -62,10 +64,7 @@ public class SzybkiJob {
 		job.setApplicationVersion("1.3.4");
 		// job.setSubmissionLocation("er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		String commandline = "sh szybki.sh "
-			+ this.szybkiInputFile.getName()
-			+ szybkiInputFile.getParameter(SzybkiParameter.PARAM.pvmconf)
-			.getParameterValue().toString();
+		String commandline = "sh szybki.sh " + this.szybkiInputFile.getName();
 
 		X.p("Commandline: " + commandline);
 
@@ -80,13 +79,19 @@ public class SzybkiJob {
 		job.addInputFileUrl(SZYBKI_HELPER_PY_SCRIPT.getPath());
 		job.addInputFileUrl(szybkiInputFile.getJobConfFile().getPath());
 
-		// for (String url : goldConfFile.getFilesToStageIn()) {
-		// job.addInputFileUrl(url);
-		// }
+		for (SzybkiParameter p : szybkiInputFile.getParameters(TYPE.FILE)) {
+
+			if (p.isEnabled()) {
+				GridFile f = (GridFile) p.getParameterValue().getValue();
+				X.p("Adding file: " + f.getUrl());
+				job.addInputFileUrl(f.getUrl());
+			}
+
+		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-				// "/ARCS/BeSTGRID/Drug_discovery/Local");
-		"/ARCS/BeSTGRID");
+		// "/ARCS/BeSTGRID/Drug_discovery/Local");
+				"/ARCS/BeSTGRID");
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 

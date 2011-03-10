@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
+import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 
 public class SzybkiInputFile implements PropertyChangeListener {
@@ -237,6 +238,17 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public List<SzybkiParameter> getParameters() {
 		return this.parameters;
+	}
+
+	public List<SzybkiParameter> getParameters(TYPE type) {
+
+		List<SzybkiParameter> result = new LinkedList<SzybkiParameter>();
+		for ( SzybkiParameter p : getParameters()) {
+			if ( p.getType().equals(type)) {
+				result.add(p);
+			}
+		}
+		return result;
 	}
 
 	public String getParametersAsString(boolean allParameters) {
