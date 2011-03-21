@@ -21,6 +21,19 @@ function check_license_status () {
     ${GOLD_DIR}/bin/gold_licence  statall >> ${INDIR}/gold_license_status
 }
 
+function check_gold_status () {
+    TIMESTAMP=$(date  +'%s')
+    NUMBER_OF_CPUS=$(echo 'ps -a'|pvm|grep gold_parallel.sh|wc -l)
+    NUMBER_OF_LICENSES=$[$(/share/apps/gold/GOLD_Suite/bin/gold_licence statall \
+	|awk 'BEGIN {a = 0}; /Users of silver/ {a = 0}; /floating license/ {a = 1}; //{ if (a == 1) print $0}' \
+	|wc -l) - 3]
+    echo $TIMESTAMP,$NUMBER_OF_CPUS,$NUMBER_OF_LICENSES >> ${INDIR}/gold_status
+}
+
+function check_gold_status_daemon () {
+    while [ 1 == 1 ]; do  check_gold_status;  sleep 5; done
+}
+
 function calculate_components () {
   OUTDIR=$(grep 'directory =' $CONF_FILE|
       awk '{print $3}')
@@ -50,12 +63,16 @@ cat ${PBS_NODEFILE}|python ${INDIR}/gold.py > ${INDIR}/gold.hosts
 
 NO_OF_CPUS=$(cat ${PBS_NODEFILE}|wc -l)
 
-trap 'release_licenses; check_license_status; calculate_components;' INT TERM EXIT
+trap 'kill $DAEMON_PID; release_licenses; check_license_status; calculate_components;' INT TERM EXIT
+
+check_gold_status_daemon &
+DAEMON_PID=$!
 
 ${GOLD_DIR}/bin/parallel_gold_auto ${NO_OF_CPUS} ${INDIR}/$1 ${INDIR}/gold.hosts ${INDIR}
 
 trap - INT TERM EXIT
 
+kill $DAEMON_PID
 release_licenses
 check_license_status
 calculate_components
