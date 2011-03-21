@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
+import org.bestgrid.virtscreen.view.szybki.SzybkiJobCreationPanel;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 
@@ -41,6 +42,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	}
 
 	private JobCreationPanel gold;
+	private JobCreationPanel szybki;
 
 	/**
 	 * Create the application.
@@ -73,12 +75,20 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	@Override
 	public JobCreationPanel[] getJobCreationPanels() {
-		return new JobCreationPanel[] { getGoldJobCreationPanel() };
+		return new JobCreationPanel[] { getGoldJobCreationPanel(),
+				getSzybkiJobCreationPanel() };
 	}
 
 	@Override
 	public String getName() {
 		return "Virtual screening client";
+	}
+
+	private JobCreationPanel getSzybkiJobCreationPanel() {
+		if (szybki == null) {
+			szybki = new SzybkiJobCreationPanel();
+		}
+		return szybki;
 	}
 
 	@Override
@@ -87,10 +97,10 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile p = null;
 		try {
 			p = GrisuRegistryManager
-					.getDefault(si)
-					.getFileManager()
-					.createGridFile(
-							"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+			.getDefault(si)
+			.getFileManager()
+			.createGridFile(
+			"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 			p.setName("Personal remote files");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -103,10 +113,10 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile f = null;
 		try {
 			f = GrisuRegistryManager
-					.getDefault(si)
-					.getFileManager()
-					.createGridFile(
-							"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+			.getDefault(si)
+			.getFileManager()
+			.createGridFile(
+			"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
 			f.setName("Drug_discovery");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -117,7 +127,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		}
 
 		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
-				.getLocalRoot();
+		.getLocalRoot();
 		List<GridFile> files = new LinkedList<GridFile>();
 		files.add(p);
 		files.add(f);

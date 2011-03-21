@@ -7,7 +7,6 @@ import grisu.model.dto.GridFile;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
@@ -19,6 +18,8 @@ public class LigandFileInputFile extends SingleInputGridFile {
 		super();
 		setBorder(null);
 		setExtensionsToDisplay(new String[] { ".mol2" });
+		setFoldersSelectable(false);
+		setDisplayHiddenFiles(false);
 	}
 
 	public String getSelectedLigandFile() {
@@ -30,11 +31,12 @@ public class LigandFileInputFile extends SingleInputGridFile {
 	}
 
 	@Override
-	protected void setInputFile(String url) {
-		super.setInputFile(url);
-		if (StringUtils.isNotBlank(url) && !url.equals(selString)) {
-			confFile.setLigandDataFiles(new String[] { url });
+	public void setInputFile(GridFile f) {
+		if (f == null) {
+			return;
 		}
+		super.setInputFile(f);
+		confFile.setLigandDataFiles(new String[] { f.getUrl() });
 	}
 
 	@Override

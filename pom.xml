@@ -4,7 +4,7 @@
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.4.3-SNAPSHOT</version>
+	<version>0.4.4</version>
 	<name>A Grid client to support high troughput virtual screening.</name>
 
 	<repositories>
@@ -42,14 +42,14 @@
 	<distributionManagement>
 		<repository>
 			<name>BeSTGRID Releases Repository</name>
-			<id>bestgrid.release</id>
-			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/releases
+			<id>bestgrid.release2</id>
+			<url>http://er77.ceres.auckland.ac.nz/nexus/content/repositories/releases
 			</url>
 		</repository>
 		<snapshotRepository>
-			<id>bestgrid.snapshot</id>
+			<id>bestgrid.snapshot2</id>
 			<name>BeSTGRID Snapshots Repository</name>
-			<url>http://dev.ceres.auckland.ac.nz/nexus/content/repositories/snapshots
+			<url>http://er77.ceres.auckland.ac.nz/nexus/content/repositories/snapshots
 			</url>
 		</snapshotRepository>
 	</distributionManagement>
@@ -61,7 +61,7 @@
 	</scm>
 
 	<properties>
-		<grisu.version>0.3.1</grisu.version>
+		<grisu.version>0.3.3</grisu.version>
 	</properties>
 
 

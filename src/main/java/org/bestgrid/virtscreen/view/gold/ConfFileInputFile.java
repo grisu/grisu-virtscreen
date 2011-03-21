@@ -7,7 +7,6 @@ import grisu.model.dto.GridFile;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
 public class ConfFileInputFile extends SingleInputGridFile {
@@ -17,15 +16,14 @@ public class ConfFileInputFile extends SingleInputGridFile {
 	public ConfFileInputFile(GoldJobInputPanelNew parent) {
 		this.parent = parent;
 		setExtensionsToDisplay(new String[] { ".conf" });
-
+		setFoldersSelectable(false);
+		setDisplayHiddenFiles(false);
 	}
 
 	@Override
-	protected void setInputFile(String url) {
-		super.setInputFile(url);
-		if (StringUtils.isNotBlank(url) && !url.equals(selString)) {
-			parent.parseConfig();
-		}
+	public void setInputFile(GridFile f) {
+		super.setInputFile(f);
+		parent.parseConfig();
 	}
 
 	@Override
