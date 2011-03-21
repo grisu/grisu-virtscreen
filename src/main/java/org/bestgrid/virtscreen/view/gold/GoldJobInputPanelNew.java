@@ -35,7 +35,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
-		PropertyChangeListener {
+PropertyChangeListener {
 
 	private ServiceInterface si;
 	private ConfFileInputFile confFileInput;
@@ -258,13 +258,13 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		getErrorLabel().setText("");
 
 		if (StringUtils.isBlank(confUrl)) {
-			setParseResult(false, "No .conf file specified.",
-					"Select .conf file.");
+			// setParseResult(false, "No .conf file specified.",
+			// "Select .conf file.");
 			getBtnRefresh().setEnabled(false);
 			getBtnSubmit().setEnabled(false);
 		} else {
 			final StringBuffer logMessage = new StringBuffer(
-					"Parse log:\n\nLoading conf file...\n");
+			"Parse log:\n\nLoading conf file...\n");
 			final StringBuffer fixes = new StringBuffer();
 
 			lockUI(true);
@@ -279,7 +279,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 						goldConfFile.setConfFile(confUrl);
 
 						getLigandFileSelectPanel()
-								.setGoldConfFile(goldConfFile);
+						.setGoldConfFile(goldConfFile);
 						getDockingAmoungCombo().setGoldConfFile(goldConfFile);
 						// checkValid = true;
 						lockUI(false);
@@ -336,13 +336,13 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 		if (success) {
 			getErrorLabel().setText("");
 			logMessage = logMessage
-					+ "Config file parsed successful. Job ready for submission.\n";
+			+ "Config file parsed successful. Job ready for submission.\n";
 		} else {
 			getErrorLabel()
-					.setText(
-							"Error when parsing .conf file. Please check log below for details.");
+			.setText(
+			"Error when parsing .conf file. Please check log below for details.");
 			logMessage = logMessage
-					+ "=====================================================================================\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n";
+			+ "\n=====================================================================================\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n";
 		}
 		getSubmissionLogPanel().setText(logMessage + "\n" + fixes);
 
@@ -400,7 +400,7 @@ public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 					getLigandFileSelectPanel().setGoldConfFile(null);
 				} catch (Exception e) {
 					String message = "\nJob creation / submission failed: "
-							+ e.getLocalizedMessage() + "\n";
+						+ e.getLocalizedMessage() + "\n";
 					e.printStackTrace();
 					getErrorLabel().setText(message);
 					getSubmissionLogPanel().appendMessage(message);
