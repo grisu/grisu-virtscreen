@@ -28,10 +28,11 @@ function check_gold_status () {
 	|awk 'BEGIN {a = 0}; /Users of silver/ {a = 0}; /floating license/ {a = 1}; //{ if (a == 1) print $0}' \
 	|wc -l) - 3]
     echo $TIMESTAMP,$NUMBER_OF_CPUS,$NUMBER_OF_LICENSES >> ${INDIR}/gold_status
+    echo $TIMESTAMP,$NUMBER_OF_CPUS,$NUMBER_OF_LICENSES > ${INDIR}/gold_status_latest
 }
 
 function check_gold_status_daemon () {
-    while [ 1 == 1 ]; do  check_gold_status;  sleep 5; done
+    while [ 1 == 1 ]; do  check_gold_status;  sleep 300; done
 }
 
 function calculate_components () {
