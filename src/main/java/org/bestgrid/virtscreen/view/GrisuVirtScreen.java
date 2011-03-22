@@ -75,8 +75,9 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	@Override
 	public JobCreationPanel[] getJobCreationPanels() {
-		return new JobCreationPanel[] { getGoldJobCreationPanel(),
-				getSzybkiJobCreationPanel() };
+		// return new JobCreationPanel[] { getGoldJobCreationPanel(),
+		// getSzybkiJobCreationPanel() };
+		return new JobCreationPanel[] { getGoldJobCreationPanel() };
 	}
 
 	@Override

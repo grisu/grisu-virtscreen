@@ -1,20 +1,27 @@
 package grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
 
 import grisu.control.ServiceInterface;
-import grisu.frontend.view.swing.jobmonitoring.single.appSpecific.AppSpecificViewerPanel;
+import grisu.model.FileManager;
+import grisu.model.GrisuRegistryManager;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.util.List;
 import java.util.TimerTask;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -48,31 +55,124 @@ public class Gold extends AppSpecificViewerPanel {
 	private JLabel label;
 	private JProgressBar progressBar;
 
-	private JLabel label_1;
+	private JLabel lblLigandsFinished;
 
 	private JTextField textField;
 	private String goldFilePath = null;
+	private String currentStatusPath = null;
+	private String statusPath = null;
 	private JButton btnArchive;
+	private JSeparator separator;
+	private JLabel lblCpusUsed;
+	private JLabel lblLicensesUsed;
+	private JTextField cpusField;
+	private JTextField licensesField;
+	private JButton btnHistory;
+	private JSeparator separator_1;
+	private int noCpus = 0;
+
+	private final FileManager fm;
+	private JLabel lblStatus;
 
 	public Gold(ServiceInterface si) {
 		super(si);
+		fm = GrisuRegistryManager.getDefault(si).getFileManager();
 		setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(12dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(62dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(32dlu;default):grow"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(62dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(32dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(16dlu;default)"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC, }));
-		add(getLabel(), "2, 2, 3, 1");
-		add(getProgressBar(), "2, 4, 3, 1");
-		add(getLabel_1(), "2, 6, right, default");
-		add(getTextField(), "4, 6, fill, default");
+		add(getLabel(), "2, 4, 3, 1, default, top");
+		add(getProgressBar(), "6, 4, 7, 1, default, top");
+		add(getLblLigandsFinished(), "2, 6, 3, 1, right, default");
+		add(getTextField(), "6, 6, fill, default");
+		add(getSeparator(), "2, 8, 11, 1, fill, fill");
+		add(getLblStatus(), "2, 10, 3, 1");
+		add(getLblCpusUsed(), "2, 12, 3, 1, right, default");
+		add(getCpusField(), "6, 12, fill, default");
+		add(getLblLicensesUsed(), "8, 12, right, default");
+		add(getLicensesField(), "10, 12, fill, default");
+		add(getBtnHistory(), "12, 10, 1, 3, right, top");
+		add(getSeparator_1(), "2, 14, 11, 1");
 		// add(getBtnArchive(), "4, 10, right, top");
+	}
+
+	private void calculateCpusAndLicenses() {
+
+		if (StringUtils.isBlank(currentStatusPath)) {
+			return;
+		}
+
+		getCpusField().setText("Loading...");
+		getLicensesField().setText("Loading...");
+
+		List<String> lines = null;
+		try {
+			File currentStatusFile = fm.downloadFile(currentStatusPath);
+			lines = FileUtils.readLines(currentStatusFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+
+		}
+
+
+		if (lines.size() != 1) {
+			getCpusField().setText("Error...");
+			getLicensesField().setText("Error...");
+			return;
+		}
+
+		String[] tokens = lines.get(0).split(",");
+
+		int cpusTemp = -1;
+		try {
+			cpusTemp = Integer.parseInt(tokens[1]);
+		} catch (NumberFormatException e) {
+			// do nothing;
+		}
+
+		int licensesTemp = -1;
+		try {
+			licensesTemp = Integer.parseInt(tokens[2]);
+		} catch (NumberFormatException e) {
+			// do nothing
+		}
+
+		if (cpusTemp <= 0) {
+			getCpusField().setText("n/a");
+		} else {
+			getCpusField().setText(cpusTemp + "   (of " + noCpus + ")");
+		}
+		if (licensesTemp <= 0) {
+			getLicensesField().setText("n/a");
+		} else {
+			getLicensesField().setText(licensesTemp + "   (of " + noCpus + ")");
+		}
+
 	}
 
 	private void calculateCurrentLigandNo() {
@@ -94,61 +194,24 @@ public class Gold extends AppSpecificViewerPanel {
 
 	}
 
-	// private JButton getBtnArchive() {
-	// if (btnArchive == null) {
-	// btnArchive = new JButton("Archive");
-	// btnArchive.setEnabled(false);
-	// btnArchive.addActionListener(new ActionListener() {
-	// public void actionPerformed(ActionEvent e) {
-	//
-	// new Thread() {
-	// @Override
-	// public void run() {
-	// try {
-	//
-	// getBtnArchive().setEnabled(false);
-	//
-	// BackgroundActionProgressDialogSmall d = new
-	// BackgroundActionProgressDialogSmall(
-	// "Archiving job:", getJob().getJobname());
-	// getJob().archive(null, true);
-	// d.close();
-	//
-	// } catch (JobPropertiesException e1) {
-	// ErrorInfo info = new ErrorInfo(
-	// "Job archive error",
-	// "Can't archive job:\n\n"
-	// + e1.getLocalizedMessage(),
-	// null, "Error", e1, Level.SEVERE, null);
-	//
-	// JXErrorPane pane = new JXErrorPane();
-	// pane.setErrorInfo(info);
-	//
-	// JXErrorPane.showDialog(Gold.this.getRootPane(),
-	// pane);
-	// getBtnArchive().setEnabled(true);
-	// } catch (RemoteFileSystemException e1) {
-	// ErrorInfo info = new ErrorInfo(
-	// "Job archive error",
-	// "Can't archive job:\n\n"
-	// + e1.getLocalizedMessage(),
-	// null, "Error", e1, Level.SEVERE, null);
-	//
-	// JXErrorPane pane = new JXErrorPane();
-	// pane.setErrorInfo(info);
-	//
-	// JXErrorPane.showDialog(Gold.this.getRootPane(),
-	// pane);
-	// getBtnArchive().setEnabled(true);
-	// }
-	// }
-	// }.start();
-	//
-	// }
-	// });
-	// }
-	// return btnArchive;
-	// }
+
+
+	private JButton getBtnHistory() {
+		if (btnHistory == null) {
+			btnHistory = new JButton("History");
+		}
+		return btnHistory;
+	}
+
+	private JTextField getCpusField() {
+		if (cpusField == null) {
+			cpusField = new JTextField();
+			cpusField.setHorizontalAlignment(SwingConstants.CENTER);
+			cpusField.setText("n/a");
+			cpusField.setEditable(false);
+		}
+		return cpusField;
+	}
 
 	private JLabel getLabel() {
 		if (label == null) {
@@ -157,11 +220,42 @@ public class Gold extends AppSpecificViewerPanel {
 		return label;
 	}
 
-	private JLabel getLabel_1() {
-		if (label_1 == null) {
-			label_1 = new JLabel("Ligands finished (approx.):");
+	private JLabel getLblCpusUsed() {
+		if (lblCpusUsed == null) {
+			lblCpusUsed = new JLabel("Cpus used:");
 		}
-		return label_1;
+		return lblCpusUsed;
+	}
+
+	private JLabel getLblLicensesUsed() {
+		if (lblLicensesUsed == null) {
+			lblLicensesUsed = new JLabel("Licenses used:");
+		}
+		return lblLicensesUsed;
+	}
+
+	private JLabel getLblLigandsFinished() {
+		if (lblLigandsFinished == null) {
+			lblLigandsFinished = new JLabel("Ligands finished:");
+		}
+		return lblLigandsFinished;
+	}
+
+	private JLabel getLblStatus() {
+		if (lblStatus == null) {
+			lblStatus = new JLabel("Status");
+		}
+		return lblStatus;
+	}
+
+	private JTextField getLicensesField() {
+		if (licensesField == null) {
+			licensesField = new JTextField();
+			licensesField.setHorizontalAlignment(SwingConstants.CENTER);
+			licensesField.setText("n/a");
+			licensesField.setEditable(false);
+		}
+		return licensesField;
 	}
 
 	private JProgressBar getProgressBar() {
@@ -174,34 +268,25 @@ public class Gold extends AppSpecificViewerPanel {
 		return progressBar;
 	}
 
-	// private void downloadAndDisplayMolecules() {
-	//
-	// String resDir = getJob().getJobProperty("result_directory");
-	// String concOut = getJob().getJobProperty(
-	// PARAMETER.concatenated_output.toString());
-	//
-	// if (StringUtils.isBlank(resDir) || StringUtils.isBlank(concOut)) {
-	// return;
-	// }
-	// final String conc = resDir + "/" + concOut;
-	// System.out.println("conc: " + conc);
-	//
-	// new Thread() {
-	// @Override
-	// public void run() {
-	// File file = getJob().downloadAndCacheOutputFile(conc);
-	// getJmolPanel_1().setFile(file.getPath());
-	// }
-	// }.start();
-	//
-	// }
+	private JSeparator getSeparator() {
+		if (separator == null) {
+			separator = new JSeparator();
+		}
+		return separator;
+	}
+
+	private JSeparator getSeparator_1() {
+		if (separator_1 == null) {
+			separator_1 = new JSeparator();
+		}
+		return separator_1;
+	}
 
 	private JTextField getTextField() {
 		if (textField == null) {
 			textField = new JTextField();
 			textField.setHorizontalAlignment(SwingConstants.CENTER);
 			textField.setEditable(false);
-			textField.setColumns(10);
 			textField.setText("n/a");
 		}
 		return textField;
@@ -211,7 +296,14 @@ public class Gold extends AppSpecificViewerPanel {
 	public void initialize() {
 
 		goldFilePath = getJob().getJobProperty("result_directory") + "/"
-				+ "gold.out";
+		+ "gold.out";
+
+		currentStatusPath = getJob().getJobDirectoryUrl() + "/"
+		+ "gold_status_latest";
+		statusPath = getJob().getJobDirectoryUrl() + "/" + "gold_status";
+
+		noCpus = getJob().getCpus();
+
 	}
 
 	@Override
@@ -243,6 +335,7 @@ public class Gold extends AppSpecificViewerPanel {
 			@Override
 			public void run() {
 				calculateCurrentLigandNo();
+				calculateCpusAndLicenses();
 			}
 		}.start();
 

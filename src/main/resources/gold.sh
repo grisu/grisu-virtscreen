@@ -32,7 +32,7 @@ function check_gold_status () {
 }
 
 function check_gold_status_daemon () {
-    while [ 1 == 1 ]; do  check_gold_status;  sleep 300; done
+    while [ 1 == 1 ]; do  check_gold_status;  sleep 60; done
 }
 
 function calculate_components () {
