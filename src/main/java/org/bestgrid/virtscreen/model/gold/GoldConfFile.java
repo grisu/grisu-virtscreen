@@ -54,7 +54,7 @@ public class GoldConfFile {
 	private ScoreParamFile scoreParamFile = null;
 
 	private final Set<AbstractGoldParameter> customparameters = Collections
-			.synchronizedSet(new HashSet<AbstractGoldParameter>());
+	.synchronizedSet(new HashSet<AbstractGoldParameter>());
 
 	// internal variables
 	private final ServiceInterface si;
@@ -67,7 +67,7 @@ public class GoldConfFile {
 
 	private List<String> configLines;
 	private final List<AbstractGoldParameter> parameters = Collections
-			.synchronizedList(new LinkedList<AbstractGoldParameter>());
+	.synchronizedList(new LinkedList<AbstractGoldParameter>());
 
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -134,7 +134,7 @@ public class GoldConfFile {
 		return result.toString();
 	}
 
-	public File getJobConfFile() {
+	public synchronized File getJobConfFile() {
 
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
 		File newConfFile = new File(tmpDir, templateFile.getName());
@@ -167,7 +167,7 @@ public class GoldConfFile {
 		return this.templateFile.getName();
 	}
 
-	public List<String> getNewConfig() {
+	public synchronized List<String> getNewConfig() {
 		List<String> result = new LinkedList<String>();
 
 		for (AbstractGoldParameter p : parameters) {
@@ -233,7 +233,8 @@ public class GoldConfFile {
 
 	}
 
-	public void setConfFile(String url) throws FileTransactionException {
+	public synchronized void setConfFile(String url)
+			throws FileTransactionException {
 		this.url = url;
 		this.parentUrl = FileManager.calculateParentUrl(this.url);
 		this.templateFile = this.fm.downloadFile(this.url);

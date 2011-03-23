@@ -30,15 +30,16 @@ public class GoldJob {
 	private int walltimeInSeconds = 600;
 
 	public GoldJob(ServiceInterface si, GoldConfFile confFileTemplate)
-			throws FileTransactionException {
+	throws FileTransactionException {
 		this.si = si;
 		this.goldConfFile = confFileTemplate;
 		job = new JobObject(si);
 
 	}
 
-	public void createAndSubmitJob() throws JobSubmissionException,
-			JobPropertiesException {
+	public synchronized void createAndSubmitJob()
+			throws JobSubmissionException,
+	JobPropertiesException {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(goldConfFile
 				.getName()));
@@ -62,7 +63,7 @@ public class GoldJob {
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-				"/ARCS/BeSTGRID/Drug_discovery/Local");
+		"/ARCS/BeSTGRID/Drug_discovery/Local");
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
