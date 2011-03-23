@@ -50,7 +50,7 @@ function calculate_components () {
   cat ${OUTDIR}/gold.out|
       grep 'Ligand counter'|
       awk '{print $8}'|
-      sort -n -u
+      sort -n -u|tail -n 1
 }
 # > ${OUTDIR}/number_of_ligands_in_library
 
