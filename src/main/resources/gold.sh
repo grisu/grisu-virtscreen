@@ -47,10 +47,12 @@ function ligands_total () {
 function calculate_components () {
   OUTDIR=$(grep 'directory =' $CONF_FILE|
       awk '{print $3}')
-  cat ${OUTDIR}/gold.out|
+  LIGAND_NUMBER=$(cat ${OUTDIR}/gold.out|
       grep 'Ligand counter'|
       awk '{print $8}'|
-      sort -n -u|tail -n 1
+      sort -n -u|tail -n 1)
+  LIGAND_NUMBER={0:-$LIGAND_NUMBER}
+  echo $LIGAND_NUMBER
 }
 # > ${OUTDIR}/number_of_ligands_in_library
 
