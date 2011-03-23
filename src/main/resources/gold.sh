@@ -51,7 +51,7 @@ function calculate_components () {
       grep 'Ligand counter'|
       awk '{print $8}'|
       sort -n -u|xargs -n 1 echo|tail -n 1)
-  LIGAND_NUMBER={$LIGAND_NUMBER:-0}
+  LIGAND_NUMBER=${LIGAND_NUMBER:-0}
   echo $LIGAND_NUMBER
 }
 # > ${OUTDIR}/number_of_ligands_in_library
