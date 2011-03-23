@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -47,7 +48,7 @@ public class Gold extends AppSpecificViewerPanel {
 		@Override
 		public void run() {
 
-			calculateCurrentLigandNo();
+			calculateCurrentLigandNoAndCpusAndLicenses();
 		}
 
 	}
@@ -58,10 +59,9 @@ public class Gold extends AppSpecificViewerPanel {
 	private JLabel lblLigandsFinished;
 
 	private JTextField textField;
-	private String goldFilePath = null;
+	// private String goldFilePath = null;
 	private String currentStatusPath = null;
 	private String statusPath = null;
-	private JButton btnArchive;
 	private JSeparator separator;
 	private JLabel lblCpusUsed;
 	private JLabel lblLicensesUsed;
@@ -70,6 +70,7 @@ public class Gold extends AppSpecificViewerPanel {
 	private JButton btnHistory;
 	private JSeparator separator_1;
 	private int noCpus = 0;
+	private int noLigands = 0;
 
 	private final FileManager fm;
 	private JLabel lblStatus;
@@ -119,7 +120,7 @@ public class Gold extends AppSpecificViewerPanel {
 		// add(getBtnArchive(), "4, 10, right, top");
 	}
 
-	private void calculateCpusAndLicenses() {
+	protected void calculateCurrentLigandNoAndCpusAndLicenses() {
 
 		if (StringUtils.isBlank(currentStatusPath)) {
 			return;
@@ -173,28 +174,20 @@ public class Gold extends AppSpecificViewerPanel {
 			getLicensesField().setText(licensesTemp + "   (of " + noCpus + ")");
 		}
 
-	}
 
-	private void calculateCurrentLigandNo() {
-
-		if (StringUtils.isBlank(goldFilePath)) {
+		Integer ligands = -1;
+		try {
+			ligands = Integer.parseInt(tokens[3]);
+		} catch (NumberFormatException e) {
+			// do nothing
+			getTextField().setText("n/a");
+			getProgressBar().setValue(0);
 			return;
 		}
 
-		long size = getJob().getFileSize(goldFilePath);
-
-		if (size <= 520) {
-			return;
-		}
-
-		size = size - 520L;
-		Integer ligands = new Double(size / 117.5).intValue();
-		getTextField().setText(ligands.toString());
-		// getProgressBar().setValue(ligands);
-
+		getTextField().setText(ligands.toString() + "  (of " + noLigands + ")");
+		getProgressBar().setValue(ligands);
 	}
-
-
 
 	private JButton getBtnHistory() {
 		if (btnHistory == null) {
@@ -261,6 +254,7 @@ public class Gold extends AppSpecificViewerPanel {
 	private JProgressBar getProgressBar() {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
+			progressBar.setEnabled(false);
 			// progressBar.setMinimum(0);
 			// progressBar.setMaximum(20000);
 			// progressBar.setMaximum(20);
@@ -295,8 +289,8 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	public void initialize() {
 
-		goldFilePath = getJob().getJobProperty("result_directory") + "/"
-		+ "gold.out";
+		// goldFilePath = getJob().getJobProperty("result_directory") + "/"
+		// + "gold.out";
 
 		currentStatusPath = getJob().getJobDirectoryUrl() + "/"
 		+ "gold_status_latest";
@@ -304,19 +298,38 @@ public class Gold extends AppSpecificViewerPanel {
 
 		noCpus = getJob().getCpus();
 
+		File temp = getJob().downloadAndCacheOutputFile("");
+		List<String> l = null;
+		try {
+			l = FileUtils.readLines(temp);
+		} catch (IOException e) {
+			myLogger.error(e);
+			return;
+		}
+		if (l.size() != 1) {
+			myLogger.error("Can't get total number of ligands...");
+			return;
+		}
+		try {
+			noLigands = Integer.parseInt(l.get(1));
+		} catch (NumberFormatException e) {
+			myLogger.equals(e);
+			return;
+		}
+
+
 	}
 
 	@Override
 	void jobFinished() {
 		updateProgress();
-		getProgressBar().setIndeterminate(false);
 		// getBtnArchive().setEnabled(true);
 	}
 
 	@Override
 	public void jobStarted() {
 		updateProgress();
-		getProgressBar().setIndeterminate(true);
+		getProgressBar().setEnabled(true);
 	}
 
 	@Override
@@ -334,8 +347,7 @@ public class Gold extends AppSpecificViewerPanel {
 		new Thread() {
 			@Override
 			public void run() {
-				calculateCurrentLigandNo();
-				calculateCpusAndLicenses();
+				calculateCurrentLigandNoAndCpusAndLicenses();
 			}
 		}.start();
 
