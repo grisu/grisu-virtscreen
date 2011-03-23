@@ -36,7 +36,7 @@ function check_job_status () {
 }
 
 function check_job_status_daemon () {
-    while [ 1 == 1 ]; do  check_job_status;  sleep 300; done
+    while [ 1 == 1 ]; do  check_job_status;  sleep 60; done
 }
 
 function ligands_total () {
