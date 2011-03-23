@@ -3,6 +3,7 @@ killall -9 pvmd3
 rm -Rf /tmp/pvm*
 
 export GOLD_DIR=/share/apps/gold/GOLD
+export GOLD_LICENSE=${GOLD_DIR}/bin/gold_licence
 export CCDC_LICENSE_FILE=27000@er171.ceres.auckland.ac.nz
 export PVM_ROOT=${GOLD_DIR}/pvm3
 
@@ -18,18 +19,21 @@ function release_licenses () {
 }
 
 function check_license_status () {
-    ${GOLD_DIR}/bin/gold_licence  statall >> ${INDIR}/gold_license_status
+    ${GOLD_LICENSE}  statall >> ${INDIR}/gold_license_status
 }
 
 function check_job_status () {
     TIMESTAMP=$(date  +'%s')
     NUMBER_OF_CPUS=$(echo 'ps -a'|pvm|grep gold_parallel.sh|wc -l)
-    NUMBER_OF_LICENSES=$[$(/share/apps/gold/GOLD_Suite/bin/gold_licence statall \
+    NUMBER_OF_LICENSES=$[$(${GOLD_LICENSE} statall \
 	|awk 'BEGIN {a = 0}; /Users of silver/ {a = 0}; /floating license/ {a = 1}; //{ if (a == 1) print $0}' \
 	|wc -l) - 3]
+
+    NUMBER_OF_LICENSES_USER=$(${GOLD_LICENSE} statall |grep $USER|wc -l)
+
     NUMBER_OF_COMPONENTS=$(calculate_components)
 
-    RESULT="$TIMESTAMP,$NUMBER_OF_CPUS,$NUMBER_OF_LICENSES,$NUMBER_OF_COMPONENTS"
+    RESULT="$TIMESTAMP,$NUMBER_OF_CPUS,$NUMBER_OF_LICENSES_USER,$NUMBER_OF_LICENSES,$NUMBER_OF_COMPONENTS"
 
     echo $RESULT >> ${INDIR}/job_status
     echo $RESULT > ${INDIR}/job_status_latest
