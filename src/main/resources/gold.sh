@@ -50,7 +50,7 @@ function calculate_components () {
   LIGAND_NUMBER=$(cat ${OUTDIR}/gold.out|
       grep 'Ligand counter'|
       awk '{print $8}'|
-      sort -n -u|tail -n 1)
+      sort -n -u|xargs -n 1 echo|tail -n 1)
   LIGAND_NUMBER={0:-$LIGAND_NUMBER}
   echo $LIGAND_NUMBER
 }
