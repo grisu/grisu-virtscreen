@@ -1,16 +1,22 @@
 package grisu.frontend.view.swing.jobmonitoring.single.appSpecific;
 
 import grisu.control.ServiceInterface;
+import grisu.frontend.control.clientexceptions.FileTransactionException;
+import grisu.frontend.view.swing.files.preview.fileViewers.utils.JobStatusFileDialog;
 import grisu.model.FileManager;
 import grisu.model.GrisuRegistryManager;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,6 +28,8 @@ import javax.swing.SwingConstants;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jdesktop.swingx.JXErrorPane;
+import org.jdesktop.swingx.error.ErrorInfo;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -74,6 +82,8 @@ public class Gold extends AppSpecificViewerPanel {
 
 	private final FileManager fm;
 	private JLabel lblStatus;
+
+	private String job_status_url;
 
 	public Gold(ServiceInterface si) {
 		super(si);
@@ -134,10 +144,8 @@ public class Gold extends AppSpecificViewerPanel {
 			File currentStatusFile = fm.downloadFile(currentStatusPath);
 			lines = FileUtils.readLines(currentStatusFile);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			myLogger.error(e);
 			return;
-
 		}
 
 
@@ -152,15 +160,15 @@ public class Gold extends AppSpecificViewerPanel {
 		int cpusTemp = -1;
 		try {
 			cpusTemp = Integer.parseInt(tokens[1]);
-		} catch (NumberFormatException e) {
-			// do nothing;
+		} catch (Exception e) {
+			myLogger.error(e);
 		}
 
 		int licensesTemp = -1;
 		try {
 			licensesTemp = Integer.parseInt(tokens[2]);
-		} catch (NumberFormatException e) {
-			// do nothing
+		} catch (Exception e) {
+			myLogger.error(e);
 		}
 
 		if (cpusTemp <= 0) {
@@ -179,7 +187,7 @@ public class Gold extends AppSpecificViewerPanel {
 		try {
 			ligands = Integer.parseInt(tokens[3]);
 		} catch (Exception e) {
-			// do nothing
+			myLogger.error(e);
 			getTextField().setText("n/a");
 			getProgressBar().setValue(0);
 			return;
@@ -189,9 +197,37 @@ public class Gold extends AppSpecificViewerPanel {
 		getProgressBar().setValue(ligands);
 	}
 
+	private File downloadJobStatusFile() throws FileTransactionException {
+		File temp = fm.downloadFile(job_status_url);
+		return temp;
+	}
+
 	private JButton getBtnHistory() {
 		if (btnHistory == null) {
 			btnHistory = new JButton("History");
+			btnHistory.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+					File temp;
+					try {
+						temp = downloadJobStatusFile();
+					} catch (FileTransactionException e1) {
+						ErrorInfo ei = new ErrorInfo(
+								"Download error",
+								"Error while trying to download job status file.",
+								e1.getLocalizedMessage(), (String) null, e1,
+								Level.SEVERE, (Map) null);
+						JXErrorPane.showDialog(Gold.this.getPanel(), ei);
+						return;
+					}
+
+					JobStatusFileDialog dialog = new JobStatusFileDialog();
+					dialog.setFileManagerAndUrl(fm, job_status_url);
+					dialog.setFile(null, temp);
+					dialog.setVisible(true);
+
+				}
+			});
 		}
 		return btnHistory;
 	}
@@ -289,14 +325,24 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	public void initialize() {
 
-		// goldFilePath = getJob().getJobProperty("result_directory") + "/"
-		// + "gold.out";
-
 		currentStatusPath = getJob().getJobDirectoryUrl() + "/"
 		+ "job_status_latest";
 		statusPath = getJob().getJobDirectoryUrl() + "/" + "job_status";
 
 		noCpus = getJob().getCpus();
+
+		job_status_url = getJob().getJobDirectoryUrl() + "/" + "job_status";
+
+	}
+
+	@Override
+	void jobFinished() {
+		updateProgress();
+		// getBtnArchive().setEnabled(true);
+	}
+
+	@Override
+	public void jobStarted() {
 
 		File temp = getJob().downloadAndCacheOutputFile("ligands_total");
 		List<String> l = null;
@@ -311,27 +357,16 @@ public class Gold extends AppSpecificViewerPanel {
 			return;
 		}
 		try {
-			noLigands = Integer.parseInt(l.get(1));
+			noLigands = Integer.parseInt(l.get(0));
 		} catch (Exception e) {
+			e.printStackTrace();
 			myLogger.equals(e);
 			return;
 		}
-
+		getProgressBar().setEnabled(true);
 		getProgressBar().setMaximum(noLigands);
 
-
-	}
-
-	@Override
-	void jobFinished() {
 		updateProgress();
-		// getBtnArchive().setEnabled(true);
-	}
-
-	@Override
-	public void jobStarted() {
-		updateProgress();
-		getProgressBar().setEnabled(true);
 	}
 
 	@Override
