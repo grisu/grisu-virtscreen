@@ -178,7 +178,7 @@ public class Gold extends AppSpecificViewerPanel {
 		Integer ligands = -1;
 		try {
 			ligands = Integer.parseInt(tokens[3]);
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			// do nothing
 			getTextField().setText("n/a");
 			getProgressBar().setValue(0);
@@ -293,12 +293,12 @@ public class Gold extends AppSpecificViewerPanel {
 		// + "gold.out";
 
 		currentStatusPath = getJob().getJobDirectoryUrl() + "/"
-		+ "gold_status_latest";
-		statusPath = getJob().getJobDirectoryUrl() + "/" + "gold_status";
+		+ "job_status_latest";
+		statusPath = getJob().getJobDirectoryUrl() + "/" + "job_status";
 
 		noCpus = getJob().getCpus();
 
-		File temp = getJob().downloadAndCacheOutputFile("");
+		File temp = getJob().downloadAndCacheOutputFile("ligands_total");
 		List<String> l = null;
 		try {
 			l = FileUtils.readLines(temp);
@@ -312,10 +312,12 @@ public class Gold extends AppSpecificViewerPanel {
 		}
 		try {
 			noLigands = Integer.parseInt(l.get(1));
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			myLogger.equals(e);
 			return;
 		}
+
+		getProgressBar().setMaximum(noLigands);
 
 
 	}
