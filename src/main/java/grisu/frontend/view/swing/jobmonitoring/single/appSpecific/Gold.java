@@ -136,15 +136,15 @@ public class Gold extends AppSpecificViewerPanel {
 		add(getLblLigandsFinished(), "4, 8, 3, 1, left, default");
 		add(getLblWalltime(), "8, 8, 3, 1, left, default");
 		add(getSeparator(), "2, 10, 9, 1, fill, fill");
-		add(getLblStatus(), "2, 12");
-		add(getLicensesJobProgressBar(), "4, 14, 3, 1");
-		add(getLicensesAllProgressbar(), "8, 14, 3, 1");
-		add(getLblLicensesUsedfor(), "4, 16, 3, 1");
-		add(getLblLicensesUsedoverall(), "8, 16, 3, 1");
-		add(getCpusProgressBar(), "4, 18, 3, 1, default, bottom");
-		add(getLblCpusUsedfor(), "4, 20");
+		add(getLblStatus(), "2, 12, 3, 1, default, top");
+		add(getBtnHistory(), "10, 12, right, top");
+		add(getCpusProgressBar(), "4, 14, 3, 1, default, bottom");
+		add(getLicensesJobProgressBar(), "8, 14, 3, 1");
+		add(getLblCpusUsedfor(), "4, 16");
+		add(getLblLicensesUsedfor(), "8, 16, 3, 1");
+		add(getLicensesAllProgressbar(), "8, 18, 3, 1");
+		add(getLblLicensesUsedoverall(), "8, 20, 3, 1");
 		add(getSeparator_1(), "2, 22, 9, 1");
-		add(getBtnHistory(), "10, 24, right, top");
 	}
 
 	protected void calculateCurrentLigandNoAndCpusAndLicenses() {
@@ -214,20 +214,26 @@ public class Gold extends AppSpecificViewerPanel {
 
 		if (cpusTemp <= 0) {
 			getCpusProgressBar().setString("n/a");
+			getCpusProgressBar().setValue(0);
 		} else {
 			getCpusProgressBar().setString(cpusTemp + "   (of " + noCpus + ")");
+			getCpusProgressBar().setValue(cpusTemp);
 		}
 		if (licensesUserTemp <= 0) {
 			getLicensesJobProgressBar().setString("n/a");
+			getLicensesJobProgressBar().setValue(0);
 		} else {
 			getLicensesJobProgressBar().setString(
 					licensesUserTemp + "   (of " + noCpus + ")");
+			getLicensesJobProgressBar().setValue(licensesUserTemp);
 		}
 		if (licensesAllTemp <= 0) {
 			getLicensesAllProgressbar().setString("n/a");
+			getLicensesAllProgressbar().setValue(0);
 		} else {
 			getLicensesAllProgressbar().setString(
-					licensesUserTemp + "   (of " + GOLD_LICENSES + ")");
+					licensesAllTemp + "   (of " + GOLD_LICENSES + ")");
+			getLicensesAllProgressbar().setValue(licensesAllTemp);
 		}
 
 
