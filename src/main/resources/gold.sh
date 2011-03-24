@@ -65,6 +65,8 @@ function start_pvm_daemon () {
     nohup ${PVM_ROOT}/lib/LINUX64/pvmd3  &
 }
 
+dos2unix ${CONF_FILE} 
+
 start_pvm_daemon
 
 ligands_total
