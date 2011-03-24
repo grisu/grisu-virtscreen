@@ -61,7 +61,7 @@
 	</scm>
 
 	<properties>
-		<grisu.version>0.3.4-SNAPSHOT</grisu.version>
+		<grisu.version>0.3.3.1-SNAPSHOT</grisu.version>
 	</properties>
 
 
@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>grisu.frontend</groupId>
 			<artifactId>grisu-client-swing</artifactId>
-			<version>0.3.4-SNAPSHOT</version>
+			<version>${grisu.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
