@@ -75,9 +75,9 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	@Override
 	public JobCreationPanel[] getJobCreationPanels() {
-		// return new JobCreationPanel[] { getGoldJobCreationPanel(),
-		// getSzybkiJobCreationPanel() };
-		return new JobCreationPanel[] { getGoldJobCreationPanel() };
+		return new JobCreationPanel[] { getGoldJobCreationPanel(),
+				getSzybkiJobCreationPanel() };
+		// return new JobCreationPanel[] { getGoldJobCreationPanel() };
 	}
 
 	@Override
@@ -100,8 +100,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			p = GrisuRegistryManager
 			.getDefault(si)
 			.getFileManager()
-			.createGridFile(
-			"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+					.createGridFile("grid://groups/nz/NeSI//");
 			p.setName("Personal remote files");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
