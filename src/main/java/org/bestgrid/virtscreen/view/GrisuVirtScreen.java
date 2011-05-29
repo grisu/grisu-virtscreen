@@ -100,7 +100,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			p = GrisuRegistryManager
 			.getDefault(si)
 			.getFileManager()
-					.createGridFile("grid://groups/nz/NeSI//");
+			.createGridFile("grid://groups/nz/NeSI//");
 			p.setName("Personal remote files");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -115,9 +115,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			f = GrisuRegistryManager
 			.getDefault(si)
 			.getFileManager()
-			.createGridFile(
-			"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
-			f.setName("Drug_discovery");
+					.createGridFile("grid://groups/nz/virtual_screening//");
+			f.setName("Virtual Screening");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
 			// f = new GridFile("grid://groups/ARCS/BeSTGRID/Drug_discovery//");
