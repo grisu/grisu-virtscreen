@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
-<!-- Note that this file is refreshed by the server every 60seconds, as specified in web.xml -->
-
 <log4j:configuration debug="true">
 
-	<appender name="ROLL" class="org.apache.log4j.FileAppender">
-		<!-- The active file to log to -->
-		<param name="file" value="${user.home}/.grisu.beta/grisu-virtscreen.debug" />
-		<param name="append" value="true" />
-		<param name="encoding" value="UTF-8" />
+	<!-- <appender name="rollingFile" class="org.apache.log4j.RollingFileAppender"> 
+		<param name="file" value="/var/log/grisu/grisu.log" /> <param name="append" 
+		value="true" /> <param name="encoding" value="UTF-8" /> <layout class="org.apache.log4j.PatternLayout"> 
+		<param name="ConversionPattern" value="%5p %d{ISO8601} [%t][%x] %c - %m%n" 
+		/> </layout> </appender> -->
 
+	<!-- <appender name="syslog" class="org.apache.log4j.net.SyslogAppender"> 
+		<param name="Facility" value="USER" /> <param name="SyslogHost" value="localhost" 
+		/> <param name="Threshold" value="all"/> <layout class="org.apache.log4j.PatternLayout"> 
+		<param name="ConversionPattern" value="%5p %d{ISO8601} [%t][%x] %c - %m%n" 
+		/> </layout> </appender> -->
+
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<!-- A1 uses PatternLayout -->
 		<layout class="org.apache.log4j.PatternLayout">
-			<!-- The log message pattern -->
-			<param name="ConversionPattern" value="%5p %d{ISO8601} [%t][%x] %c - %m%n" />
+			<param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
 		</layout>
 	</appender>
 
-	<!-- Loggers to filter out various class paths -->
+	<appender name="file" class="org.apache.log4j.FileAppender">
+		<param name="File" value="${user.home}/.grisu.beta/grisu-virtscreen.debug" />
+		<param name="Threshold" value="debug" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
+		</layout>
+	</appender>
 
-	<logger name="org.hibernate.engine.loading.LoadContexts" additivity="false">
-		<level value="error"/>
-		<appender-ref ref="ROLL" />
-	</logger>
+	<!-- <logger name="org.hibernate.engine.loading.LoadContexts" additivity="false"> 
+		<level value="error" /> </logger> -->
 
-	<!-- Debugging loggers -->
-
-	<!-- Uncomment to enable debug on calpoly code only -->
-	
-	<logger name="grisu">
-		<level value="debug"/>
-		<appender-ref ref="ROLL" />
-	</logger>
 	<logger name="org.apache.commons.vfs.provider">
-		<level value="error"/>
-		<appender-ref ref="ROLL" />
+		<level value="error" />
 	</logger>
-	
+
+	<logger name="grisu" additivity="true">
+		<level value="debug" />
+	</logger>
+
 
 	<root>
-		<priority value="warn" />
-		<appender-ref ref="ROLL" />
+		<level value="warn" />
+		<appender-ref ref="console" />
+		<appender-ref ref="file" />
 	</root>
 
 </log4j:configuration>
