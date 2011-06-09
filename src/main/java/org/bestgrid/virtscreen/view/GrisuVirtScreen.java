@@ -75,9 +75,9 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	@Override
 	public JobCreationPanel[] getJobCreationPanels() {
-		return new JobCreationPanel[] { getGoldJobCreationPanel(),
-				getSzybkiJobCreationPanel() };
-		// return new JobCreationPanel[] { getGoldJobCreationPanel() };
+		// return new JobCreationPanel[] { getGoldJobCreationPanel(),
+		// getSzybkiJobCreationPanel() };
+		return new JobCreationPanel[] { getGoldJobCreationPanel() };
 	}
 
 	@Override
@@ -95,13 +95,11 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	@Override
 	protected void initOptionalStuff(ServiceInterface si) {
 
-		GridFile p = null;
+		GridFile df = null;
 		try {
-			p = GrisuRegistryManager
-			.getDefault(si)
-			.getFileManager()
-			.createGridFile("grid://groups/nz/NeSI//");
-			p.setName("Personal remote files");
+			df = GrisuRegistryManager.getDefault(si).getFileManager()
+			.createGridFile("grid://groups/nz/nesi//");
+			df.setName("Data Fabric");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
 			// p = new GridFile(
@@ -110,12 +108,29 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			// p.setName("Personal remote files");
 			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 		}
+		// GridFile p = null;
+		// try {
+		// p = GrisuRegistryManager
+		// .getDefault(si)
+		// .getFileManager()
+		// .createGridFile(
+		// iftp:/grid://groups/ARCS/BeSTGRID/Drug_discovery/Local///
+		// setName("Personal remote files");
+		// } catch (RemoteFileSystemException e) {
+		// e.printStackTrace();
+		// // p = new GridFile(
+		// // "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		// // p.setIsVirtual(false);
+		// // p.setName("Personal remote files");
+		// // p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		// }
 		GridFile f = null;
 		try {
 			f = GrisuRegistryManager
 			.getDefault(si)
 			.getFileManager()
-					.createGridFile("grid://groups/nz/virtual_screening//");
+			.createGridFile(
+			"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
 			f.setName("Virtual Screening");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -128,9 +143,18 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
 		.getLocalRoot();
 		List<GridFile> files = new LinkedList<GridFile>();
-		files.add(p);
-		files.add(f);
-		files.add(l);
+		if (df != null) {
+			files.add(df);
+		}
+		// if (p != null) {
+		// files.add(p);
+		// }
+		if (f != null) {
+			files.add(f);
+		}
+		if (l != null) {
+			files.add(l);
+		}
 		//
 		GrisuRegistryManager.getDefault(si).set(VIRTSCREEN_ROOTS, files);
 		addGroupFileListPanel(files, files);

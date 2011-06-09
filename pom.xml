@@ -61,7 +61,7 @@
 	</scm>
 
 	<properties>
-		<grisu.version>0.3.3.2-SNAPSHOT</grisu.version>
+		<grisu.version>0.3.4</grisu.version>
 	</properties>
 
 

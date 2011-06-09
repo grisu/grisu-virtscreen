@@ -1,6 +1,5 @@
 package org.bestgrid.virtscreen.model.gold;
 
-import grisu.X;
 import grisu.control.exceptions.RemoteFileSystemException;
 import grisu.model.FileManager;
 import grisu.model.dto.GridFile;
@@ -27,7 +26,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 	public static final String LIGAND_PARAMETER_NAME = "ligand_data_file";
 
 	public static int getLigandDockingAmount(String configLine) {
-		X.p(configLine);
+
 		String[] temp = configLine.split("\\s");
 		String temp2 = temp[temp.length - 1];
 
@@ -53,7 +52,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 
 	public static String[] getLigandFiles(String configLine) {
 		String[] temp = configLine.substring(LIGAND_PARAMETER_NAME.length())
-				.trim().split("\\s");
+		.trim().split("\\s");
 
 		if (temp.length == 0) {
 			return new String[] {};
@@ -103,7 +102,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 	}
 
 	public synchronized List<String> getRemoteLigandFiles()
-			throws RemoteFileSystemException {
+	throws RemoteFileSystemException {
 
 		if (remoteLigandFiles == null) {
 			GridFile folder = getFileManager().ls(VS_LIBRARY_FILES_URL);
@@ -138,7 +137,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 	public void setLigandDockingAmount(int amount) {
 		removeMessage("amount");
 		newLine = LIGAND_PARAMETER_NAME + " "
-				+ StringUtils.join(getLigandFiles(), " ") + " " + amount;
+		+ StringUtils.join(getLigandFiles(), " ") + " " + amount;
 		addMessage("amount", "  Set ligand docking amount to " + amount + "\n");
 	}
 
@@ -278,8 +277,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 			// msg.append("\nAll specified ligand data files are valid and accessable.\n");
 			valid = true;
 			newLine = LIGAND_PARAMETER_NAME + " "
-					+ StringUtils.join(newFiles, " ") + " "
-					+ getLigandDockingAmount();
+			+ StringUtils.join(newFiles, " ") + " "
+			+ getLigandDockingAmount();
 			// getFilesToStageIn().addAll(newFiles);
 		}
 
