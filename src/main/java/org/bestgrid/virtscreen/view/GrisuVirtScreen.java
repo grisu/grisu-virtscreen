@@ -108,22 +108,23 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			// p.setName("Personal remote files");
 			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 		}
-		// GridFile p = null;
-		// try {
-		// p = GrisuRegistryManager
-		// .getDefault(si)
-		// .getFileManager()
-		// .createGridFile(
-		// iftp:/grid://groups/ARCS/BeSTGRID/Drug_discovery/Local///
-		// setName("Personal remote files");
-		// } catch (RemoteFileSystemException e) {
-		// e.printStackTrace();
-		// // p = new GridFile(
-		// // "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-		// // p.setIsVirtual(false);
-		// // p.setName("Personal remote files");
-		// // p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-		// }
+		GridFile p = null;
+		try {
+			p = GrisuRegistryManager
+			.getDefault(si)
+			.getFileManager()
+			.createGridFile(
+			"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+			df.setName("Data Fabric");
+		} catch (RemoteFileSystemException e) {
+			e.printStackTrace();
+			// p = new GridFile(
+			// "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+			// p.setIsVirtual(false);
+			// p.setName("Personal remote files");
+			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		}
+
 		GridFile f = null;
 		try {
 			f = GrisuRegistryManager
@@ -140,17 +141,33 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			// f.setPath(f.getUrl());
 		}
 
+		GridFile j = null;
+		try {
+			j = GrisuRegistryManager.getDefault(si).getFileManager()
+			.createGridFile("grid://jobs");
+			j.setName("Jobs");
+		} catch (RemoteFileSystemException e) {
+			e.printStackTrace();
+			// f = new GridFile("grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+			//
+			// f.setIsVirtual(true);
+			// f.setPath(f.getUrl());
+		}
+
 		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
 		.getLocalRoot();
 		List<GridFile> files = new LinkedList<GridFile>();
 		if (df != null) {
 			files.add(df);
 		}
-		// if (p != null) {
-		// files.add(p);
-		// }
+		if (p != null) {
+			files.add(p);
+		}
 		if (f != null) {
 			files.add(f);
+		}
+		if (j != null) {
+			files.add(j);
 		}
 		if (l != null) {
 			files.add(l);
