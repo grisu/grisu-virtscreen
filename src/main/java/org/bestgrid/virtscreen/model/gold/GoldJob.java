@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
+import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
 public class GoldJob {
 
@@ -30,7 +31,7 @@ public class GoldJob {
 	private int walltimeInSeconds = 600;
 
 	public GoldJob(ServiceInterface si, GoldConfFile confFileTemplate)
-	throws FileTransactionException {
+			throws FileTransactionException {
 		this.si = si;
 		this.goldConfFile = confFileTemplate;
 		job = new JobObject(si);
@@ -39,13 +40,13 @@ public class GoldJob {
 
 	public synchronized void createAndSubmitJob()
 			throws JobSubmissionException,
-	JobPropertiesException {
+			JobPropertiesException {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(goldConfFile
 				.getName()));
 		job.setApplication("Gold");
-		job.setApplicationVersion("5.0");
-		job.setSubmissionLocation("gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
+		job.setApplicationVersion(GrisuVirtScreen.GOLD_VERSION);
+		job.setSubmissionLocation(GrisuVirtScreen.SUBMISSION_LOCATION);
 
 		job.setCommandline("sh gold.sh " + this.goldConfFile.getName());
 		job.setCpus(this.cpus);
@@ -63,7 +64,7 @@ public class GoldJob {
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-		"/ARCS/BeSTGRID/Drug_discovery/Local");
+				GrisuVirtScreen.SUBMISSION_VO);
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
 

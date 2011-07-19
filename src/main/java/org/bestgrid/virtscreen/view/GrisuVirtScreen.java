@@ -20,6 +20,12 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	public static final String VIRTSCREEN_ROOTS = "virtscreen_roots";
 
+	public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
+
+	public static final String SUBMISSION_LOCATION = "gold:gram5.ceres.auckland.ac.nz";
+
+	public static final String GOLD_VERSION = "5.1";
+
 	/**
 	 * Launch the application.
 	 */
@@ -98,7 +104,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile df = null;
 		try {
 			df = GrisuRegistryManager.getDefault(si).getFileManager()
-			.createGridFile("grid://groups/nz/nesi//");
+					.createGridFile("grid://groups/nz/nesi//");
 			df.setName("Data Fabric");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -108,30 +114,28 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			// p.setName("Personal remote files");
 			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 		}
-		GridFile p = null;
-		try {
-			p = GrisuRegistryManager
-			.getDefault(si)
-			.getFileManager()
-			.createGridFile(
-			"grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-			df.setName("Data Fabric");
-		} catch (RemoteFileSystemException e) {
-			e.printStackTrace();
-			// p = new GridFile(
-			// "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-			// p.setIsVirtual(false);
-			// p.setName("Personal remote files");
-			// p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
-		}
+		// GridFile p = null;
+		// try {
+		// p = GrisuRegistryManager
+		// .getDefault(si)
+		// .getFileManager()
+		// .createGridFile("grid://groups/nz/nesi//");
+		// df.setName("Data Fabric");
+		// } catch (RemoteFileSystemException e) {
+		// e.printStackTrace();
+		// // p = new GridFile(
+		// // "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		// // p.setIsVirtual(false);
+		// // p.setName("Personal remote files");
+		// // p.setPath("grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
+		// }
 
 		GridFile f = null;
 		try {
 			f = GrisuRegistryManager
-			.getDefault(si)
-			.getFileManager()
-			.createGridFile(
-			"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+					.getDefault(si)
+					.getFileManager()
+					.createGridFile("grid://groups/nz/virtual-screening//");
 			f.setName("Virtual Screening");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -144,7 +148,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFile j = null;
 		try {
 			j = GrisuRegistryManager.getDefault(si).getFileManager()
-			.createGridFile("grid://jobs");
+					.createGridFile("grid://jobs");
 			j.setName("Jobs");
 		} catch (RemoteFileSystemException e) {
 			e.printStackTrace();
@@ -155,14 +159,14 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		}
 
 		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
-		.getLocalRoot();
+				.getLocalRoot();
 		List<GridFile> files = new LinkedList<GridFile>();
 		if (df != null) {
 			files.add(df);
 		}
-		if (p != null) {
-			files.add(p);
-		}
+		// if (p != null) {
+		// files.add(p);
+		// }
 		if (f != null) {
 			files.add(f);
 		}
