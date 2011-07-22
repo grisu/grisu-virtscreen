@@ -14,10 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class SzybkiJob {
+
+	static final Logger myLogger = Logger.getLogger(SzybkiJob.class.getName());
 
 	public static final File SZYBKI_JOB_CONTROL_SCRIPT = new File(
 			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "szybki.sh");
@@ -90,7 +93,7 @@ public class SzybkiJob {
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-		// "/ARCS/BeSTGRID/Drug_discovery/Local");
+				// "/ARCS/BeSTGRID/Drug_discovery/Local");
 				"/ARCS/BeSTGRID");
 
 		Map<String, String> additionalJobProperties = new HashMap<String, String>();
@@ -98,7 +101,7 @@ public class SzybkiJob {
 		try {
 			job.submitJob(additionalJobProperties);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 
 		job = null;

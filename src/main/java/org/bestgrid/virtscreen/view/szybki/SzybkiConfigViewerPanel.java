@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.szybki.SzybkiException;
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
 
@@ -25,6 +26,10 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class SzybkiConfigViewerPanel extends JPanel implements
 PropertyChangeListener {
+
+	static final Logger myLogger = Logger
+			.getLogger(SzybkiConfigViewerPanel.class.getName());
+
 	private JScrollPane scrollPane;
 	private JTextArea textArea;
 
@@ -128,7 +133,7 @@ PropertyChangeListener {
 		try {
 			this.inputFile.createTempFileFromStrings(Arrays.asList(lines));
 		} catch (SzybkiException e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 
 	}
@@ -139,7 +144,7 @@ PropertyChangeListener {
 		int c = getTextArea().getCaretPosition();
 
 		String text = this.inputFile
-		.getParametersAsString(showDisabledParameters);
+				.getParametersAsString(showDisabledParameters);
 		getTextArea().setText(text);
 
 		getTextArea().setCaretPosition(c);

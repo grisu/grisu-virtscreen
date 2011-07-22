@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.bestgrid.virtscreen.model.gold.GoldJob;
 import org.netbeans.validation.api.ui.ValidationGroup;
@@ -36,6 +37,9 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 PropertyChangeListener {
+
+	static final Logger myLogger = Logger.getLogger(GoldJobInputPanelNew.class
+			.getName());
 
 	private ServiceInterface si;
 	private ConfFileInputFile confFileInput;
@@ -264,7 +268,7 @@ PropertyChangeListener {
 			getBtnSubmit().setEnabled(false);
 		} else {
 			final StringBuffer logMessage = new StringBuffer(
-			"Parse log:\n\nLoading conf file...\n");
+					"Parse log:\n\nLoading conf file...\n");
 			final StringBuffer fixes = new StringBuffer();
 
 			lockUI(true);
@@ -296,7 +300,7 @@ PropertyChangeListener {
 						getBtnSubmit().setEnabled(false);
 						return;
 					} catch (Exception e) {
-						e.printStackTrace();
+						myLogger.error(e);
 						logMessage.append("Error opening .conf file: "
 								+ e.getLocalizedMessage());
 						fixes.append("Please check syntax of .conf file "
@@ -336,13 +340,13 @@ PropertyChangeListener {
 		if (success) {
 			getErrorLabel().setText("");
 			logMessage = logMessage
-			+ "Config file parsed successful. Job ready for submission.\n";
+					+ "Config file parsed successful. Job ready for submission.\n";
 		} else {
 			getErrorLabel()
 			.setText(
-			"Error when parsing .conf file. Please check log below for details.");
+					"Error when parsing .conf file. Please check log below for details.");
 			logMessage = logMessage
-			+ "\n=====================================================================================\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n";
+					+ "\n=====================================================================================\n\nError when parsing config file. Please check errors below, fix and update the file and click \"Reload\":\n";
 		}
 		getSubmissionLogPanel().setText(logMessage + "\n" + fixes);
 
@@ -366,8 +370,7 @@ PropertyChangeListener {
 			job = new GoldJob(si, goldConfFile);
 
 		} catch (FileTransactionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			myLogger.error(e);
 			return;
 		}
 
@@ -400,8 +403,8 @@ PropertyChangeListener {
 					getLigandFileSelectPanel().setGoldConfFile(null);
 				} catch (Exception e) {
 					String message = "\nJob creation / submission failed: "
-						+ e.getLocalizedMessage() + "\n";
-					e.printStackTrace();
+							+ e.getLocalizedMessage() + "\n";
+					myLogger.error(e);
 					getErrorLabel().setText(message);
 					getSubmissionLogPanel().appendMessage(message);
 				} finally {

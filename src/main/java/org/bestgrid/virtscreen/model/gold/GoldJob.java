@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
 public class GoldJob {
+
+	static final Logger myLogger = Logger.getLogger(GoldJob.class.getName());
 
 	public static final File GOLD_JOB_CONTROL_SCRIPT = new File(
 			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "gold.sh");
@@ -77,7 +80,7 @@ public class GoldJob {
 		try {
 			job.submitJob(additionalJobProperties);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 
 		job = null;

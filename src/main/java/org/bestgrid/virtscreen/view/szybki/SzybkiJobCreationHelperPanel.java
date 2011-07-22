@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.szybki.SzybkiJob;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -20,6 +21,10 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 public class SzybkiJobCreationHelperPanel extends JPanel {
+
+	static final Logger myLogger = Logger
+			.getLogger(SzybkiJobCreationHelperPanel.class.getName());
+
 	private JCheckBox chckbxDisplayAllParameters;
 	private JButton btnSubmit;
 
@@ -66,9 +71,9 @@ public class SzybkiJobCreationHelperPanel extends JPanel {
 							try {
 								job.createAndSubmitJob();
 							} catch (JobSubmissionException e) {
-								e.printStackTrace();
+								myLogger.error(e);
 							} catch (JobPropertiesException e) {
-								e.printStackTrace();
+								myLogger.error(e);
 							}
 						}
 					}.start();

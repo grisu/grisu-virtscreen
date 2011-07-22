@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.szybki.SzybkiException;
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
 import org.bestgrid.virtscreen.model.szybki.SzybkiJob;
@@ -22,6 +23,9 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class SzybkiJobCreationPanel extends JPanel implements JobCreationPanel,
 PropertyChangeListener {
+
+	static final Logger myLogger = Logger
+			.getLogger(SzybkiJobCreationPanel.class.getName());
 
 	private ServiceInterface si;
 	private SzybkiInputFileGrid szybkiInputFileGrid;
@@ -144,7 +148,7 @@ PropertyChangeListener {
 			try {
 				this.inputFile.setInputFile((GridFile) evt.getNewValue());
 			} catch (SzybkiException e) {
-				e.printStackTrace();
+				myLogger.error(e);
 			}
 
 		}

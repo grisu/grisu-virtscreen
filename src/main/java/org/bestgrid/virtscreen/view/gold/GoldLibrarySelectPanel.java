@@ -17,6 +17,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
 import org.bestgrid.virtscreen.model.gold.LigandDataFile;
 
@@ -26,6 +27,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 public class GoldLibrarySelectPanel extends AbstractWidget {
+
+	static final Logger myLogger = Logger
+			.getLogger(GoldLibrarySelectPanel.class.getName());
 
 	public static final String N_A_MESSAGE = "Specified library not available.";
 	private final DefaultListModel ligandModel;
@@ -221,7 +225,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 				ligandModelCombo.removeAllElements();
 				for (String ligand : allLigands) {
 					ligandModelCombo
-							.addElement(FileManager.getFilename(ligand));
+					.addElement(FileManager.getFilename(ligand));
 				}
 			} else {
 				ligandModel.removeAllElements();
@@ -230,7 +234,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 				}
 			}
 		} catch (RemoteFileSystemException e) {
-			e.printStackTrace();
+			myLogger.error(e);
 		}
 		loadLibraries();
 	}

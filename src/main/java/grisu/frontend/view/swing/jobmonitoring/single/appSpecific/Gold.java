@@ -180,7 +180,7 @@ public class Gold extends AppSpecificViewerPanel {
 
 		Long hours = deltaInSeconds / 3600L;
 		getWalltimeProgressbar().setString(
-				hours + "  (of " + walltime / 3600 + ")");
+				hours + "  (of " + (walltime / 3600) + ")");
 
 		if (lines.size() != 1) {
 			getCpusProgressBar().setString("Error...");
@@ -414,7 +414,7 @@ public class Gold extends AppSpecificViewerPanel {
 	public void initialize() {
 
 		currentStatusPath = getJob().getJobDirectoryUrl() + "/"
-		+ "job_status_latest";
+				+ "job_status_latest";
 		statusPath = getJob().getJobDirectoryUrl() + "/" + "job_status";
 
 		noCpus = getJob().getCpus();
@@ -444,7 +444,7 @@ public class Gold extends AppSpecificViewerPanel {
 		}
 
 		String ligandsTotalUrl = getJob().getJobDirectoryUrl()
-		+ "/ligands_total";
+				+ "/ligands_total";
 		try {
 			startTimestamp = fm.getLastModified(ligandsTotalUrl);
 			endTimestamp = startTimestamp + (walltime * 1000);
@@ -462,8 +462,7 @@ public class Gold extends AppSpecificViewerPanel {
 		try {
 			noLigands = Integer.parseInt(l.get(0));
 		} catch (Exception e) {
-			e.printStackTrace();
-			myLogger.equals(e);
+			myLogger.error(e);
 			return;
 		}
 		getProgressBar().setEnabled(true);
