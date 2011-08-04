@@ -24,11 +24,15 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	public static final String VIRTSCREEN_ROOTS = "virtscreen_roots";
 
-	public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
+	// public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
+	public static final String SUBMISSION_VO = "/ARCS/BeSTGRID/Drug_discovery/Local";
 
-	public static final String SUBMISSION_LOCATION = "gold:gram5.ceres.auckland.ac.nz";
+	// public static final String SUBMISSION_LOCATION =
+	// "gold:gram5.ceres.auckland.ac.nz";
+	public static final String SUBMISSION_LOCATION = "gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz";
 
-	public static final String GOLD_VERSION = "5.1";
+	// public static final String GOLD_VERSION = "5.1";
+	public static final String GOLD_VERSION = "5.0";
 
 	/**
 	 * Launch the application.
@@ -139,7 +143,9 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			f = GrisuRegistryManager
 					.getDefault(si)
 					.getFileManager()
-					.createGridFile("grid://groups/nz/virtual-screening//");
+					// .createGridFile("grid://groups/nz/virtual-screening//");
+					.createGridFile(
+							"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
 			f.setName("Virtual Screening");
 		} catch (RemoteFileSystemException e) {
 			myLogger.error(e);
