@@ -137,11 +137,11 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 	public String[] getSelectedLibraryFiles() {
 
 		if (useComboBox) {
-			String libFile = (String) combo.getSelectedItem();
+			final String libFile = (String) combo.getSelectedItem();
 			return new String[] { libFile };
 		} else {
-			Object[] o = list.getSelectedValues();
-			String[] result = new String[o.length];
+			final Object[] o = list.getSelectedValues();
+			final String[] result = new String[o.length];
 			for (int i = 0; i < o.length; i++) {
 				result[i] = (String) o[i];
 			}
@@ -171,7 +171,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 			list.setEnabled(true);
 		}
 
-		String[] ligandFiles = confFile.getLigandDataFiles();
+		final String[] ligandFiles = confFile.getLigandDataFiles();
 
 		if (useComboBox) {
 			if (ligandFiles.length == 0) {
@@ -181,7 +181,7 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 				ligandModelCombo.setSelectedItem(N_A_MESSAGE);
 			} else {
 				// only use first one...
-				String lib = FileManager.getFilename(ligandFiles[0]);
+				final String lib = FileManager.getFilename(ligandFiles[0]);
 				if (ligandModelCombo.getIndexOf(lib) < 0) {
 					if (ligandModelCombo.getIndexOf(N_A_MESSAGE) < 0) {
 						ligandModelCombo.addElement(N_A_MESSAGE);
@@ -193,11 +193,12 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 				}
 			}
 		} else {
-			int[] temp = {};
+			final int[] temp = {};
 			list.setSelectedIndices(temp);
-			List<Integer> selected = new LinkedList<Integer>();
-			for (String ligand : ligandFiles) {
-				int i = ligandModel.indexOf(FileManager.getFilename(ligand));
+			final List<Integer> selected = new LinkedList<Integer>();
+			for (final String ligand : ligandFiles) {
+				final int i = ligandModel.indexOf(FileManager
+						.getFilename(ligand));
 				if (i >= 0) {
 					selected.add(i);
 				}
@@ -223,18 +224,18 @@ public class GoldLibrarySelectPanel extends AbstractWidget {
 					LigandDataFile.VS_LIBRARY_FILES_URL);
 			if (useComboBox) {
 				ligandModelCombo.removeAllElements();
-				for (String ligand : allLigands) {
+				for (final String ligand : allLigands) {
 					ligandModelCombo
 					.addElement(FileManager.getFilename(ligand));
 				}
 			} else {
 				ligandModel.removeAllElements();
-				for (String ligand : allLigands) {
+				for (final String ligand : allLigands) {
 					ligandModel.addElement(FileManager.getFilename(ligand));
 				}
 			}
-		} catch (RemoteFileSystemException e) {
-			myLogger.error(e);
+		} catch (final RemoteFileSystemException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 		loadLibraries();
 	}

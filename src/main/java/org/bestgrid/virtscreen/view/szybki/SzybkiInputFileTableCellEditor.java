@@ -19,17 +19,19 @@ import org.bestgrid.virtscreen.model.szybki.ParameterValue;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
 
 public class SzybkiInputFileTableCellEditor extends AbstractCellEditor
-implements TableCellEditor {
+		implements TableCellEditor {
 
 	private final JCheckBox checkbox = new JCheckBox();
 	private final DefaultCellEditor checkBoxEditor = new DefaultCellEditor(
 			checkbox);
 
 	private final JComboBox combobox = new JComboBox();
-	private final DefaultCellEditor comboBoxEditor = new DefaultCellEditor(combobox);
+	private final DefaultCellEditor comboBoxEditor = new DefaultCellEditor(
+			combobox);
 
 	private final JTextField textField = new JTextField();
-	private final DefaultCellEditor textFieldEditor = new DefaultCellEditor(textField);
+	private final DefaultCellEditor textFieldEditor = new DefaultCellEditor(
+			textField);
 
 	private final Map<PARAM, FileCellEditor> fces = new HashMap<PARAM, FileCellEditor>();
 
@@ -49,7 +51,7 @@ implements TableCellEditor {
 	private FileCellEditor getFileCellEditor(PARAM p) {
 
 		if (fces.get(p) == null) {
-			FileCellEditor temp = new FileCellEditor();
+			final FileCellEditor temp = new FileCellEditor();
 			temp.setServiceInterface(si);
 			temp.setHistoryKey("szybki_" + p.toString());
 
@@ -63,7 +65,7 @@ implements TableCellEditor {
 
 		X.p("Value " + value.toString() + " row: " + row + " col: " + column);
 
-		ParameterValue pv = (ParameterValue) value;
+		final ParameterValue pv = (ParameterValue) value;
 
 		switch (pv.getType()) {
 		case BOOLEAN:
@@ -76,12 +78,11 @@ implements TableCellEditor {
 					isSelected, row, column);
 
 		case FILE:
-			FileCellEditor fce = getFileCellEditor(pv.getParameter());
+			final FileCellEditor fce = getFileCellEditor(pv.getParameter());
 			currentEditor = fce;
 			fce.setConfiguration(pv.getParameter().config);
 			return fce.getTableCellEditorComponent(table, value, isSelected,
-					row,
-					column);
+					row, column);
 		default:
 			currentEditor = textFieldEditor;
 			return textFieldEditor.getTableCellEditorComponent(table, value,
@@ -90,6 +91,5 @@ implements TableCellEditor {
 		}
 
 	}
-
 
 }

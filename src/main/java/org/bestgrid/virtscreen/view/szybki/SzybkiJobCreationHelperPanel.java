@@ -53,7 +53,7 @@ public class SzybkiJobCreationHelperPanel extends JPanel {
 
 				public void actionPerformed(ActionEvent e) {
 
-					if ( si == null ) {
+					if (si == null) {
 						X.p("Serviceinterface not set.");
 						return;
 					}
@@ -65,15 +65,15 @@ public class SzybkiJobCreationHelperPanel extends JPanel {
 
 					parent.setCurrentJob(job);
 
-					new Thread(){
+					new Thread() {
 						@Override
 						public void run() {
 							try {
 								job.createAndSubmitJob();
-							} catch (JobSubmissionException e) {
-								myLogger.error(e);
-							} catch (JobPropertiesException e) {
-								myLogger.error(e);
+							} catch (final JobSubmissionException e) {
+								myLogger.error(e.getLocalizedMessage(), e);
+							} catch (final JobPropertiesException e) {
+								myLogger.error(e.getLocalizedMessage(), e);
 							}
 						}
 					}.start();

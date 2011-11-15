@@ -40,7 +40,7 @@ public class VirtScreenEnvironment {
 			IOUtils.copy(in, new FileOutputStream(
 					SzybkiJob.SZYBKI_HELPER_PY_SCRIPT));
 			in.close();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
 		}
 	}

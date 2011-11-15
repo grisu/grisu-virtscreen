@@ -30,7 +30,6 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 		}
 	}
 
-
 	public int getColumnCount() {
 		return 4;
 	}
@@ -83,7 +82,7 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 			return null;
 		}
 
-		SzybkiParameter p = inputFile.getParameter(rowIndex);
+		final SzybkiParameter p = inputFile.getParameter(rowIndex);
 		return p.getParameterValue();
 	}
 
@@ -119,12 +118,11 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 	@Override
 	public boolean isCellEditable(int row, int col) {
 
-
 		if (col == 0) {
 			return true;
 		}
 
-		SzybkiParameter p = inputFile.getParameter(row);
+		final SzybkiParameter p = inputFile.getParameter(row);
 		if (!p.isEnabled()) {
 			return false;
 		} else {
@@ -145,7 +143,7 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 
 		try {
 			param.getParameterValue().setValue(value);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.err.println(e.getLocalizedMessage());
 		}
 
@@ -154,7 +152,7 @@ public class SzybkiInputFileTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int col) {
 
-		SzybkiParameter p = inputFile.getParameter(row);
+		final SzybkiParameter p = inputFile.getParameter(row);
 
 		switch (col) {
 		case 0:

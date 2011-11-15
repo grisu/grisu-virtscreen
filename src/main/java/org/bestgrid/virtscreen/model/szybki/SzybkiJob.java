@@ -20,7 +20,8 @@ import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class SzybkiJob {
 
-	static final Logger myLogger = Logger.getLogger(SzybkiJob.class.getName());
+	static final Logger myLogger = Logger.getLogger(SzybkiJob.class
+			.getName());
 
 	public static final File SZYBKI_JOB_CONTROL_SCRIPT = new File(
 			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "szybki.sh");
@@ -30,13 +31,13 @@ public class SzybkiJob {
 
 	public static void main(String[] args) throws Exception {
 
-		ServiceInterface si = LoginManager.loginCommandline("Local");
+		final ServiceInterface si = LoginManager.loginCommandline("Local");
 
-		SzybkiInputFile input = new SzybkiInputFile(si);
+		final SzybkiInputFile input = new SzybkiInputFile(si);
 
 		input.setInputFile("/home/markus/Desktop/jack/szybki/example.param");
 
-		SzybkiJob job = new SzybkiJob(si, input);
+		final SzybkiJob job = new SzybkiJob(si, input);
 
 		job.createAndSubmitJob();
 
@@ -67,7 +68,8 @@ public class SzybkiJob {
 		job.setApplicationVersion("1.3.4");
 		// job.setSubmissionLocation("er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz");
 
-		String commandline = "sh szybki.sh " + this.szybkiInputFile.getName();
+		final String commandline = "sh szybki.sh "
+				+ this.szybkiInputFile.getName();
 
 		X.p("Commandline: " + commandline);
 
@@ -82,10 +84,10 @@ public class SzybkiJob {
 		job.addInputFileUrl(SZYBKI_HELPER_PY_SCRIPT.getPath());
 		job.addInputFileUrl(szybkiInputFile.getJobConfFile().getPath());
 
-		for (SzybkiParameter p : szybkiInputFile.getParameters(TYPE.FILE)) {
+		for (final SzybkiParameter p : szybkiInputFile.getParameters(TYPE.FILE)) {
 
 			if (p.isEnabled()) {
-				GridFile f = (GridFile) p.getParameterValue().getValue();
+				final GridFile f = (GridFile) p.getParameterValue().getValue();
 				X.p("Adding file: " + f.getUrl());
 				job.addInputFileUrl(f.getUrl());
 			}
@@ -96,12 +98,12 @@ public class SzybkiJob {
 				// "/ARCS/BeSTGRID/Drug_discovery/Local");
 				"/ARCS/BeSTGRID");
 
-		Map<String, String> additionalJobProperties = new HashMap<String, String>();
+		final Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
 		try {
 			job.submitJob(additionalJobProperties);
-		} catch (InterruptedException e) {
-			myLogger.error(e);
+		} catch (final InterruptedException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 		job = null;

@@ -25,13 +25,13 @@ public class GoldConfFile {
 
 	public static void main(String[] args) throws Exception {
 
-		ServiceInterface si = LoginManager.loginCommandline("Local");
+		final ServiceInterface si = LoginManager.loginCommandline("Local");
 
-		GoldConfFile conf = new GoldConfFile(si);
+		final GoldConfFile conf = new GoldConfFile(si);
 
 		conf.setConfFile("/home/markus/Desktop/jack/exampleJob2/p110a_lead4x.conf");
 
-		for (String line : conf.getNewConfig()) {
+		for (final String line : conf.getNewConfig()) {
 			X.p(line);
 		}
 
@@ -54,7 +54,7 @@ public class GoldConfFile {
 	private ScoreParamFile scoreParamFile = null;
 
 	private final Set<AbstractGoldParameter> customparameters = Collections
-	.synchronizedSet(new HashSet<AbstractGoldParameter>());
+			.synchronizedSet(new HashSet<AbstractGoldParameter>());
 
 	// internal variables
 	private final ServiceInterface si;
@@ -67,7 +67,7 @@ public class GoldConfFile {
 
 	private List<String> configLines;
 	private final List<AbstractGoldParameter> parameters = Collections
-	.synchronizedList(new LinkedList<AbstractGoldParameter>());
+			.synchronizedList(new LinkedList<AbstractGoldParameter>());
 
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -109,9 +109,9 @@ public class GoldConfFile {
 
 	public Set<String> getFilesToStageIn() {
 
-		Set<String> result = new HashSet<String>();
+		final Set<String> result = new HashSet<String>();
 
-		for (AbstractGoldParameter p : parameters) {
+		for (final AbstractGoldParameter p : parameters) {
 			result.addAll(p.getFilesToStageIn());
 
 		}
@@ -121,10 +121,10 @@ public class GoldConfFile {
 
 	public String getFixes() {
 
-		StringBuffer result = new StringBuffer();
+		final StringBuffer result = new StringBuffer();
 
-		for (AbstractGoldParameter p : parameters) {
-			String msg = p.getFixes();
+		for (final AbstractGoldParameter p : parameters) {
+			final String msg = p.getFixes();
 			if (StringUtils.isNotBlank(msg)) {
 				result.append("Parameter: " + p.getParameterName() + "\n");
 				result.append(msg);
@@ -136,15 +136,15 @@ public class GoldConfFile {
 
 	public synchronized File getJobConfFile() {
 
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File newConfFile = new File(tmpDir, templateFile.getName());
+		final File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		final File newConfFile = new File(tmpDir, templateFile.getName());
 
 		newConfFile.delete();
 		newConfFile.deleteOnExit();
 
 		try {
 			FileUtils.writeLines(newConfFile, getNewConfig());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -168,9 +168,9 @@ public class GoldConfFile {
 	}
 
 	public synchronized List<String> getNewConfig() {
-		List<String> result = new LinkedList<String>();
+		final List<String> result = new LinkedList<String>();
 
-		for (AbstractGoldParameter p : parameters) {
+		for (final AbstractGoldParameter p : parameters) {
 			result.add(p.getConfigLine());
 		}
 
@@ -179,10 +179,10 @@ public class GoldConfFile {
 
 	public String getParseMessages() {
 
-		StringBuffer result = new StringBuffer();
+		final StringBuffer result = new StringBuffer();
 
-		for (AbstractGoldParameter p : parameters) {
-			String msg = p.getMessage();
+		for (final AbstractGoldParameter p : parameters) {
+			final String msg = p.getMessage();
 			if (StringUtils.isNotBlank(msg)) {
 				result.append("Parameter: " + p.getParameterName() + "\n");
 				result.append(msg);
@@ -214,7 +214,7 @@ public class GoldConfFile {
 
 	public boolean isValid() {
 
-		for (AbstractGoldParameter p : parameters) {
+		for (final AbstractGoldParameter p : parameters) {
 			if (!p.isValid()) {
 				return false;
 			}
@@ -241,7 +241,7 @@ public class GoldConfFile {
 
 		try {
 			this.configLines = FileUtils.readLines(this.templateFile);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -260,17 +260,18 @@ public class GoldConfFile {
 		customparameters.add(concatenatedOutput);
 		customparameters.add(scoreParamFile);
 
-		for (String line : configLines) {
+		for (final String line : configLines) {
 
 			if (StringUtils.isBlank(line)) {
 				continue;
 			}
 
 			boolean custom = false;
-			Iterator<AbstractGoldParameter> i = customparameters.iterator();
+			final Iterator<AbstractGoldParameter> i = customparameters
+					.iterator();
 
 			while (i.hasNext()) {
-				AbstractGoldParameter temp = i.next();
+				final AbstractGoldParameter temp = i.next();
 				if (temp.isResponsibleForLine(line)) {
 					temp.setServiceInterface(si);
 					temp.init(line, parentUrl);

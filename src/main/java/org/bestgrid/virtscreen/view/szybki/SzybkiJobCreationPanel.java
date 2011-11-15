@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.model.szybki.SzybkiException;
@@ -49,8 +50,7 @@ PropertyChangeListener {
 				RowSpec.decode("max(27dlu;default):grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(50dlu;default)"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(95dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC, }));
@@ -120,10 +120,11 @@ PropertyChangeListener {
 
 	private JTabbedPane getTabbedPane() {
 		if (tabbedPane == null) {
-			tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
+			tabbedPane = new JTabbedPane(SwingConstants.BOTTOM);
 			tabbedPane.addTab("Parameters", null, getSzybkiInputFileGrid(),
 					null);
-			tabbedPane.addTab("params file", null, getSzybkiConfigViewerPanel(), null);
+			tabbedPane.addTab("params file", null,
+					getSzybkiConfigViewerPanel(), null);
 		}
 		return tabbedPane;
 	}
@@ -137,8 +138,6 @@ PropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent evt) {
 
-
-
 		if ("inputFile".equals(evt.getPropertyName())) {
 
 			if (evt.getNewValue() == null) {
@@ -147,8 +146,8 @@ PropertyChangeListener {
 
 			try {
 				this.inputFile.setInputFile((GridFile) evt.getNewValue());
-			} catch (SzybkiException e) {
-				myLogger.error(e);
+			} catch (final SzybkiException e) {
+				myLogger.error(e.getLocalizedMessage(), e);
 			}
 
 		}

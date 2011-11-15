@@ -116,7 +116,8 @@ public class AdvancedLibrarySelectPanel extends AbstractWidget {
 	public void reset() {
 
 		boolean found = true;
-		for (String s : getGoldLibrarySelectPanel().getSelectedLibraryFiles()) {
+		for (final String s : getGoldLibrarySelectPanel()
+				.getSelectedLibraryFiles()) {
 			if (GoldLibrarySelectPanel.N_A_MESSAGE.equals(s)) {
 				found = false;
 				break;
@@ -138,7 +139,7 @@ public class AdvancedLibrarySelectPanel extends AbstractWidget {
 						getChckbxAdvancedSelection().setSelected(true);
 						return;
 					}
-				} catch (RemoteFileSystemException e) {
+				} catch (final RemoteFileSystemException e) {
 					getLigandFileInputFile().setValue(null);
 				}
 				getChckbxAdvancedSelection().setSelected(false);

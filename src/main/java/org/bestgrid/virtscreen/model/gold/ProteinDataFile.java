@@ -59,8 +59,8 @@ public class ProteinDataFile extends AbstractGoldParameter {
 
 		removeMessage("parse");
 
-		StringBuffer msg = new StringBuffer();
-		StringBuffer fix = new StringBuffer();
+		final StringBuffer msg = new StringBuffer();
+		final StringBuffer fix = new StringBuffer();
 
 		boolean parsingSuccessful = true;
 		boolean isLocalFile = false;
@@ -112,7 +112,7 @@ public class ProteinDataFile extends AbstractGoldParameter {
 					}
 				}
 
-			} catch (URISyntaxException e) {
+			} catch (final URISyntaxException e) {
 				msg.append("     -> Could not parse url for file: " + file
 						+ "\n");
 				parsingSuccessful = false;

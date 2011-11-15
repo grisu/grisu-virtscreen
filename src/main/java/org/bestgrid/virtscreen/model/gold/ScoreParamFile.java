@@ -66,8 +66,8 @@ public class ScoreParamFile extends AbstractGoldParameter {
 			return;
 		}
 
-		StringBuffer msg = new StringBuffer();
-		StringBuffer fix = new StringBuffer();
+		final StringBuffer msg = new StringBuffer();
+		final StringBuffer fix = new StringBuffer();
 
 		boolean parsingSuccessful = true;
 
@@ -112,7 +112,7 @@ public class ScoreParamFile extends AbstractGoldParameter {
 					}
 				}
 
-			} catch (URISyntaxException e) {
+			} catch (final URISyntaxException e) {
 				msg.append("     -> Could not parse url for file: " + file
 						+ "\n");
 				parsingSuccessful = false;

@@ -38,8 +38,8 @@ import com.jgoodies.forms.layout.RowSpec;
 public class GoldJobInputPanelNew extends JPanel implements JobCreationPanel,
 PropertyChangeListener {
 
-	static final Logger myLogger = Logger.getLogger(GoldJobInputPanelNew.class
-			.getName());
+	static final Logger myLogger = Logger
+			.getLogger(GoldJobInputPanelNew.class.getName());
 
 	private ServiceInterface si;
 	private ConfFileInputFile confFileInput;
@@ -248,7 +248,7 @@ PropertyChangeListener {
 					getBtnSubmit().setEnabled(false);
 				}
 				getBtnRefresh().setEnabled(!lock);
-				for (AbstractWidget w : widgets) {
+				for (final AbstractWidget w : widgets) {
 					w.lockUI(lock);
 				}
 			}
@@ -290,7 +290,7 @@ PropertyChangeListener {
 
 						getLigandFileSelectPanel().reset();
 
-					} catch (FileTransactionException e) {
+					} catch (final FileTransactionException e) {
 						logMessage.append("Can't access .conf file: "
 								+ getConfFileInput().getInputFileUrl());
 						fixes.append("Select an existing file.");
@@ -299,8 +299,8 @@ PropertyChangeListener {
 						lockUI(false);
 						getBtnSubmit().setEnabled(false);
 						return;
-					} catch (Exception e) {
-						myLogger.error(e);
+					} catch (final Exception e) {
+						myLogger.error(e.getLocalizedMessage(), e);
 						logMessage.append("Error opening .conf file: "
 								+ e.getLocalizedMessage());
 						fixes.append("Please check syntax of .conf file "
@@ -322,11 +322,11 @@ PropertyChangeListener {
 		// // TODO Auto-generated method stub
 		// setParseResult((Boolean) evt.getNewValue(),
 		// currentConfFile.getLogMessage(), currentConfFile.getFixes());
-		boolean success = goldConfFile.isValid();
+		final boolean success = goldConfFile.isValid();
 
-		String msg = goldConfFile.getParseMessages();
+		final String msg = goldConfFile.getParseMessages();
 
-		String fixes = goldConfFile.getFixes();
+		final String fixes = goldConfFile.getFixes();
 
 		setParseResult(success, msg, fixes);
 		getBtnSubmit().setEnabled(success);
@@ -356,7 +356,7 @@ PropertyChangeListener {
 		this.si = si;
 		this.goldConfFile = new GoldConfFile(si);
 		this.goldConfFile.addListener(this);
-		for (AbstractWidget w : widgets) {
+		for (final AbstractWidget w : widgets) {
 			w.setServiceInterface(si);
 		}
 
@@ -369,15 +369,15 @@ PropertyChangeListener {
 		try {
 			job = new GoldJob(si, goldConfFile);
 
-		} catch (FileTransactionException e) {
-			myLogger.error(e);
+		} catch (final FileTransactionException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			return;
 		}
 
 		job.setCpus(getCpus().getCpus());
 		job.setWalltime(getWalltime().getWalltimeInSeconds());
 
-		String email = getEmail_1().getEmailAddress();
+		final String email = getEmail_1().getEmailAddress();
 		if (StringUtils.isNotBlank(email)
 				&& (getEmail_1().sendEmailWhenJobFinished() || getEmail_1()
 						.sendEmailWhenJobIsStarted())) {
@@ -396,15 +396,15 @@ PropertyChangeListener {
 					getSubmissionLogPanel().setJobObject(job.getJobObject());
 					job.createAndSubmitJob();
 
-					for (AbstractWidget w : widgets) {
+					for (final AbstractWidget w : widgets) {
 						w.saveItemToHistory();
 					}
 					getConfFileInput().setInputFile(null);
 					getLigandFileSelectPanel().setGoldConfFile(null);
-				} catch (Exception e) {
-					String message = "\nJob creation / submission failed: "
+				} catch (final Exception e) {
+					final String message = "\nJob creation / submission failed: "
 							+ e.getLocalizedMessage() + "\n";
-					myLogger.error(e);
+					myLogger.error(e.getLocalizedMessage(), e);
 					getErrorLabel().setText(message);
 					getSubmissionLogPanel().appendMessage(message);
 				} finally {

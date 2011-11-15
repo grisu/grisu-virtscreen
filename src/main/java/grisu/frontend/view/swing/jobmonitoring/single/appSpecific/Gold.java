@@ -62,7 +62,7 @@ public class Gold extends AppSpecificViewerPanel {
 
 	}
 
-	private static final int GOLD_LICENSES = 12;
+	private static final int GOLD_LICENSES = 32;
 
 	private JLabel label;
 	private JProgressBar progressBar;
@@ -117,16 +117,12 @@ public class Gold extends AppSpecificViewerPanel {
 				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(16dlu;default)"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(16dlu;default)"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC, }));
@@ -162,11 +158,11 @@ public class Gold extends AppSpecificViewerPanel {
 		List<String> lines = null;
 		Long timestampTemp = -1L;
 		try {
-			File currentStatusFile = fm.downloadFile(currentStatusPath);
+			final File currentStatusFile = fm.downloadFile(currentStatusPath);
 			lines = FileUtils.readLines(currentStatusFile);
 			timestampTemp = fm.getLastModified(currentStatusPath);
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			getCpusProgressBar().setString("n/a");
 			getLicensesAllProgressbar().setString("n/a");
 			getLicensesJobProgressBar().setString("n/a");
@@ -175,10 +171,10 @@ public class Gold extends AppSpecificViewerPanel {
 			return;
 		}
 
-		Long deltaInSeconds = (timestampTemp - startTimestamp)/1000L;
+		final Long deltaInSeconds = (timestampTemp - startTimestamp) / 1000L;
 		getWalltimeProgressbar().setValue(deltaInSeconds.intValue());
 
-		Long hours = deltaInSeconds / 3600L;
+		final Long hours = deltaInSeconds / 3600L;
 		getWalltimeProgressbar().setString(
 				hours + "  (of " + (walltime / 3600) + ")");
 
@@ -189,27 +185,27 @@ public class Gold extends AppSpecificViewerPanel {
 			return;
 		}
 
-		String[] tokens = lines.get(0).split(",");
+		final String[] tokens = lines.get(0).split(",");
 
 		int cpusTemp = -1;
 		try {
 			cpusTemp = Integer.parseInt(tokens[1]);
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 		int licensesUserTemp = -1;
 		try {
 			licensesUserTemp = Integer.parseInt(tokens[2]);
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 		int licensesAllTemp = -1;
 		try {
 			licensesAllTemp = Integer.parseInt(tokens[3]);
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 		if (cpusTemp <= 0) {
@@ -236,12 +232,11 @@ public class Gold extends AppSpecificViewerPanel {
 			getLicensesAllProgressbar().setValue(licensesAllTemp);
 		}
 
-
 		Integer ligands = -1;
 		try {
 			ligands = Integer.parseInt(tokens[4]);
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			getProgressBar().setString("n/a");
 			getProgressBar().setValue(0);
 			return;
@@ -253,7 +248,7 @@ public class Gold extends AppSpecificViewerPanel {
 	}
 
 	private File downloadJobStatusFile() throws FileTransactionException {
-		File temp = fm.downloadFile(job_status_url);
+		final File temp = fm.downloadFile(job_status_url);
 		return temp;
 	}
 
@@ -268,8 +263,8 @@ public class Gold extends AppSpecificViewerPanel {
 					File temp;
 					try {
 						temp = downloadJobStatusFile();
-					} catch (FileTransactionException e1) {
-						ErrorInfo ei = new ErrorInfo(
+					} catch (final FileTransactionException e1) {
+						final ErrorInfo ei = new ErrorInfo(
 								"Download error",
 								"Error while trying to download job status file.",
 								e1.getLocalizedMessage(), (String) null, e1,
@@ -278,7 +273,7 @@ public class Gold extends AppSpecificViewerPanel {
 						return;
 					}
 
-					JobStatusFileDialog dialog = new JobStatusFileDialog();
+					final JobStatusFileDialog dialog = new JobStatusFileDialog();
 					dialog.setFileManagerAndUrl(fm, job_status_url);
 					dialog.setFile(null, temp);
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -434,16 +429,16 @@ public class Gold extends AppSpecificViewerPanel {
 	@Override
 	public void jobStarted() {
 
-		File temp = getJob().downloadAndCacheOutputFile("ligands_total");
+		final File temp = getJob().downloadAndCacheOutputFile("ligands_total");
 		List<String> l = null;
 		try {
 			l = FileUtils.readLines(temp);
-		} catch (IOException e) {
-			myLogger.error(e);
+		} catch (final IOException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			return;
 		}
 
-		String ligandsTotalUrl = getJob().getJobDirectoryUrl()
+		final String ligandsTotalUrl = getJob().getJobDirectoryUrl()
 				+ "/ligands_total";
 		try {
 			startTimestamp = fm.getLastModified(ligandsTotalUrl);
@@ -451,8 +446,8 @@ public class Gold extends AppSpecificViewerPanel {
 			getWalltimeProgressbar().setEnabled(true);
 			getWalltimeProgressbar().setMinimum(0);
 			getWalltimeProgressbar().setMaximum(walltime);
-		} catch (RemoteFileSystemException e1) {
-			myLogger.debug(e1);
+		} catch (final RemoteFileSystemException e1) {
+			myLogger.debug(e1.getLocalizedMessage(), e1);
 		}
 
 		if (l.size() != 1) {
@@ -461,8 +456,8 @@ public class Gold extends AppSpecificViewerPanel {
 		}
 		try {
 			noLigands = Integer.parseInt(l.get(0));
-		} catch (Exception e) {
-			myLogger.error(e);
+		} catch (final Exception e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			return;
 		}
 		getProgressBar().setEnabled(true);

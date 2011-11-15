@@ -123,27 +123,27 @@ PropertyChangeListener {
 
 	private void updateSzybkiInputFile() {
 
-		String text = getTextArea().getText();
-		String[] lines = text.split("\\r?\\n");
+		final String text = getTextArea().getText();
+		final String[] lines = text.split("\\r?\\n");
 
-		for (String l : lines) {
+		for (final String l : lines) {
 			X.p("XXX" + l + "XXX");
 		}
 
 		try {
 			this.inputFile.createTempFileFromStrings(Arrays.asList(lines));
-		} catch (SzybkiException e) {
-			myLogger.error(e);
+		} catch (final SzybkiException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 	}
 
 	private void updateViewer() {
 
-		int y = getScrollPane().getVerticalScrollBar().getValue();
-		int c = getTextArea().getCaretPosition();
+		final int y = getScrollPane().getVerticalScrollBar().getValue();
+		final int c = getTextArea().getCaretPosition();
 
-		String text = this.inputFile
+		final String text = this.inputFile
 				.getParametersAsString(showDisabledParameters);
 		getTextArea().setText(text);
 

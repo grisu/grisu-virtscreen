@@ -11,13 +11,13 @@ public class SzybkiException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SzybkiException(Throwable cause) {
-		super(cause);
+	public SzybkiException(String message, Throwable cause) {
+		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public SzybkiException(String message, Throwable cause) {
-		super(message, cause);
+	public SzybkiException(Throwable cause) {
+		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 

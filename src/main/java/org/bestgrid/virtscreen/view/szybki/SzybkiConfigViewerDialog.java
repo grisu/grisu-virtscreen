@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
-
 
 public class SzybkiConfigViewerDialog extends JDialog {
 
@@ -20,10 +20,11 @@ public class SzybkiConfigViewerDialog extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			SzybkiConfigViewerDialog dialog = new SzybkiConfigViewerDialog(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			final SzybkiConfigViewerDialog dialog = new SzybkiConfigViewerDialog(
+					null);
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -48,11 +49,11 @@ public class SzybkiConfigViewerDialog extends JDialog {
 			contentPanel.add(szybkiConfigViewerPanel, BorderLayout.CENTER);
 		}
 		{
-			JPanel buttonPane = new JPanel();
+			final JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				final JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						szybkiConfigViewerPanel.removeFile();
@@ -66,6 +67,5 @@ public class SzybkiConfigViewerDialog extends JDialog {
 
 		setVisible(true);
 	}
-
 
 }

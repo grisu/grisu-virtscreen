@@ -31,13 +31,11 @@ public class TableFilterControlPanel extends JPanel {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("185px:grow"),
 				FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC, }));
 		// add(getChckbxDisplayAllParameters(), "2, 2, left, top");
 		add(getSingleInputGridFile(), "2, 2, fill, fill");
 	}
-
 
 	private JCheckBox getChckbxDisplayAllParameters() {
 		if (chckbxDisplayAllParameters == null) {
@@ -48,9 +46,8 @@ public class TableFilterControlPanel extends JPanel {
 				public void itemStateChanged(ItemEvent e) {
 
 					szybkiJobCreationPanel
-					.showDisabledParameters(chckbxDisplayAllParameters
-							.isSelected());
-
+							.showDisabledParameters(chckbxDisplayAllParameters
+									.isSelected());
 
 				}
 			});
@@ -58,13 +55,12 @@ public class TableFilterControlPanel extends JPanel {
 		return chckbxDisplayAllParameters;
 	}
 
-
 	private SingleInputGridFile getSingleInputGridFile() {
 		if (singleInputGridFile == null) {
 			singleInputGridFile = new SingleInputGridFile();
 			singleInputGridFile.setHistoryKey("szybki_conf_file");
 			singleInputGridFile
-			.setExtensionsToDisplay(new String[] { "param" });
+					.setExtensionsToDisplay(new String[] { "param" });
 
 			singleInputGridFile.setFoldersSelectable(false);
 			singleInputGridFile.setDisplayHiddenFiles(false);
@@ -72,7 +68,6 @@ public class TableFilterControlPanel extends JPanel {
 		}
 		return singleInputGridFile;
 	}
-
 
 	public void setServiceInterface(ServiceInterface si) {
 		getSingleInputGridFile().setServiceInterface(si);

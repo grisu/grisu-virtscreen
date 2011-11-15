@@ -17,7 +17,7 @@ import javax.swing.table.TableRowSorter;
 import org.bestgrid.virtscreen.model.szybki.SzybkiInputFile;
 
 public class SzybkiInputFileGrid extends JPanel implements
-PropertyChangeListener {
+		PropertyChangeListener {
 
 	public static final RowFilter<SzybkiInputFileTableModel, Integer> ENABLEDFILTER = new RowFilter<SzybkiInputFileTableModel, Integer>() {
 		@Override
@@ -51,8 +51,6 @@ PropertyChangeListener {
 		add(getScrollPane(), BorderLayout.CENTER);
 	}
 
-
-
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -78,7 +76,7 @@ PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 
 		X.p("Changed in Grid: " + evt.getPropertyName());
-		if ( "inputFile".equals(evt.getPropertyName()) ) {
+		if ("inputFile".equals(evt.getPropertyName())) {
 			X.p("New: " + evt.getNewValue());
 			tm.fireTableDataChanged();
 		}
@@ -92,10 +90,10 @@ PropertyChangeListener {
 		tm = new SzybkiInputFileTableModel();
 		getTable().setModel(tm);
 
-		TableColumn tc0 = getTable().getColumnModel().getColumn(0);
-		TableColumn tc1 = getTable().getColumnModel().getColumn(1);
-		TableColumn tc2 = getTable().getColumnModel().getColumn(2);
-		TableColumn tc3 = getTable().getColumnModel().getColumn(3);
+		final TableColumn tc0 = getTable().getColumnModel().getColumn(0);
+		final TableColumn tc1 = getTable().getColumnModel().getColumn(1);
+		final TableColumn tc2 = getTable().getColumnModel().getColumn(2);
+		final TableColumn tc3 = getTable().getColumnModel().getColumn(3);
 
 		tc0.setPreferredWidth(24);
 		tc0.setMaxWidth(24);
@@ -110,16 +108,14 @@ PropertyChangeListener {
 		tc3.setMaxWidth(60);
 		tc3.setMinWidth(60);
 
-		SzybkiInputFileTableCellRenderer cr = new SzybkiInputFileTableCellRenderer(
+		final SzybkiInputFileTableCellRenderer cr = new SzybkiInputFileTableCellRenderer(
 				this.si);
-		SzybkiInputFileTableCellEditor ce = new SzybkiInputFileTableCellEditor(
+		final SzybkiInputFileTableCellEditor ce = new SzybkiInputFileTableCellEditor(
 				this.si);
 		tc2.setCellRenderer(cr);
 		tc2.setCellEditor(ce);
 
-		sorter = new TableRowSorter<SzybkiInputFileTableModel>(
-				tm);
-
+		sorter = new TableRowSorter<SzybkiInputFileTableModel>(tm);
 
 		getTable().setRowSorter(sorter);
 

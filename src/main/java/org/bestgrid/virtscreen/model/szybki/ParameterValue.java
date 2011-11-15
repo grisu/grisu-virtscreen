@@ -28,12 +28,11 @@ public class ParameterValue {
 
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public ParameterValue(ServiceInterface si, PARAM p,
-			String value) {
+	public ParameterValue(ServiceInterface si, PARAM p, String value) {
 		this.si = si;
 		this.param = p;
 
-		String newValue = filter(value);
+		final String newValue = filter(value);
 		setStringValue(newValue);
 
 	}
@@ -44,13 +43,13 @@ public class ParameterValue {
 
 	private String filter(String value) {
 
-		FILTER[] filters = this.param.filters;
+		final FILTER[] filters = this.param.filters;
 
 		if (filters == null) {
 			return value;
 		}
 
-		for (FILTER filter : filters) {
+		for (final FILTER filter : filters) {
 			switch (filter) {
 			case BASENAME_FILTER:
 				value = FileManager.getFilename(value);
@@ -89,9 +88,9 @@ public class ParameterValue {
 		case BOOLEAN:
 			try {
 				this.value = Boolean.parseBoolean(value);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new IllegalArgumentException(
-				"Value needs to be of type Boolean.");
+						"Value needs to be of type Boolean.");
 			}
 			this.stringValue = value;
 			return;
@@ -102,27 +101,27 @@ public class ParameterValue {
 		case INTEGER:
 			try {
 				this.value = Integer.parseInt(value);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new IllegalArgumentException(
-				"Value needs to be of type Integer.");
+						"Value needs to be of type Integer.");
 			}
 			this.stringValue = value;
 			return;
 		case DOUBLE:
 			try {
 				this.value = Double.parseDouble(value);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new IllegalArgumentException(
-				"Value needs to be of type Double.");
+						"Value needs to be of type Double.");
 			}
 			this.stringValue = value;
 			return;
 		case FILE:
 			try {
 				this.value = GrisuRegistryManager.getDefault(si)
-				.getFileManager().createGridFile(value);
+						.getFileManager().createGridFile(value);
 				this.stringValue = value;
-			} catch (RemoteFileSystemException e) {
+			} catch (final RemoteFileSystemException e) {
 				throw new IllegalArgumentException(e);
 			}
 			this.stringValue = value;

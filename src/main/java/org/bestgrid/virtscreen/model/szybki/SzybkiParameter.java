@@ -80,7 +80,7 @@ public class SzybkiParameter implements SzybkiConfigLine {
 		public static PARAM fromString(String paramName) {
 			try {
 				return PARAM.valueOf(paramName);
-			} catch (IllegalArgumentException e) {
+			} catch (final IllegalArgumentException e) {
 				return null;
 			}
 
@@ -229,7 +229,7 @@ public class SzybkiParameter implements SzybkiConfigLine {
 	}
 
 	public String getLine() {
-		StringBuffer l = new StringBuffer();
+		final StringBuffer l = new StringBuffer();
 		if (!isEnabled) {
 			l.append("# ");
 		}
@@ -267,14 +267,14 @@ public class SzybkiParameter implements SzybkiConfigLine {
 	}
 
 	public void setEnabled(boolean e) {
-		boolean old = this.isEnabled;
+		final boolean old = this.isEnabled;
 		this.isEnabled = e;
 		pcs.firePropertyChange("enabled", old, this.isEnabled);
 	}
 
 	public void setParameterValue(ParameterValue v) {
 		X.p("Sdfsdfdsfsdf");
-		Object oldValue = v;
+		final Object oldValue = v;
 		this.parameterValue = v;
 		pcs.firePropertyChange("parameterValue", oldValue, this.parameterValue);
 	}

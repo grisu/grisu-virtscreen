@@ -30,7 +30,7 @@ public class ConfFileInputFile extends SingleInputGridFile {
 	public void setServiceInterface(ServiceInterface si) {
 		super.setServiceInterface(si);
 
-		List<GridFile> roots = (List<GridFile>) (GrisuRegistryManager
+		final List<GridFile> roots = (List<GridFile>) (GrisuRegistryManager
 				.getDefault(getServiceInterface())
 				.get(GrisuVirtScreen.VIRTSCREEN_ROOTS));
 

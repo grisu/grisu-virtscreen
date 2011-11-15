@@ -19,20 +19,21 @@ import org.bestgrid.virtscreen.view.szybki.SzybkiJobCreationPanel;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 
-	static final Logger myLogger = Logger.getLogger(GrisuVirtScreen.class
-			.getName());
+	static final Logger myLogger = Logger
+			.getLogger(GrisuVirtScreen.class.getName());
 
 	public static final String VIRTSCREEN_ROOTS = "virtscreen_roots";
 
-	// public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
-	public static final String SUBMISSION_VO = "/ARCS/BeSTGRID/Drug_discovery/Local";
+	public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
+	// public static final String SUBMISSION_VO =
+	// "/ARCS/BeSTGRID/Drug_discovery/Local";
 
+	public static final String SUBMISSION_LOCATION = "gold:gram5.ceres.auckland.ac.nz";
 	// public static final String SUBMISSION_LOCATION =
-	// "gold:gram5.ceres.auckland.ac.nz";
-	public static final String SUBMISSION_LOCATION = "gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz";
+	// "gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz";
 
 	// public static final String GOLD_VERSION = "5.1";
-	public static final String GOLD_VERSION = "5.0";
+	public static final String GOLD_VERSION = "5.1";
 
 	/**
 	 * Launch the application.
@@ -48,8 +49,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 				try {
 					final GrisuApplicationWindow appWindow = new GrisuVirtScreen();
 					appWindow.setVisible(true);
-				} catch (Exception e) {
-					myLogger.error(e);
+				} catch (final Exception e) {
+					myLogger.error(e.getLocalizedMessage(), e);
 				}
 			}
 		});
@@ -114,8 +115,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			df = GrisuRegistryManager.getDefault(si).getFileManager()
 					.createGridFile("grid://groups/nz/nesi//");
 			df.setName("Data Fabric");
-		} catch (RemoteFileSystemException e) {
-			myLogger.error(e);
+		} catch (final RemoteFileSystemException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			// p = new GridFile(
 			// "grid://groups/ARCS/BeSTGRID/Drug_discovery/Local//");
 			// p.setIsVirtual(false);
@@ -140,15 +141,13 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 		GridFile f = null;
 		try {
-			f = GrisuRegistryManager
-					.getDefault(si)
+			f = GrisuRegistryManager.getDefault(si)
 					.getFileManager()
 					// .createGridFile("grid://groups/nz/virtual-screening//");
-					.createGridFile(
-							"grid://groups/ARCS/BeSTGRID/Drug_discovery//");
+					.createGridFile("grid://groups/nz/nesi/virtual-screening//");
 			f.setName("Virtual Screening");
-		} catch (RemoteFileSystemException e) {
-			myLogger.error(e);
+		} catch (final RemoteFileSystemException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			// f = new GridFile("grid://groups/ARCS/BeSTGRID/Drug_discovery//");
 			//
 			// f.setIsVirtual(true);
@@ -160,17 +159,17 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			j = GrisuRegistryManager.getDefault(si).getFileManager()
 					.createGridFile("grid://jobs");
 			j.setName("Jobs");
-		} catch (RemoteFileSystemException e) {
-			myLogger.error(e);
+		} catch (final RemoteFileSystemException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			// f = new GridFile("grid://groups/ARCS/BeSTGRID/Drug_discovery//");
 			//
 			// f.setIsVirtual(true);
 			// f.setPath(f.getUrl());
 		}
 
-		GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
+		final GridFile l = GrisuRegistryManager.getDefault(si).getFileManager()
 				.getLocalRoot();
-		List<GridFile> files = new LinkedList<GridFile>();
+		final List<GridFile> files = new LinkedList<GridFile>();
 		if (df != null) {
 			files.add(df);
 		}

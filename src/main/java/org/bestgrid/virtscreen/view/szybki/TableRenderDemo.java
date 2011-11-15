@@ -113,8 +113,8 @@ public class TableRenderDemo extends JPanel {
 		}
 
 		private void printDebugData() {
-			int numRows = getRowCount();
-			int numCols = getColumnCount();
+			final int numRows = getRowCount();
+			final int numCols = getColumnCount();
 
 			for (int i = 0; i < numRows; i++) {
 				System.out.print("    row " + i + ":");
@@ -154,11 +154,11 @@ public class TableRenderDemo extends JPanel {
 	 */
 	private static void createAndShowGUI() {
 		// Create and set up the window.
-		JFrame frame = new JFrame("TableRenderDemo");
+		final JFrame frame = new JFrame("TableRenderDemo");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Create and set up the content pane.
-		TableRenderDemo newContentPane = new TableRenderDemo();
+		final TableRenderDemo newContentPane = new TableRenderDemo();
 		newContentPane.setOpaque(true); // content panes must be opaque
 		frame.setContentPane(newContentPane);
 
@@ -182,12 +182,12 @@ public class TableRenderDemo extends JPanel {
 	public TableRenderDemo() {
 		super(new GridLayout(1, 0));
 
-		JTable table = new JTable(new MyTableModel());
+		final JTable table = new JTable(new MyTableModel());
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
 		// Create the scroll pane and add the table to it.
-		JScrollPane scrollPane = new JScrollPane(table);
+		final JScrollPane scrollPane = new JScrollPane(table);
 
 		// Set up column sizes.
 		initColumnSizes(table);
@@ -200,49 +200,45 @@ public class TableRenderDemo extends JPanel {
 	}
 
 	/*
-	 * This method picks good column sizes.
-	 * If all column heads are wider than the column's cells'
-	 * contents, then you can just use column.sizeWidthToFit().
+	 * This method picks good column sizes. If all column heads are wider than
+	 * the column's cells' contents, then you can just use
+	 * column.sizeWidthToFit().
 	 */
 	private void initColumnSizes(JTable table) {
-		MyTableModel model = (MyTableModel)table.getModel();
+		final MyTableModel model = (MyTableModel) table.getModel();
 		TableColumn column = null;
 		Component comp = null;
 		int headerWidth = 0;
 		int cellWidth = 0;
-		Object[] longValues = model.longValues;
-		TableCellRenderer headerRenderer =
-			table.getTableHeader().getDefaultRenderer();
+		final Object[] longValues = model.longValues;
+		final TableCellRenderer headerRenderer = table.getTableHeader()
+				.getDefaultRenderer();
 
 		for (int i = 0; i < 5; i++) {
 			column = table.getColumnModel().getColumn(i);
 
-			comp = headerRenderer.getTableCellRendererComponent(
-					null, column.getHeaderValue(),
-					false, false, 0, 0);
+			comp = headerRenderer.getTableCellRendererComponent(null,
+					column.getHeaderValue(), false, false, 0, 0);
 			headerWidth = comp.getPreferredSize().width;
 
-			comp = table.getDefaultRenderer(model.getColumnClass(i)).
-			getTableCellRendererComponent(
-					table, longValues[i],
-					false, false, 0, i);
+			comp = table.getDefaultRenderer(model.getColumnClass(i))
+					.getTableCellRendererComponent(table, longValues[i], false,
+							false, 0, i);
 			cellWidth = comp.getPreferredSize().width;
 
 			if (DEBUG) {
-				System.out.println("Initializing width of column "
-						+ i + ". "
-						+ "headerWidth = " + headerWidth
-						+ "; cellWidth = " + cellWidth);
+				System.out.println("Initializing width of column " + i + ". "
+						+ "headerWidth = " + headerWidth + "; cellWidth = "
+						+ cellWidth);
 			}
 
 			column.setPreferredWidth(Math.max(headerWidth, cellWidth));
 		}
 	}
 
-	public void setUpSportColumn(JTable table,
-			TableColumn sportColumn) {
-		//Set up the editor for the sport cells.
-		JComboBox comboBox = new JComboBox();
+	public void setUpSportColumn(JTable table, TableColumn sportColumn) {
+		// Set up the editor for the sport cells.
+		final JComboBox comboBox = new JComboBox();
 		comboBox.addItem("Snowboarding");
 		comboBox.addItem("Rowing");
 		comboBox.addItem("Knitting");
@@ -251,9 +247,8 @@ public class TableRenderDemo extends JPanel {
 		comboBox.addItem("None of the above");
 		sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
 
-		//Set up tool tips for the sport cells.
-		DefaultTableCellRenderer renderer =
-			new DefaultTableCellRenderer();
+		// Set up tool tips for the sport cells.
+		final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 		renderer.setToolTipText("Click for combo box");
 		sportColumn.setCellRenderer(renderer);
 	}

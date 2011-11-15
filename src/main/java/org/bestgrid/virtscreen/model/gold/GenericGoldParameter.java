@@ -25,7 +25,7 @@ public class GenericGoldParameter extends AbstractGoldParameter {
 
 	@Override
 	public String getParameterName() {
-		String temp = getKey(getConfigLine());
+		final String temp = getKey(getConfigLine());
 		if (StringUtils.isNotBlank(temp)) {
 			return temp;
 		} else {

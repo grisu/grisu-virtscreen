@@ -18,7 +18,8 @@ import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
 public class GoldJob {
 
-	static final Logger myLogger = Logger.getLogger(GoldJob.class.getName());
+	static final Logger myLogger = Logger.getLogger(GoldJob.class
+			.getName());
 
 	public static final File GOLD_JOB_CONTROL_SCRIPT = new File(
 			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "gold.sh");
@@ -42,8 +43,7 @@ public class GoldJob {
 	}
 
 	public synchronized void createAndSubmitJob()
-			throws JobSubmissionException,
-			JobPropertiesException {
+			throws JobSubmissionException, JobPropertiesException {
 
 		job.setTimestampJobname(FilenameUtils.getBaseName(goldConfFile
 				.getName()));
@@ -62,25 +62,25 @@ public class GoldJob {
 		job.addInputFileUrl(GOLD_HELPER_PY_SCRIPT.getPath());
 		job.addInputFileUrl(goldConfFile.getJobConfFile().getPath());
 
-		for (String url : goldConfFile.getFilesToStageIn()) {
+		for (final String url : goldConfFile.getFilesToStageIn()) {
 			job.addInputFileUrl(url);
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
 				GrisuVirtScreen.SUBMISSION_VO);
 
-		Map<String, String> additionalJobProperties = new HashMap<String, String>();
+		final Map<String, String> additionalJobProperties = new HashMap<String, String>();
 
-		String dir = this.goldConfFile.getDirectory();
-		String conc = this.goldConfFile.getConcatenatedOutput();
+		final String dir = this.goldConfFile.getDirectory();
+		final String conc = this.goldConfFile.getConcatenatedOutput();
 
 		additionalJobProperties.put("result_directory", dir);
 		additionalJobProperties.put("concatenated_output", conc);
 
 		try {
 			job.submitJob(additionalJobProperties);
-		} catch (InterruptedException e) {
-			myLogger.error(e);
+		} catch (final InterruptedException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 		}
 
 		job = null;

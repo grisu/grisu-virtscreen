@@ -13,7 +13,7 @@ import javax.swing.table.TableCellEditor;
 import org.bestgrid.virtscreen.model.szybki.ParameterValue;
 
 public class FileCellEditor extends AbstractCellEditor implements
-TableCellEditor {
+		TableCellEditor {
 
 	private ServiceInterface si;
 	private final FileSelectorPanelMini panel = new FileSelectorPanelMini();
@@ -42,7 +42,5 @@ TableCellEditor {
 		this.si = si;
 		this.panel.setServiceInterface(si);
 	}
-
-
 
 }

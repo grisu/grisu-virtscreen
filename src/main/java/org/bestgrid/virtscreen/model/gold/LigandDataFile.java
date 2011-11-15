@@ -20,15 +20,15 @@ public class LigandDataFile extends AbstractGoldParameter {
 	static final Logger myLogger = Logger.getLogger(LigandDataFile.class
 			.getName());
 
-	public static final String VS_LIBRARY_FILES_URL = "gsiftp://ng2.auckland.ac.nz/home/grid-vs/libraries/";
+	public static final String VS_LIBRARY_FILES_URL = "gsiftp://gram5.ceres.auckland.ac.nz/home/grid-vs/libraries/";
 	public static final String VS_LIBRARY_LOCAL_PATH = "/home/grid-vs/libraries/";
 
 	public static final String LIGAND_PARAMETER_NAME = "ligand_data_file";
 
 	public static int getLigandDockingAmount(String configLine) {
 
-		String[] temp = configLine.split("\\s");
-		String temp2 = temp[temp.length - 1];
+		final String[] temp = configLine.split("\\s");
+		final String temp2 = temp[temp.length - 1];
 
 		if (temp.length == 0) {
 			return 1;
@@ -36,23 +36,23 @@ public class LigandDataFile extends AbstractGoldParameter {
 
 		if (temp.length == 1) {
 			try {
-				int n = Integer.parseInt(temp[0]);
+				final int n = Integer.parseInt(temp[0]);
 				return n;
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				return 1;
 			}
 		}
 
 		try {
 			return Integer.parseInt(temp2);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return 1;
 		}
 	}
 
 	public static String[] getLigandFiles(String configLine) {
-		String[] temp = configLine.substring(LIGAND_PARAMETER_NAME.length())
-		.trim().split("\\s");
+		final String[] temp = configLine
+				.substring(LIGAND_PARAMETER_NAME.length()).trim().split("\\s");
 
 		if (temp.length == 0) {
 			return new String[] {};
@@ -63,7 +63,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 			try {
 				Integer.parseInt(temp[0]);
 				return new String[] {};
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				return new String[] { temp[0] };
 			}
 		}
@@ -102,10 +102,10 @@ public class LigandDataFile extends AbstractGoldParameter {
 	}
 
 	public synchronized List<String> getRemoteLigandFiles()
-	throws RemoteFileSystemException {
+			throws RemoteFileSystemException {
 
 		if (remoteLigandFiles == null) {
-			GridFile folder = getFileManager().ls(VS_LIBRARY_FILES_URL);
+			final GridFile folder = getFileManager().ls(VS_LIBRARY_FILES_URL);
 			if (folder == null) {
 				throw new RemoteFileSystemException(
 						"Could not find children for common library location.");
@@ -137,7 +137,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 	public void setLigandDockingAmount(int amount) {
 		removeMessage("amount");
 		newLine = LIGAND_PARAMETER_NAME + " "
-		+ StringUtils.join(getLigandFiles(), " ") + " " + amount;
+				+ StringUtils.join(getLigandFiles(), " ") + " " + amount;
 		addMessage("amount", "  Set ligand docking amount to " + amount + "\n");
 	}
 
@@ -147,8 +147,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 		removeMessage("files");
 		removeFix("files");
 
-		StringBuffer msg = new StringBuffer();
-		StringBuffer fix = new StringBuffer();
+		final StringBuffer msg = new StringBuffer();
+		final StringBuffer fix = new StringBuffer();
 
 		clearStageInFiles();
 
@@ -163,7 +163,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 
 		}
 
-		List<String> newFiles = new LinkedList<String>();
+		final List<String> newFiles = new LinkedList<String>();
 
 		boolean parsingSuccessful = true;
 
@@ -171,8 +171,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 		// error
 		try {
 			getRemoteLigandFiles();
-		} catch (RemoteFileSystemException e) {
-			myLogger.error(e);
+		} catch (final RemoteFileSystemException e) {
+			myLogger.error(e.getLocalizedMessage(), e);
 			msg.append("   Could not connect to common library location: "
 					+ e.getLocalizedMessage() + "\n");
 			fix.append("   Please contact a BeSTGRID support.");
@@ -234,7 +234,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 								}
 							}
 
-						} catch (URISyntaxException e) {
+						} catch (final URISyntaxException e) {
 							msg.append("     -> Could not parse url for file: "
 									+ file + "\n");
 							parsingSuccessful = false;
@@ -263,7 +263,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 					}
 				}
 
-			} catch (RemoteFileSystemException e) {
+			} catch (final RemoteFileSystemException e) {
 				// should not happen
 			}
 
@@ -277,8 +277,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 			// msg.append("\nAll specified ligand data files are valid and accessable.\n");
 			valid = true;
 			newLine = LIGAND_PARAMETER_NAME + " "
-			+ StringUtils.join(newFiles, " ") + " "
-			+ getLigandDockingAmount();
+					+ StringUtils.join(newFiles, " ") + " "
+					+ getLigandDockingAmount();
 			// getFilesToStageIn().addAll(newFiles);
 		}
 
@@ -290,8 +290,8 @@ public class LigandDataFile extends AbstractGoldParameter {
 	@Override
 	protected void setNewConfigValue(String value) {
 
-		int amount = getLigandDockingAmount(value);
-		String[] files = getLigandFiles(value);
+		final int amount = getLigandDockingAmount(value);
+		final String[] files = getLigandFiles(value);
 		setLigandDockingAmount(amount);
 		setLigandFiles(files);
 	}

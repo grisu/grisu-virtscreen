@@ -32,7 +32,7 @@ public class SzybkiInputFileTableCellRenderer implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
-		ParameterValue pv = (ParameterValue) value;
+		final ParameterValue pv = (ParameterValue) value;
 
 		switch (pv.getType()) {
 		case BOOLEAN:
@@ -45,7 +45,6 @@ public class SzybkiInputFileTableCellRenderer implements TableCellRenderer {
 			dtcr.setText(pv.getStringValue());
 			return dtcr;
 		}
-
 
 	}
 

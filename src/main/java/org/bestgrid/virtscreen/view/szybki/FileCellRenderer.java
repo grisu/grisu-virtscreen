@@ -22,7 +22,7 @@ public class FileCellRenderer implements TableCellRenderer {
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
 		panel.setConfiguration(((ParameterValue) value).getParameter().config);
-		GridFile f = (GridFile) (((ParameterValue) value).getValue());
+		final GridFile f = (GridFile) (((ParameterValue) value).getValue());
 		panel.setInputFile(f);
 
 		panel.setToolTipText(f.getUrl());

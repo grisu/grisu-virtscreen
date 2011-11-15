@@ -19,7 +19,7 @@ public abstract class AbstractGoldParameter {
 			return null;
 		}
 
-		int index = line.indexOf("=");
+		final int index = line.indexOf("=");
 		if (index <= 0) {
 			return null;
 		} else {
@@ -34,7 +34,7 @@ public abstract class AbstractGoldParameter {
 			return null;
 		}
 
-		int index = line.indexOf("=");
+		final int index = line.indexOf("=");
 		if (index < 0) {
 			return null;
 		} else {
@@ -107,9 +107,9 @@ public abstract class AbstractGoldParameter {
 	}
 
 	public String getFixes() {
-		StringBuffer result = new StringBuffer();
+		final StringBuffer result = new StringBuffer();
 
-		for (String s : getFixesMap().values()) {
+		for (final String s : getFixesMap().values()) {
 			result.append(s + "\n");
 		}
 		return result.toString();
@@ -120,9 +120,9 @@ public abstract class AbstractGoldParameter {
 	}
 
 	public String getMessage() {
-		StringBuffer result = new StringBuffer();
+		final StringBuffer result = new StringBuffer();
 
-		for (String s : getParseMessage().values()) {
+		for (final String s : getParseMessage().values()) {
 			result.append(s + "\n");
 		}
 		return result.toString();
@@ -141,7 +141,7 @@ public abstract class AbstractGoldParameter {
 	}
 
 	public String getValue() {
-		String temp = getValue(getConfigLine());
+		final String temp = getValue(getConfigLine());
 		if (StringUtils.isBlank(temp)) {
 			return "n/a";
 		} else {

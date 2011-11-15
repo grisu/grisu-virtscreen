@@ -2,9 +2,11 @@
 killall -9 pvmd3
 rm -Rf /tmp/pvm*
 
-export GOLD_DIR=/share/apps/gold/GOLD
+#export GOLD_DIR=/share/apps/gold/GOLD
+export GOLD_DIR=/share/apps/goldsuite-5.1/GOLD
 export GOLD_LICENSE=${GOLD_DIR}/bin/gold_licence
-export CCDC_LICENSE_FILE=27000@er171.ceres.auckland.ac.nz
+#export CCDC_LICENSE_FILE=27000@er171.ceres.auckland.ac.nz
+export CCDC_LICENSE_FILE=27000@cluster.ceres.auckland.ac.nz
 export PVM_ROOT=${GOLD_DIR}/pvm3
 
 export INDIR=`pwd`

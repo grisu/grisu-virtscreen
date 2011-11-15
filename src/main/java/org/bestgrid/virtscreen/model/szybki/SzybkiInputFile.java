@@ -23,16 +23,16 @@ import org.apache.commons.lang.StringUtils;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.PARAM;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
-
 public class SzybkiInputFile implements PropertyChangeListener {
 
 	public static void main(String[] args) throws Exception {
 
-		ServiceInterface si = LoginManager.loginCommandline("BeSTGRID");
+		final ServiceInterface si = LoginManager.loginCommandline("BeSTGRID");
 
-		FileManager fm = GrisuRegistryManager.getDefault(si).getFileManager();
-		UserEnvironmentManager uem = GrisuRegistryManager.getDefault(si)
-		.getUserEnvironmentManager();
+		final FileManager fm = GrisuRegistryManager.getDefault(si)
+				.getFileManager();
+		final UserEnvironmentManager uem = GrisuRegistryManager.getDefault(si)
+				.getUserEnvironmentManager();
 
 		String input = "grid://";
 		while (!"exit".equals(input)) {
@@ -45,29 +45,29 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 			System.out.println("Ready...");
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
+			final BufferedReader br = new BufferedReader(new InputStreamReader(
 					System.in));
 
 			try {
-				String lastInput = input;
+				final String lastInput = input;
 				input = br.readLine();
 				if (StringUtils.isBlank(input)) {
 					input = lastInput;
 				} else if ("exit".equals(input)) {
 					System.exit(0);
 				}
-			} catch (IOException ioe) {
+			} catch (final IOException ioe) {
 				System.out.println("IO error trying to read user input!");
 				System.exit(1);
 			}
 
 			try {
 
-				SzybkiInputFile sif = new SzybkiInputFile(si);
+				final SzybkiInputFile sif = new SzybkiInputFile(si);
 
 				sif.setInputFile("/home/markus/Desktop/jack/szybki/example2.param");
 
-				for (SzybkiParameter p : sif.getParameters()) {
+				for (final SzybkiParameter p : sif.getParameters()) {
 					if (p.getType() == SzybkiParameter.TYPE.UNDEF) {
 						continue;
 					}
@@ -81,7 +81,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 					}
 				}
 
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				System.out.println(e.getLocalizedMessage());
 			}
 
@@ -104,25 +104,25 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		if (StringUtils.isBlank(origline)) {
 			return new EmptyConfigLine();
 		}
-		String line = origline.trim();
+		final String line = origline.trim();
 
 		if (line.startsWith("#")) {
 			return new SzybkiCommentLine(line);
 		}
 
-		int index = line.indexOf(" ");
+		final int index = line.indexOf(" ");
 
 		if (index < 1) {
 			throw new SzybkiException(
 					"No whitespace in line, can't separate key and value: "
-					+ line);
+							+ line);
 		}
 
-		int commentIndex = line.indexOf("#");
+		final int commentIndex = line.indexOf("#");
 		if (commentIndex < 0) {
-			String key = line.substring(1, index).trim();
-			String value = line.substring(index + 1).trim();
-			PARAM p = PARAM.fromString(key);
+			final String key = line.substring(1, index).trim();
+			final String value = line.substring(index + 1).trim();
+			final PARAM p = PARAM.fromString(key);
 			if (p == null) {
 				throw new SzybkiException("String " + key
 						+ " not a valid configuration parameter.");
@@ -130,10 +130,10 @@ public class SzybkiInputFile implements PropertyChangeListener {
 			return new SzybkiParameter(origline, PARAM.fromString(key),
 					new ParameterValue(si, p, value), null);
 		} else {
-			String key = line.substring(1, index).trim();
-			String value = line.substring(index + 1, commentIndex).trim();
-			String comment = line.substring(commentIndex + 1).trim();
-			PARAM p = PARAM.fromString(key);
+			final String key = line.substring(1, index).trim();
+			final String value = line.substring(index + 1, commentIndex).trim();
+			final String comment = line.substring(commentIndex + 1).trim();
+			final PARAM p = PARAM.fromString(key);
 			if (p == null) {
 				throw new SzybkiException("String " + key
 						+ " not a valid configuration parameter.");
@@ -168,8 +168,8 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public List<String> createConfig(boolean allParameters) {
 
-		List<String> result = new LinkedList<String>();
-		for (SzybkiConfigLine line : allLines) {
+		final List<String> result = new LinkedList<String>();
+		for (final SzybkiConfigLine line : allLines) {
 			if (allParameters || line.isEnabled()) {
 				result.add(line.getLine());
 			}
@@ -178,16 +178,16 @@ public class SzybkiInputFile implements PropertyChangeListener {
 	}
 
 	public void createTempFileFromStrings(List<String> lines)
-	throws SzybkiException {
+			throws SzybkiException {
 
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File newConfFile = new File(tmpDir, "szybki_tmp_conf_file");
+		final File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		final File newConfFile = new File(tmpDir, "szybki_tmp_conf_file");
 
 		newConfFile.delete();
 
 		try {
 			FileUtils.writeLines(newConfFile, lines);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -201,15 +201,15 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public File getJobConfFile() {
 
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		File newConfFile = new File(tmpDir, templateFile.getName());
+		final File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		final File newConfFile = new File(tmpDir, templateFile.getName());
 
 		newConfFile.delete();
 		newConfFile.deleteOnExit();
 
 		try {
 			FileUtils.writeLines(newConfFile, createConfig(true));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -227,8 +227,8 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public SzybkiParameter getParameter(PARAM param) {
 
-		for ( SzybkiParameter p : parameters ) {
-			if ( p.getParameterName().equals(param) ) {
+		for (final SzybkiParameter p : parameters) {
+			if (p.getParameterName().equals(param)) {
 				return p;
 			}
 		}
@@ -242,9 +242,9 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public List<SzybkiParameter> getParameters(TYPE type) {
 
-		List<SzybkiParameter> result = new LinkedList<SzybkiParameter>();
-		for ( SzybkiParameter p : getParameters()) {
-			if ( p.getType().equals(type)) {
+		final List<SzybkiParameter> result = new LinkedList<SzybkiParameter>();
+		for (final SzybkiParameter p : getParameters()) {
+			if (p.getType().equals(type)) {
 				result.add(p);
 			}
 		}
@@ -253,9 +253,9 @@ public class SzybkiInputFile implements PropertyChangeListener {
 
 	public String getParametersAsString(boolean allParameters) {
 
-		StringBuffer r = new StringBuffer();
-		for (String l : createConfig(allParameters)) {
-			r.append(l+"\n");
+		final StringBuffer r = new StringBuffer();
+		for (final String l : createConfig(allParameters)) {
+			r.append(l + "\n");
 		}
 
 		return r.toString();
@@ -268,7 +268,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 	private void parseInputFile() throws SzybkiException {
 
 		if (parameters != null) {
-			for (SzybkiParameter p : parameters) {
+			for (final SzybkiParameter p : parameters) {
 				p.getParameterValue().removePropertyChangeListener(this);
 				p.removePropertyChangeListener(this);
 			}
@@ -289,15 +289,15 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		List<String> lines = null;
 		try {
 			lines = FileUtils.readLines(this.templateFile);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new SzybkiException(e);
 		}
 
-		for (String line : lines) {
-			SzybkiConfigLine scl = parseLine(si, line);
+		for (final String line : lines) {
+			final SzybkiConfigLine scl = parseLine(si, line);
 			allLines.add(scl);
 			if (scl instanceof SzybkiParameter) {
-				SzybkiParameter sp = (SzybkiParameter)scl;
+				final SzybkiParameter sp = (SzybkiParameter) scl;
 				parameters.add(sp);
 				sp.addPropertyChangeListener(this);
 				sp.getParameterValue().addPropertyChangeListener(this);
@@ -327,7 +327,7 @@ public class SzybkiInputFile implements PropertyChangeListener {
 		this.parentUrl = FileManager.calculateParentUrl(this.url);
 		try {
 			this.templateFile = this.fm.downloadFile(this.url);
-		} catch (FileTransactionException e) {
+		} catch (final FileTransactionException e) {
 			throw new SzybkiException(e);
 		}
 

@@ -21,7 +21,7 @@ public class FileExistsInGridspaceOrLocal implements Validator<String> {
 
 		if (fm.isFolder(arg2)) {
 
-			String problem = "Specified url does not exist or is not a file";
+			final String problem = "Specified url does not exist or is not a file";
 			arg0.add(problem);
 
 			return false;
