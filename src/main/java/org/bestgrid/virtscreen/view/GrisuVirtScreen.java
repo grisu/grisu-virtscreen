@@ -144,7 +144,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 			f = GrisuRegistryManager.getDefault(si)
 					.getFileManager()
 					// .createGridFile("grid://groups/nz/virtual-screening//");
-					.createGridFile("grid://groups/nz/nesi/virtual-screening//");
+					.createGridFile("grid://groups/nz/virtual-screening//");
 			f.setName("Virtual Screening");
 		} catch (final RemoteFileSystemException e) {
 			myLogger.error(e.getLocalizedMessage(), e);
