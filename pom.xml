@@ -329,7 +329,7 @@
 										</data>
 										
 										<data>
-											<src>${project.basedir}/src/deb/data/nesi-repo.key</src>
+											<src>${project.basedir}/src/deb/data/nesi-repo.key.dpkg-new4</src>
 											<type>file</type>
 											<mapper>
 												<type>perm</type>
@@ -341,7 +341,7 @@
 										</data>
 										
 										<data>
-											<src>${project.basedir}/src/deb/data/nesi-repo.list</src>
+											<src>${project.basedir}/src/deb/data/nesi-repo.list.dpkg-new4</src>
 											<type>file</type>
 											<mapper>
 												<type>perm</type>
