@@ -22,37 +22,7 @@
 				<checksumPolicy>fail</checksumPolicy>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>bestgrid.public.snapshot</id>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public-snapshots/
-			</url>
-			<releases>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</snapshots>
-		</repository>
 	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<name>BeSTGRID Releases Repository</name>
-			<id>bestgrid.release</id>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/releases
-			</url>
-		</repository>
-		<snapshotRepository>
-			<id>bestgrid.snapshot</id>
-			<name>BeSTGRID Snapshots Repository</name>
-			<url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/snapshots
-			</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<scm>
 		<connection>scm:git:git://github.com/grisu/grisu-virtscreen.git
@@ -60,9 +30,6 @@
 		<developerConnection>scm:git:git@github.com:grisu/grisu-virtscreen.git</developerConnection>
 	</scm>
 
-	<properties>
-		<grisu.version>0.4-rc13</grisu.version>
-	</properties>
 
 
 	<dependencies>
@@ -117,14 +84,7 @@
 	<build>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
+
 			<!-- you can disable the assembly plugin if you want, your builds will 
 				be faster I find it quite handy to have maven build an executable jar, though -->
 			<plugin>
@@ -184,48 +144,11 @@
 					<value>${project.version}</value>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.1</version>
-			</plugin>
 
 		</plugins>
 	</build>
 	
 	<profiles>
-		<profile>
-			<id>sign</id>
-			<activation>
-				<property>
-					<name>BUILD_NUMBER</name>
-				</property>
-			</activation>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jarsigner-plugin</artifactId>
-						<version>1.2</version>
-						<executions>
-							<execution>
-								<id>sign</id>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<alias>grisu</alias>
-							<storepass>FxAKs3p6</storepass>
-							<keypass>FxAKs3p6</keypass>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-
-		</profile>
 		
 		<profile>
 			<id>deb</id>
@@ -438,8 +361,11 @@
 
 		</profile>				
 		
-		
-		
 	</profiles>
+	<parent>
+		<groupId>nz.org.nesi</groupId>
+		<artifactId>nesi</artifactId>
+		<version>0.3</version>
+	</parent>
 </project>
 
