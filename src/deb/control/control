@@ -1,0 +1,8 @@
+Package: grisu-virtscreen
+Version: VERSION_TOKEN
+Section: misc
+Priority: optional
+Architecture: all
+Depends: java-runtime,libbcprov-java
+Maintainer: Markus Binsteiner <m.binsteiner@auckland.ac.nz>
+Description: Grisu Virtual screening client
