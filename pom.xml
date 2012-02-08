@@ -250,31 +250,6 @@
 												<filemode>755</filemode>
 											</mapper>
 										</data>
-										
-										<data>
-											<src>${project.basedir}/src/deb/data/nesi-repo.key.dpkg-new4</src>
-											<type>file</type>
-											<mapper>
-												<type>perm</type>
-												<prefix>/usr/share/keyrings/</prefix>
-												<user>root</user>
-												<group>root</group>
-												<filemode>755</filemode>
-											</mapper>
-										</data>
-										
-										<data>
-											<src>${project.basedir}/src/deb/data/nesi-repo.list.dpkg-new4</src>
-											<type>file</type>
-											<mapper>
-												<type>perm</type>
-												<prefix>/etc/apt/sources.list.d/</prefix>
-												<user>root</user>
-												<group>root</group>
-												<filemode>755</filemode>
-											</mapper>
-										</data>																		
-
 									</dataSet>
 
 								</configuration>
@@ -323,9 +298,6 @@
 										<source>
 											<location>target/grisu-virtscreen-binary.jar</location>
 										</source>
-										<source>
-											<location>src/deb/data/bcprov.jar</location>
-										</source>
 									</sources>
 								</mapping>
 								<mapping>
@@ -344,10 +316,10 @@
 							</mappings>
 							<requires>
 								<require>java-1.6.0-openjdk</require>
-<!-- 								<require>bouncycastle</require> -->
+								<require>nesi</require>
 							</requires>
 							<preinstallScriptlet>
-								<script>echo "Installing Grisu Template client..."</script>
+								<script>echo "Installing Grisu Virtual Screening client..."</script>
 							</preinstallScriptlet>
 							<!-- <postinstallScriptlet> <scriptFile>src/main/scripts/postinstall</scriptFile> 
 								<fileEncoding>utf-8</fileEncoding> </postinstallScriptlet> <preremoveScriptlet> 
