@@ -36,34 +36,9 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	// public static final String GOLD_VERSION = "5.1";
 	public static final String GOLD_VERSION = "5.1";
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-
-		Thread.currentThread().setName("main");
-
-		LoginManagerNew.setClientName("virtscreen");
-
-		LoginManagerNew.setClientVersion(grisu.jcommons.utils.Version
-				.get("this-client"));
-
-		EnvironmentVariableHelpers.loadEnvironmentVariablesToSystemProperties();
-
-		LoginManagerNew.initEnvironment();
-
-		VirtScreenEnvironment.init();
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					final GrisuApplicationWindow appWindow = new GrisuVirtScreen();
-					appWindow.setVisible(true);
-				} catch (final Exception e) {
-					myLogger.error(e.getLocalizedMessage(), e);
-				}
-			}
-		});
+	public static void main(String[] args) throws Exception {
+		GrisuVirtScreen app = new GrisuVirtScreen();
+		app.run();
 	}
 
 	private JobCreationPanel gold;
@@ -72,7 +47,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	/**
 	 * Create the application.
 	 */
-	public GrisuVirtScreen() {
+	public GrisuVirtScreen() throws Exception {
 		super();
 	}
 
@@ -199,5 +174,35 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GrisuRegistryManager.getDefault(si).set(VIRTSCREEN_ROOTS, files);
 		addGroupFileListPanel(files, files);
 
+	}
+
+	/**
+	 * Launch the application.
+	 */
+	public void run() {
+
+		Thread.currentThread().setName("main");
+
+		LoginManagerNew.setClientName("virtscreen");
+
+		LoginManagerNew.setClientVersion(grisu.jcommons.utils.Version
+				.get("this-client"));
+
+		EnvironmentVariableHelpers.loadEnvironmentVariablesToSystemProperties();
+
+		LoginManagerNew.initEnvironment();
+
+		VirtScreenEnvironment.init();
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					final GrisuApplicationWindow appWindow = new GrisuVirtScreen();
+					appWindow.setVisible(true);
+				} catch (final Exception e) {
+					myLogger.error(e.getLocalizedMessage(), e);
+				}
+			}
+		});
 	}
 }
