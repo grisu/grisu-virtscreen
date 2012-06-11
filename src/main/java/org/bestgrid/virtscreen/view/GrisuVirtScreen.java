@@ -2,7 +2,7 @@ package org.bestgrid.virtscreen.view;
 
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.RemoteFileSystemException;
-import grisu.frontend.control.login.LoginManagerNew;
+import grisu.frontend.control.login.LoginManager;
 import grisu.frontend.view.swing.GrisuApplicationWindow;
 import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import grisu.jcommons.utils.EnvironmentVariableHelpers;
@@ -183,14 +183,14 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 		Thread.currentThread().setName("main");
 
-		LoginManagerNew.setClientName("virtscreen");
+		LoginManager.setClientName("virtscreen");
 
-		LoginManagerNew.setClientVersion(grisu.jcommons.utils.Version
+		LoginManager.setClientVersion(grisu.jcommons.utils.Version
 				.get("this-client"));
 
 		EnvironmentVariableHelpers.loadEnvironmentVariablesToSystemProperties();
 
-		LoginManagerNew.initEnvironment();
+		LoginManager.initEnvironment();
 
 		VirtScreenEnvironment.init();
 
