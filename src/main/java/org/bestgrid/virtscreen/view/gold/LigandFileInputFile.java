@@ -1,14 +1,13 @@
 package org.bestgrid.virtscreen.view.gold;
 
 import grisu.control.ServiceInterface;
+import grisu.frontend.view.swing.files.virtual.GridFileTreePanel;
 import grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
-import grisu.model.GrisuRegistryManager;
 import grisu.model.dto.GridFile;
 
 import java.util.List;
 
 import org.bestgrid.virtscreen.model.gold.GoldConfFile;
-import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 
 public class LigandFileInputFile extends SingleInputGridFile {
 
@@ -43,9 +42,7 @@ public class LigandFileInputFile extends SingleInputGridFile {
 	public void setServiceInterface(ServiceInterface si) {
 		super.setServiceInterface(si);
 
-		final List<GridFile> roots = (List<GridFile>) (GrisuRegistryManager
-				.getDefault(getServiceInterface())
-				.get(GrisuVirtScreen.VIRTSCREEN_ROOTS));
+		final List<GridFile> roots = GridFileTreePanel.getDefaultRoots(si);
 
 		setRoots(roots);
 	}
