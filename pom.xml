@@ -79,6 +79,11 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.bestgrid.virtscreen</groupId>
+			<artifactId>grisu-virtscreen</artifactId>
+			<version>0.8-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
