@@ -33,6 +33,12 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	public static final String GOLD_VERSION = "5.1";
 
 	public static void main(String[] args) throws Exception {
+
+		LoginManager.setClientName("virtscreen");
+
+		LoginManager.setClientVersion(grisu.jcommons.utils.Version
+				.get("virtscreen"));
+
 		GrisuVirtScreen app = new GrisuVirtScreen();
 		app.run();
 	}
@@ -110,11 +116,6 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	public void run() {
 
 		Thread.currentThread().setName("main");
-
-		LoginManager.setClientName("virtscreen");
-
-		LoginManager.setClientVersion(grisu.jcommons.utils.Version
-				.get("this-client"));
 
 		EnvironmentVariableHelpers.loadEnvironmentVariablesToSystemProperties();
 
