@@ -79,6 +79,11 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>grith</groupId>
+			<artifactId>jgrith</artifactId>
+			<version>0.6.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -339,5 +344,8 @@
 		<artifactId>nesi</artifactId>
 		<version>0.11</version>
 	</parent>
+	<properties>
+		<grisu.version>0.4.10</grisu.version>
+	</properties>
 </project>
 
