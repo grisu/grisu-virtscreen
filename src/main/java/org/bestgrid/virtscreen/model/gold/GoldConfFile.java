@@ -1,9 +1,7 @@
 package org.bestgrid.virtscreen.model.gold;
 
-import grisu.X;
 import grisu.control.ServiceInterface;
 import grisu.frontend.control.clientexceptions.FileTransactionException;
-import grisu.frontend.control.login.LoginManager;
 import grisu.model.FileManager;
 import grisu.model.GrisuRegistryManager;
 
@@ -23,25 +21,25 @@ import org.apache.commons.lang.StringUtils;
 
 public class GoldConfFile {
 
-	public static void main(String[] args) throws Exception {
+	// public static void main(String[] args) throws Exception {
 
-		final ServiceInterface si = LoginManager.loginCommandline("Local");
-
-		final GoldConfFile conf = new GoldConfFile(si);
-
-		conf.setConfFile("/home/markus/Desktop/jack/exampleJob2/p110a_lead4x.conf");
-
-		for (final String line : conf.getNewConfig()) {
-			X.p(line);
-		}
-
-		X.p("");
-		X.p("");
-
-		X.p("Parse messages: ");
-		X.p(conf.getParseMessages());
-
-	}
+	//		final ServiceInterface si = LoginManager.loginCommandline("Local");
+	//
+	//		final GoldConfFile conf = new GoldConfFile(si);
+	//
+	//		conf.setConfFile("/home/markus/Desktop/jack/exampleJob2/p110a_lead4x.conf");
+	//
+	//		for (final String line : conf.getNewConfig()) {
+	//			X.p(line);
+	//		}
+	//
+	//		X.p("");
+	//		X.p("");
+	//
+	//		X.p("Parse messages: ");
+	//		X.p(conf.getParseMessages());
+	//
+	//	}
 
 	// gold specific variables
 	private LigandDataFile ligandFile = null;

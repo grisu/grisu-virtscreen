@@ -4,7 +4,7 @@
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.7-SNAPSHOT</version>
+	<version>0.8</version>
 	<name>A Grid client to support high troughput virtual screening.</name>
 
 	<repositories>
@@ -49,10 +49,10 @@
 			</exclusions>
 		</dependency>
 
-		<!-- we can't include the bouncy castle library in our assembled binary 
-			so it has to put in the classpath in some other way. You could either have 
-			the bcprov jar in the same directory as your executable jar, or you just 
-			do nothing. Grisu will try to download it in the background and put it in 
+		<!-- we can't include the bouncy castle library in our assembled binary
+			so it has to put in the classpath in some other way. You could either have
+			the bcprov jar in the same directory as your executable jar, or you just
+			do nothing. Grisu will try to download it in the background and put it in
 			the classpath once your application is executed the first time... -->
 		<dependency>
 			<groupId>bouncycastle</groupId>
@@ -62,13 +62,13 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- further grisu dependencies, incuded by default but can be disabled 
+		<!-- further grisu dependencies, incuded by default but can be disabled
 			if not needed and you want a smaller assembly -->
-		<!-- the grisu-core dependency is needed when you want to connect to a 
+		<!-- the grisu-core dependency is needed when you want to connect to a
 			local backend (which is the only supported backend for grisu 0.3 at the moment -->
-		<!-- <dependency> <groupId>grisu</groupId> <artifactId>grisu-core</artifactId> 
+		<!-- <dependency> <groupId>grisu</groupId> <artifactId>grisu-core</artifactId>
 			<version>0.3-SNAPSHOT</version> <type>jar</type> <scope>compile</scope> </dependency> -->
-		<!-- this is needed for shibboleth login don't disable it for now even 
+		<!-- this is needed for shibboleth login don't disable it for now even
 			if you don't want to use shibboleth, I reckon you'll get classpath errors -->
 
 
@@ -85,7 +85,7 @@
 
 		<plugins>
 
-			<!-- you can disable the assembly plugin if you want, your builds will 
+			<!-- you can disable the assembly plugin if you want, your builds will
 				be faster I find it quite handy to have maven build an executable jar, though -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -106,7 +106,7 @@
 								<manifestEntries>
 									<Class-Path>bcprov.jar bcprov-jdk15-145.jar local-backend.jar grisu-client-library.jar
 									</Class-Path>
-									<SplashScreen-Image>splash.png</SplashScreen-Image>
+<!-- 									<SplashScreen-Image>splash.png</SplashScreen-Image> -->
 								</manifestEntries>
 							</archive>
 
@@ -135,21 +135,33 @@
 				<configuration>
 					<includes>
 						<!-- replace the token in this file -->
-						<include>target/classes/this-client.version</include>
+						<include>target/classes/virtscreen.version</include>
 					</includes>
 					<regex>false</regex>
 					<!-- the name of the token to replace -->
 					<token>VERSION_TOKEN</token>
 					<!-- replace it with the maven project version -->
-					<value>${project.version}</value>
+					<value>${project.version} (${maven.build.timestamp})</value>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.2</version>
+				<inherited>false</inherited>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<pushChanges>true</pushChanges>
+					<localCheckout>true</localCheckout>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+					<releaseProfiles>deb,rpm</releaseProfiles>
+				</configuration>
+			</plugin>			
 		</plugins>
 	</build>
-	
+
 	<profiles>
-		
+
 		<profile>
 			<id>deb</id>
 			<!-- <activation> -->
@@ -200,7 +212,7 @@
 						</executions>
 						<configuration>
 							<includes>
-								<include>target/classes/this-client.version</include>
+								<include>target/classes/virtscreen.version</include>
 								<include>target/deb/control/control</include>
 							</includes>
 							<ignoreMissingFile>false</ignoreMissingFile>
@@ -208,7 +220,7 @@
 							<replacements>
 								<replacement>
 									<token>VERSION_TOKEN</token>
-									<value>${project.version}</value>
+									<value>${project.version} (${maven.build.timestamp})</value>
 								</replacement>
 							</replacements>
 						</configuration>
@@ -259,8 +271,8 @@
 				</plugins>
 			</build>
 
-		</profile>		
-		
+		</profile>
+
 		<profile>
 			<id>rpm</id>
 			<build>
@@ -321,9 +333,9 @@
 							<preinstallScriptlet>
 								<script>echo "Installing Grisu Virtual Screening client..."</script>
 							</preinstallScriptlet>
-							<!-- <postinstallScriptlet> <scriptFile>src/main/scripts/postinstall</scriptFile> 
-								<fileEncoding>utf-8</fileEncoding> </postinstallScriptlet> <preremoveScriptlet> 
-								<scriptFile>src/main/scripts/preremove</scriptFile> <fileEncoding>utf-8</fileEncoding> 
+							<!-- <postinstallScriptlet> <scriptFile>src/main/scripts/postinstall</scriptFile>
+								<fileEncoding>utf-8</fileEncoding> </postinstallScriptlet> <preremoveScriptlet>
+								<scriptFile>src/main/scripts/preremove</scriptFile> <fileEncoding>utf-8</fileEncoding>
 								</preremoveScriptlet> -->
 						</configuration>
 					</plugin>
@@ -331,13 +343,62 @@
 			</build>
 
 
-		</profile>				
-		
+		</profile>
+		<profile>
+			<id>getdown</id>
+			<build>
+				<plugins>
+
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>2.5</version>
+						<executions>
+							<execution>
+								<id>copy-getdown-control</id>
+								<!-- here the phase you need -->
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}</directory>
+											<includes>
+												<include>getdown.txt</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.bitbucket.joxley</groupId>
+						<artifactId>getdown-maven-plugin</artifactId>
+						<version>nesi-0.0.1</version>
+						<configuration>
+							<appdir>target</appdir> <!-- Defaults to target -->
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>digest</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<parent>
 		<groupId>nz.org.nesi</groupId>
 		<artifactId>nesi</artifactId>
-		<version>0.5</version>
+		<version>0.20</version>
 	</parent>
 </project>
 

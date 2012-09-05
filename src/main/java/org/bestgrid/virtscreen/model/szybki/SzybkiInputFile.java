@@ -2,19 +2,15 @@ package org.bestgrid.virtscreen.model.szybki;
 
 import grisu.control.ServiceInterface;
 import grisu.frontend.control.clientexceptions.FileTransactionException;
-import grisu.frontend.control.login.LoginManager;
 import grisu.model.FileManager;
 import grisu.model.GrisuRegistryManager;
-import grisu.model.UserEnvironmentManager;
 import grisu.model.dto.GridFile;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,69 +21,69 @@ import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
 
 public class SzybkiInputFile implements PropertyChangeListener {
 
-	public static void main(String[] args) throws Exception {
-
-		final ServiceInterface si = LoginManager.loginCommandline("BeSTGRID");
-
-		final FileManager fm = GrisuRegistryManager.getDefault(si)
-				.getFileManager();
-		final UserEnvironmentManager uem = GrisuRegistryManager.getDefault(si)
-				.getUserEnvironmentManager();
-
-		String input = "grid://";
-		while (!"exit".equals(input)) {
-
-			// System.out.println("Available groups:");
-			// for (String g : uem.getAllAvailableUniqueGroupnames(true)) {
-			// System.out.println(g);
-			// }
-			// System.out.println();
-
-			System.out.println("Ready...");
-
-			final BufferedReader br = new BufferedReader(new InputStreamReader(
-					System.in));
-
-			try {
-				final String lastInput = input;
-				input = br.readLine();
-				if (StringUtils.isBlank(input)) {
-					input = lastInput;
-				} else if ("exit".equals(input)) {
-					System.exit(0);
-				}
-			} catch (final IOException ioe) {
-				System.out.println("IO error trying to read user input!");
-				System.exit(1);
-			}
-
-			try {
-
-				final SzybkiInputFile sif = new SzybkiInputFile(si);
-
-				sif.setInputFile("/home/markus/Desktop/jack/szybki/example2.param");
-
-				for (final SzybkiParameter p : sif.getParameters()) {
-					if (p.getType() == SzybkiParameter.TYPE.UNDEF) {
-						continue;
-					}
-					if (p.getComment() == null) {
-						System.out.println(p.getParameterName() + "\t\t"
-								+ p.getParameterValue());
-					} else {
-						System.out.println(p.getParameterName() + "\t\t"
-								+ p.getParameterValue() + "\t\t"
-								+ p.getComment());
-					}
-				}
-
-			} catch (final Exception e) {
-				System.out.println(e.getLocalizedMessage());
-			}
-
-		}
-
-	}
+	// public static void main(String[] args) throws Exception {
+	//
+	// final ServiceInterface si = LoginManager.loginCommandline("BeSTGRID");
+	//
+	// final FileManager fm = GrisuRegistryManager.getDefault(si)
+	// .getFileManager();
+	// final UserEnvironmentManager uem = GrisuRegistryManager.getDefault(si)
+	// .getUserEnvironmentManager();
+	//
+	// String input = "grid://";
+	// while (!"exit".equals(input)) {
+	//
+	// // System.out.println("Available groups:");
+	// // for (String g : uem.getAllAvailableUniqueGroupnames(true)) {
+	// // System.out.println(g);
+	// // }
+	// // System.out.println();
+	//
+	// System.out.println("Ready...");
+	//
+	// final BufferedReader br = new BufferedReader(new InputStreamReader(
+	// System.in));
+	//
+	// try {
+	// final String lastInput = input;
+	// input = br.readLine();
+	// if (StringUtils.isBlank(input)) {
+	// input = lastInput;
+	// } else if ("exit".equals(input)) {
+	// System.exit(0);
+	// }
+	// } catch (final IOException ioe) {
+	// System.out.println("IO error trying to read user input!");
+	// System.exit(1);
+	// }
+	//
+	// try {
+	//
+	// final SzybkiInputFile sif = new SzybkiInputFile(si);
+	//
+	// sif.setInputFile("/home/markus/Desktop/jack/szybki/example2.param");
+	//
+	// for (final SzybkiParameter p : sif.getParameters()) {
+	// if (p.getType() == SzybkiParameter.TYPE.UNDEF) {
+	// continue;
+	// }
+	// if (p.getComment() == null) {
+	// System.out.println(p.getParameterName() + "\t\t"
+	// + p.getParameterValue());
+	// } else {
+	// System.out.println(p.getParameterName() + "\t\t"
+	// + p.getParameterValue() + "\t\t"
+	// + p.getComment());
+	// }
+	// }
+	//
+	// } catch (final Exception e) {
+	// System.out.println(e.getLocalizedMessage());
+	// }
+	//
+	// }
+	//
+	// }
 
 	/**
 	 * Parses one line from the szybki input file and converts it into a

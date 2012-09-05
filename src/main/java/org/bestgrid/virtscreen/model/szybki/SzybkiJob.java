@@ -5,7 +5,6 @@ import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
 import grisu.frontend.control.jobMonitoring.RunningJobManager;
-import grisu.frontend.control.login.LoginManager;
 import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
 
@@ -29,19 +28,19 @@ public class SzybkiJob {
 	public static final File SZYBKI_HELPER_PY_SCRIPT = new File(
 			VirtScreenEnvironment.VIRTSCREEN_PLUGIN_DIR, "szybki.py");
 
-	public static void main(String[] args) throws Exception {
-
-		final ServiceInterface si = LoginManager.loginCommandline("Local");
-
-		final SzybkiInputFile input = new SzybkiInputFile(si);
-
-		input.setInputFile("/home/markus/Desktop/jack/szybki/example.param");
-
-		final SzybkiJob job = new SzybkiJob(si, input);
-
-		job.createAndSubmitJob();
-
-	}
+	// public static void main(String[] args) throws Exception {
+	//
+	// final ServiceInterface si = LoginManager.loginCommandline("Local");
+	//
+	// final SzybkiInputFile input = new SzybkiInputFile(si);
+	//
+	// input.setInputFile("/home/markus/Desktop/jack/szybki/example.param");
+	//
+	// final SzybkiJob job = new SzybkiJob(si, input);
+	//
+	// job.createAndSubmitJob();
+	//
+	// }
 
 	private final SzybkiInputFile szybkiInputFile;
 

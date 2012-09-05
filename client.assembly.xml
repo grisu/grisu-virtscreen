@@ -34,8 +34,6 @@
 					<exclude>client-config.wsdd</exclude>
 					<exclude>ARCS.SF</exclude>
 					<exclude>ARCS.RSA</exclude>
-					<exclude>certificates.zip</exclude>
-					<exclude>vomses.zip</exclude>
 					<exclude>arcs/__init__.py</exclude>
 					<exclude>gsindl/__init__.py</exclude>
 					<exclude>arcs/shibboleth/__init__.py</exclude>

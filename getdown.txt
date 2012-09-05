@@ -1,0 +1,11 @@
+# The URL from which the client is downloaded
+appbase = http://code.ceres.auckland.ac.nz/snapshot-downloads/virtscreen-client
+
+# UI Configuration
+ui.name = Virtual screening client
+
+# Application jar files
+code = grisu-virtscreen-binary.jar
+
+# The main entry point for the application
+class = org.bestgrid.virtscreen.view.GrisuVirtScreen
