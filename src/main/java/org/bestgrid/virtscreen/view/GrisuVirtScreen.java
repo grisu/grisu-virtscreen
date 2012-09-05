@@ -38,6 +38,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 		LoginManager.setClientVersion(grisu.jcommons.utils.Version
 				.get("virtscreen"));
+		
+		GrisuApplicationWindow.PANEL_TO_PRELOAD = "Gold";
 
 		GrisuVirtScreen app = new GrisuVirtScreen();
 		app.run();
