@@ -1,8 +1,6 @@
 [Desktop Entry]
-Categories=
 Comment=A GUI to submit and manage virtual screening jobs to the grid.
 Comment[en]=A GUI to submit and manage virtual screening jobs to the grid.
-Encoding=UTF-8
 Exec=/usr/bin/grisu-virtscreen 
 GenericName=
 GenericName[en]=
@@ -10,14 +8,9 @@ Icon=/usr/local/lib/grisu/virtscreen-icon.png
 MimeType=
 Name=Virtual Screening Client
 Name[en]=Virtual Screening Client
-Path=
-ServiceTypes=
-SwallowExec=
-SwallowTitle=
 Terminal=false
-TerminalOptions=
 Type=Application
-URL=
+Categories=X-NeSI;
 X-KDE-SubstituteUID=false
 X-KDE-Username=root
 
