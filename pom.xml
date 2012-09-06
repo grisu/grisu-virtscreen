@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
@@ -49,10 +50,10 @@
 			</exclusions>
 		</dependency>
 
-		<!-- we can't include the bouncy castle library in our assembled binary
-			so it has to put in the classpath in some other way. You could either have
-			the bcprov jar in the same directory as your executable jar, or you just
-			do nothing. Grisu will try to download it in the background and put it in
+		<!-- we can't include the bouncy castle library in our assembled binary 
+			so it has to put in the classpath in some other way. You could either have 
+			the bcprov jar in the same directory as your executable jar, or you just 
+			do nothing. Grisu will try to download it in the background and put it in 
 			the classpath once your application is executed the first time... -->
 		<dependency>
 			<groupId>bouncycastle</groupId>
@@ -62,13 +63,13 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- further grisu dependencies, incuded by default but can be disabled
+		<!-- further grisu dependencies, incuded by default but can be disabled 
 			if not needed and you want a smaller assembly -->
-		<!-- the grisu-core dependency is needed when you want to connect to a
+		<!-- the grisu-core dependency is needed when you want to connect to a 
 			local backend (which is the only supported backend for grisu 0.3 at the moment -->
-		<!-- <dependency> <groupId>grisu</groupId> <artifactId>grisu-core</artifactId>
+		<!-- <dependency> <groupId>grisu</groupId> <artifactId>grisu-core</artifactId> 
 			<version>0.3-SNAPSHOT</version> <type>jar</type> <scope>compile</scope> </dependency> -->
-		<!-- this is needed for shibboleth login don't disable it for now even
+		<!-- this is needed for shibboleth login don't disable it for now even 
 			if you don't want to use shibboleth, I reckon you'll get classpath errors -->
 
 
@@ -85,7 +86,7 @@
 
 		<plugins>
 
-			<!-- you can disable the assembly plugin if you want, your builds will
+			<!-- you can disable the assembly plugin if you want, your builds will 
 				be faster I find it quite handy to have maven build an executable jar, though -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -104,9 +105,10 @@
 									<mainClass>org.bestgrid.virtscreen.view.GrisuVirtScreen</mainClass>
 								</manifest>
 								<manifestEntries>
-									<Class-Path>bcprov.jar bcprov-jdk15-145.jar local-backend.jar grisu-client-library.jar
+									<Class-Path>bcprov.jar bcprov-jdk15-145.jar local-backend.jar
+										grisu-client-library.jar
 									</Class-Path>
-<!-- 									<SplashScreen-Image>splash.png</SplashScreen-Image> -->
+									<!-- <SplashScreen-Image>splash.png</SplashScreen-Image> -->
 								</manifestEntries>
 							</archive>
 
@@ -156,7 +158,7 @@
 					<tagNameFormat>@{project.version}</tagNameFormat>
 					<releaseProfiles>deb,rpm</releaseProfiles>
 				</configuration>
-			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
 
@@ -203,29 +205,75 @@
 						<version>1.4.0</version>
 						<executions>
 							<execution>
+								<id>fix_client_version</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+								<configuration>
+									<includes>
+										<include>target/classes/virtscreen.version</include>
+									</includes>
+									<ignoreMissingFile>false</ignoreMissingFile>
+
+									<replacements>
+										<replacement>
+											<token>VERSION_TOKEN</token>
+											<value>${project.version} (${maven.build.timestamp})</value>
+										</replacement>
+									</replacements>
+								</configuration>
+							</execution>
+							<execution>
 								<id>fix_deb_version</id>
 								<phase>prepare-package</phase>
 								<goals>
 									<goal>replace</goal>
 								</goals>
+								<configuration>
+									<includes>
+										<include>target/deb/control/control</include>
+									</includes>
+									<ignoreMissingFile>false</ignoreMissingFile>
+
+									<replacements>
+										<replacement>
+											<token>VERSION_TOKEN</token>
+											<value>${project.version}</value>
+										</replacement>
+									</replacements>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<includes>
-								<include>target/classes/virtscreen.version</include>
-								<include>target/deb/control/control</include>
-							</includes>
-							<ignoreMissingFile>false</ignoreMissingFile>
 
-							<replacements>
-								<replacement>
-									<token>VERSION_TOKEN</token>
-									<value>${project.version} (${maven.build.timestamp})</value>
-								</replacement>
-							</replacements>
-						</configuration>
 					</plugin>
+<!-- 					<plugin> -->
+<!-- 						<groupId>com.google.code.maven-replacer-plugin</groupId> -->
+<!-- 						<artifactId>maven-replacer-plugin</artifactId> -->
+<!-- 						<version>1.4.0</version> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<id>fix_deb_version</id> -->
+<!-- 								<phase>prepare-package</phase> -->
+<!-- 								<goals> -->
+<!-- 									<goal>replace</goal> -->
+<!-- 								</goals> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 						<configuration> -->
+<!-- 							<includes> -->
+<!-- 								<include>target/deb/control/control</include> -->
+<!-- 							</includes> -->
+<!-- 							<ignoreMissingFile>false</ignoreMissingFile> -->
 
+<!-- 							<replacements> -->
+<!-- 								<replacement> -->
+<!-- 									<token>VERSION_TOKEN</token> -->
+<!-- 									<value>${project.version}</value> -->
+<!-- 								</replacement> -->
+<!-- 							</replacements> -->
+<!-- 						</configuration> -->
+<!-- 					</plugin> -->
 					<plugin>
 						<artifactId>jdeb</artifactId>
 						<groupId>org.vafer</groupId>
@@ -243,6 +291,26 @@
 									<dataSet>
 										<data>
 											<src>${project.build.directory}/grisu-virtscreen-binary.jar</src>
+											<type>file</type>
+											<mapper>
+												<type>perm</type>
+												<prefix>/usr/local/lib/grisu/</prefix>
+												<user>root</user>
+												<group>root</group>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/deb/data/grisu-virtscreen.desktop</src>
+											<type>file</type>
+											<mapper>
+												<type>perm</type>
+												<prefix>/usr/share/applications/</prefix>
+												<user>root</user>
+												<group>root</group>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/deb/data/virtscreen-icon.png</src>
 											<type>file</type>
 											<mapper>
 												<type>perm</type>
@@ -294,7 +362,7 @@
 							<group>Application/Other</group>
 							<!-- <icon>src/main/resources/icon.gif</icon> -->
 							<packager>Markus Binsteiner</packager>
-<!-- 							<prefix>/usr/local</prefix> -->
+							<!-- <prefix>/usr/local</prefix> -->
 							<version>${project.version}</version>
 							<!-- <changelogFile>src/changelog</changelogFile> -->
 							<!-- <defineStatements> -->
@@ -333,9 +401,9 @@
 							<preinstallScriptlet>
 								<script>echo "Installing Grisu Virtual Screening client..."</script>
 							</preinstallScriptlet>
-							<!-- <postinstallScriptlet> <scriptFile>src/main/scripts/postinstall</scriptFile>
-								<fileEncoding>utf-8</fileEncoding> </postinstallScriptlet> <preremoveScriptlet>
-								<scriptFile>src/main/scripts/preremove</scriptFile> <fileEncoding>utf-8</fileEncoding>
+							<!-- <postinstallScriptlet> <scriptFile>src/main/scripts/postinstall</scriptFile> 
+								<fileEncoding>utf-8</fileEncoding> </postinstallScriptlet> <preremoveScriptlet> 
+								<scriptFile>src/main/scripts/preremove</scriptFile> <fileEncoding>utf-8</fileEncoding> 
 								</preremoveScriptlet> -->
 						</configuration>
 					</plugin>
