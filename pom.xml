@@ -392,18 +392,18 @@
 										</source>
 									</sources>
 								</mapping>
-								<mapping>
-									<directory>/usr/share/applications/</directory>
-									<documentation>true</documentation>
-									<filemode>644</filemode>
-									<username>root</username>
-									<groupname>root</groupname>
-									<sources>
-										<source>
-											<location>src/deb/data/grisu-virtscreen.desktop</location>
-										</source>
-									</sources>
-								</mapping>
+<!-- 								<mapping> -->
+<!-- 									<directory>/usr/share/applications/</directory> -->
+<!-- 									<documentation>true</documentation> -->
+<!-- 									<filemode>644</filemode> -->
+<!-- 									<username>root</username> -->
+<!-- 									<groupname>root</groupname> -->
+<!-- 									<sources> -->
+<!-- 										<source> -->
+<!-- 											<location>src/deb/data/grisu-virtscreen.desktop</location> -->
+<!-- 										</source> -->
+<!-- 									</sources> -->
+<!-- 								</mapping> -->
 
 							</mappings>
 							<requires>
