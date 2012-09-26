@@ -5,8 +5,8 @@ rm -Rf /tmp/pvm*
 #export GOLD_DIR=/share/apps/gold/GOLD
 export GOLD_DIR=/share/apps/goldsuite-5.1/GOLD
 export GOLD_LICENSE=${GOLD_DIR}/bin/gold_licence
-#export CCDC_LICENSE_FILE=27000@er171.ceres.auckland.ac.nz
-export CCDC_LICENSE_FILE=27000@cluster.ceres.auckland.ac.nz
+export CCDC_LICENSE_FILE=27004@xcat-p
+#export CCDC_LICENSE_FILE=/share/apps/goldsuite-5.1/ccdc_licence.dat
 export PVM_ROOT=${GOLD_DIR}/pvm3
 
 export INDIR=`pwd`
@@ -21,17 +21,22 @@ function release_licenses () {
 }
 
 function check_license_status () {
-    ${GOLD_LICENSE}  statall >> ${INDIR}/gold_license_status
+    echo "Checking license status"
+    ${GOLD_LICENSE}  statall|sed  's/Uncounted/32/g' >> ${INDIR}/gold_license_status
 }
 
 function check_job_status () {
     TIMESTAMP=$(date  +'%s')
+    echo "Checking job status at time $TIMESTAMP"
     NUMBER_OF_CPUS=$(echo 'ps -a'|pvm|grep gold_parallel.sh|wc -l)
+    echo "total number of CPUS is $NUMBER_OF_CPUS"
     NUMBER_OF_LICENSES=$[$(${GOLD_LICENSE} statall \
 	|awk 'BEGIN {a = 0}; /Users of silver/ {a = 0}; /floating license/ {a = 1}; //{ if (a == 1) print $0}' \
 	|wc -l) - 3]
+    echo "total number of licenses $NUMBER_OF_LICENSES"
 
     NUMBER_OF_LICENSES_USER=$(${GOLD_LICENSE} statall |grep $USER|wc -l)
+    echo "number of licenses per user $NUMBER_OF_LICENSES_USER"
 
     NUMBER_OF_COMPONENTS=$(calculate_components)
 
@@ -82,9 +87,9 @@ rm -f ${INDIR}/gold.hosts
 echo " PARALLEL OPTIONS" >> ${INDIR}/${CONF_FILE}
 echo "hostfile = gold.hosts" >> ${INDIR}/${CONF_FILE}
 
-cat ${PBS_NODEFILE}|python ${INDIR}/gold.py > ${INDIR}/gold.hosts
+cat ${LOADL_HOSTFILE}|python ${INDIR}/gold.py > ${INDIR}/gold.hosts
 
-NO_OF_CPUS=$(cat ${PBS_NODEFILE}|wc -l)
+NO_OF_CPUS=$(cat ${LOADL_HOSTFILE}|wc -l)
 
 trap 'kill $DAEMON_PID; release_licenses; check_license_status;' INT TERM EXIT
 
@@ -98,6 +103,4 @@ trap - INT TERM EXIT
 kill $DAEMON_PID
 release_licenses
 check_license_status
-
-
 

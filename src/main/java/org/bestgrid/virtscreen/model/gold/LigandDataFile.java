@@ -20,7 +20,7 @@ public class LigandDataFile extends AbstractGoldParameter {
 	static final Logger myLogger = Logger.getLogger(LigandDataFile.class
 			.getName());
 
-	public static final String VS_LIBRARY_FILES_URL = "gsiftp://gram5.ceres.auckland.ac.nz/home/grid-vs/libraries/";
+	public static final String VS_LIBRARY_FILES_URL = "gsiftp://pan.nesi.org.nz/home/grid-vs/libraries/";
 	public static final String VS_LIBRARY_LOCAL_PATH = "/home/grid-vs/libraries/";
 
 	public static final String LIGAND_PARAMETER_NAME = "ligand_data_file";
