@@ -16,7 +16,7 @@ export CONF_FILE=$1
 function release_licenses () {
     ${GOLD_DIR}/bin/gold_licence  statall|
      grep ${USER}|
-      awk '{print "${GOLD_DIR}/gold/d_linux_64/bin/lmutil lmremove  -h gold " $2 " 27000 "  substr($6,0, length($6)-2)}'|
+      awk '{print "${GOLD_DIR}/gold/d_linux_64/bin/lmutil lmremove  -h gold " $2 " 27004 "  substr($6,0, length($6)-2)}'|
       sh
 }
 
