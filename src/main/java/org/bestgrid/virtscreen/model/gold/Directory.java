@@ -24,6 +24,7 @@ public class Directory extends AbstractGoldParameter {
 	@Override
 	public void initParameter() {
 		setNewValue("./Results");
+//		setNewValue("/tmp/Results");
 		addMessage("static",
 				"  -> Set output directory to be named \"Results\"\n");
 	}

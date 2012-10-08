@@ -53,7 +53,8 @@ public class GoldJob {
 
 		job.setCommandline("sh gold.sh " + this.goldConfFile.getName());
 		job.setCpus(this.cpus);
-		job.setMemory(2L * 2147483648L * new Long(this.cpus));
+//		job.setMemory(2L * 2147483648L * new Long(this.cpus));
+		job.setMemory(2L * 2147483648L);
 		// job.setHostCount(1);
 		job.setForce_single(true);
 		job.setWalltimeInSeconds(walltimeInSeconds);
