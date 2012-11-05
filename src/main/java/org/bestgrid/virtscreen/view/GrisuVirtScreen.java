@@ -12,6 +12,7 @@ import java.awt.EventQueue;
 import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
+import org.bestgrid.virtscreen.view.gromacs.GromacsSubmitPanel;
 import org.bestgrid.virtscreen.view.szybki.SzybkiJobCreationPanel;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
@@ -32,6 +33,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	// public static final String GOLD_VERSION = "5.1";
 	public static final String GOLD_VERSION = "5.1";
+	
+	public static final String GROMACS_VERSION = "4.5.4";
 
 	public static void main(String[] args) throws Exception {
 
@@ -48,6 +51,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	private JobCreationPanel gold;
 	private JobCreationPanel szybki;
+	private JobCreationPanel gromacs;
 
 	/**
 	 * Create the application.
@@ -78,11 +82,18 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		return gold;
 	}
 
+	private JobCreationPanel getGromacsJobCreationPanel() {
+		if (gromacs == null) {
+			gromacs = new GromacsSubmitPanel();
+		}
+		return gromacs;
+	}
+
 	@Override
 	public JobCreationPanel[] getJobCreationPanels() {
 		// return new JobCreationPanel[] { getGoldJobCreationPanel(),
 		// getSzybkiJobCreationPanel() };
-		return new JobCreationPanel[] { getGoldJobCreationPanel() };
+		return new JobCreationPanel[] { getGoldJobCreationPanel(), getGromacsJobCreationPanel() };
 	}
 
 	@Override
@@ -137,5 +148,10 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 				}
 			}
 		});
+	}
+
+	@Override
+	public boolean displayAllJobsMonitoringItem() {
+		return false;
 	}
 }

@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.bestgrid.virtscreen.model.gold.GoldJob;
+import org.bestgrid.virtscreen.model.gromacs.GromacsJob;
 import org.bestgrid.virtscreen.model.szybki.SzybkiJob;
 
 public class VirtScreenEnvironment {
@@ -39,6 +40,11 @@ public class VirtScreenEnvironment {
 			in = GoldJob.class.getResourceAsStream("/szybki.py");
 			IOUtils.copy(in, new FileOutputStream(
 					SzybkiJob.SZYBKI_HELPER_PY_SCRIPT));
+			in.close();
+			
+			in = GoldJob.class.getResourceAsStream("/gromacs.sh");
+			IOUtils.copy(in, new FileOutputStream(
+					GromacsJob.GROMACS_JOB_CONTROL_SCRIPT));
 			in.close();
 		} catch (final Exception e) {
 
