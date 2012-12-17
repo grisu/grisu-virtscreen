@@ -1,32 +1,38 @@
 package org.bestgrid.virtscreen.view.gromacs;
 
-import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
 import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
+import grisu.frontend.view.swing.jobcreation.widgets.Cpus;
+import grisu.frontend.view.swing.jobcreation.widgets.Email;
+import grisu.frontend.view.swing.jobcreation.widgets.OrderableMultiInputGridFile;
 import grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
+import grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
+import grisu.frontend.view.swing.jobcreation.widgets.Walltime;
+import grisu.model.dto.GridFile;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
 import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 
 import org.bestgrid.virtscreen.model.gromacs.GromacsJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
-import grisu.frontend.view.swing.jobcreation.widgets.MultiInputGridFile;
-import grisu.frontend.view.swing.jobcreation.widgets.Email;
-import grisu.frontend.view.swing.jobcreation.widgets.Cpus;
-import grisu.frontend.view.swing.jobcreation.widgets.Walltime;
-import grisu.frontend.view.swing.jobcreation.widgets.WalltimeVertical;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
+	
+	public static final Logger myLogger = LoggerFactory.getLogger(GromacsSubmitPanel.class);
 	
 	private final String HISTORY_KEY = "virtScreenGromacsJob";
 
@@ -37,13 +43,12 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 	
 	private ServiceInterface si;
 	private SubmissionLogPanel submissionLogPanel;
-	private MultiInputGridFile multiInputGridFile;
+	private OrderableMultiInputGridFile multiInputGridFile;
 	private Email email;
 	private Cpus cpus;
-	private WalltimeVertical walltimeVertical;
+	private Walltime walltimeVertical;
 	private SingleInputGridFile topInputFile;
 	private JSeparator separator;
-	private JSeparator separator_1;
 
 	/**
 	 * Create the panel.
@@ -51,13 +56,13 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 	public GromacsSubmitPanel() {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(94dlu;default):grow"),
+				ColumnSpec.decode("max(44dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(94dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(65dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(31dlu;default)"),
+				ColumnSpec.decode("max(81dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -67,7 +72,7 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -75,15 +80,14 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,}));
-		add(getGroInputFile(), "2, 2, 7, 1, fill, fill");
-		add(getTopInputFile(), "2, 4, 7, 1, fill, fill");
-		add(getSeparator_1(), "8, 6");
-		add(getCpus(), "8, 8, fill, bottom");
-		add(getWalltimeVertical(), "8, 10, fill, fill");
-		add(getMultiInputGridFile(), "2, 8, 3, 3, fill, fill");
-		add(getEmail(), "2, 12, 3, 1, fill, fill");
-		add(getSeparator(), "6, 8, 1, 5");
-		add(getBtnNewButton(), "8, 12, right, center");
+		add(getGroInputFile(), "2, 2, 5, 1, fill, fill");
+		add(getMultiInputGridFile(), "8, 2, 1, 7, fill, fill");
+		add(getTopInputFile(), "2, 4, 5, 1, fill, fill");
+		add(getCpus(), "2, 6, fill, fill");
+		add(getWalltimeVertical(), "4, 6, 3, 1, fill, fill");
+		add(getEmail(), "2, 8, 5, 1, fill, fill");
+		add(getSeparator(), "2, 10, 7, 1");
+		add(getBtnNewButton(), "8, 12, right, bottom");
 		add(getSubmissionLogPanel(), "2, 14, 7, 1, fill, fill");
 
 	}
@@ -135,6 +139,24 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 		}
 		return groInputFile;
 	}
+	
+	private void lockUI(final boolean lock) {
+		
+		SwingUtilities.invokeLater(new Thread() {
+			public void run() {
+				getBtnNewButton().setEnabled(!lock);
+				getMultiInputGridFile().lockUI(lock);
+				getCpus().lockUI(lock);
+				getWalltimeVertical().lockUI(lock);
+				getTopInputFile().lockUI(lock);
+				getEmail().lockUI(lock);
+				getGroInputFile().lockUI(lock);
+			}
+		});
+		
+		
+	}
+	
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("Submit");
@@ -143,7 +165,14 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 					 
 					new Thread() {
 						public void run() {
-							submit();
+							
+							lockUI(true);
+							
+							try {
+								submit();
+							} finally {
+								lockUI(false);
+							}
 						}
 					}.start();
 					
@@ -151,6 +180,12 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 			});
 		}
 		return btnNewButton;
+	}
+	
+	private void clearPanel() {
+		getMultiInputGridFile().clearFiles();
+		getTopInputFile().setValue(null);
+		getGroInputFile().setValue(null);
 	}
 	
 	private void submit() {
@@ -161,7 +196,10 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 		
 		job.setGroFile(getGroInputFile().getInputFile());
 		job.setTopFile(getTopInputFile().getInputFile());
-		job.setMbpFiles(getMultiInputGridFile().getInputFiles());
+		
+		List<GridFile> mdpFiles = getMultiInputGridFile().getInputFiles();
+		
+		job.setMbpFiles(mdpFiles);
 		
 		job.setWalltimeInSeconds(getWalltimeVertical().getWalltimeInSeconds());
 		job.setCpus(getCpus().getCpus());
@@ -173,12 +211,11 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 		
 		try {
 			job.createAndSubmitJob();
+			clearPanel();
 		} catch (JobSubmissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			myLogger.debug("Job creation failed", e);
 		} catch (JobPropertiesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			myLogger.debug("Job creation failed", e);
 		}
 		
 	}
@@ -188,9 +225,9 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 		}
 		return submissionLogPanel;
 	}
-	private MultiInputGridFile getMultiInputGridFile() {
+	private OrderableMultiInputGridFile getMultiInputGridFile() {
 		if (multiInputGridFile == null) {
-			multiInputGridFile = new MultiInputGridFile();
+			multiInputGridFile = new OrderableMultiInputGridFile();
 			multiInputGridFile.setTitle("mdpFiles");
 		}
 		return multiInputGridFile;
@@ -204,13 +241,13 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 	private Cpus getCpus() {
 		if (cpus == null) {
 			cpus = new Cpus();
-			cpus.setEditableComboBox(true);
+			cpus.setEditableComboBox(false);
 		}
 		return cpus;
 	}
-	private WalltimeVertical getWalltimeVertical() {
+	private Walltime getWalltimeVertical() {
 		if (walltimeVertical == null) {
-			walltimeVertical = new WalltimeVertical();
+			walltimeVertical = new Walltime();
 		}
 		return walltimeVertical;
 	}
@@ -225,14 +262,7 @@ public class GromacsSubmitPanel extends JPanel implements JobCreationPanel {
 	private JSeparator getSeparator() {
 		if (separator == null) {
 			separator = new JSeparator();
-			separator.setOrientation(SwingConstants.VERTICAL);
 		}
 		return separator;
-	}
-	private JSeparator getSeparator_1() {
-		if (separator_1 == null) {
-			separator_1 = new JSeparator();
-		}
-		return separator_1;
 	}
 }

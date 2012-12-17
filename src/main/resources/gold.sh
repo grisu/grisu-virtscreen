@@ -69,7 +69,8 @@ function calculate_components () {
 
 
 function start_pvm_daemon () {
-    nohup ${PVM_ROOT}/lib/LINUX86_64/pvmd3  &
+	echo "starting pvm daemon. PVM_ROOT is " $PVM_ROOT
+    nohup ${PVM_ROOT}/lib/LINUX64/pvmd3  &
 }
 
 dos2unix ${CONF_FILE} 

@@ -9,11 +9,13 @@ import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 import org.slf4j.Logger;
@@ -64,6 +66,7 @@ public class GromacsJob {
 	private GridFile topFile;
 
 	private List<GridFile> mbpFiles;
+	private File mdpFileOrder;
 
 	private int cpus = 64;
 
@@ -96,7 +99,7 @@ public class GromacsJob {
 		job.setEmail_on_job_finish(email_on_finish);
 		job.setEmail_on_job_start(email_on_start);
 
-		String commandline = "/share/apps/gromacs/gromacs_workflow_top.sh -d . -i "+getGroFile().getName()+" -t "+getTopFile().getName();
+		String commandline = "/share/apps/gromacs/gromacs_workflow_new.sh -d . -i "+getGroFile().getName()+" -t "+getTopFile().getName() + " -f "+mdpFileOrder.getName();
 		if ( this.cpus > 1 ) {
 			commandline = commandline + " -mpi";
 		}
@@ -108,13 +111,15 @@ public class GromacsJob {
 		job.addInputFileUrl(GROMACS_JOB_CONTROL_SCRIPT.getPath());
 		job.addInputFileUrl(getGroFile().getUrl());
 		job.addInputFileUrl(getTopFile().getUrl());
+		
+		job.addInputFileUrl(mdpFileOrder.getAbsolutePath());
 
 		for (GridFile f : getMbpFiles()) {
 			job.addInputFileUrl(f.getUrl());
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-				"/nz/nesi/projects/nesi99999");
+				"/nz/nesi/projects/nesi00031");
 		//GrisuVirtScreen.SUBMISSION_VO);
 
 		final Map<String, String> additionalJobProperties = new HashMap<String, String>();
@@ -192,8 +197,22 @@ public class GromacsJob {
 		this.groFile = groFile;
 	}
 
-	public void setMbpFiles(List<GridFile> mbpFiles) {
-		this.mbpFiles = mbpFiles;
+	public void setMbpFiles(List<GridFile> mdpFiles) {
+		this.mbpFiles = mdpFiles;
+		try {
+			mdpFileOrder = File.createTempFile("mdp_order_", ".txt");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} 
+		StringBuffer temp = new StringBuffer();
+		for (GridFile f : mdpFiles) {
+			temp.append(f.getName()+"\n");
+		}
+		try {
+			FileUtils.writeStringToFile(mdpFileOrder, temp.toString());
+		} catch (IOException e) {
+			throw new RuntimeException();
+		}
 	}
 
 	public void setTopFile(GridFile topFile) {
