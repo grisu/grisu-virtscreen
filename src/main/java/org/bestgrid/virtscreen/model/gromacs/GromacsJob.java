@@ -119,7 +119,7 @@ public class GromacsJob {
 		}
 
 		RunningJobManager.getDefault(si).createJob(job,
-				"/nz/nesi/projects/nesi00031");
+				"/nz/nesi/projects/nesi00039");
 		//GrisuVirtScreen.SUBMISSION_VO);
 
 		final Map<String, String> additionalJobProperties = new HashMap<String, String>();
