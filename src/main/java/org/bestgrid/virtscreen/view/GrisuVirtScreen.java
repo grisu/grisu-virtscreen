@@ -6,6 +6,7 @@ import grisu.frontend.view.swing.GrisuApplicationWindow;
 import grisu.frontend.view.swing.files.virtual.GridFileTreePanel;
 import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import grisu.jcommons.utils.EnvironmentVariableHelpers;
+import grith.jgrith.Environment;
 
 import java.awt.EventQueue;
 
@@ -133,7 +134,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 		EnvironmentVariableHelpers.loadEnvironmentVariablesToSystemProperties();
 
-		LoginManager.initEnvironment();
+		Environment.initEnvironment();
+//		LoginManager.initEnvironment();
 
 		VirtScreenEnvironment.init();
 

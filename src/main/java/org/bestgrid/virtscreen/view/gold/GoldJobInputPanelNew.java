@@ -6,7 +6,7 @@ import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import grisu.frontend.view.swing.jobcreation.widgets.AbstractWidget;
 import grisu.frontend.view.swing.jobcreation.widgets.Cpus;
 import grisu.frontend.view.swing.jobcreation.widgets.Email;
-import grisu.frontend.view.swing.jobcreation.widgets.SingleInputFile;
+import grisu.frontend.view.swing.jobcreation.widgets.SingleInputGridFile;
 import grisu.frontend.view.swing.jobcreation.widgets.SubmissionLogPanel;
 import grisu.frontend.view.swing.jobcreation.widgets.Walltime;
 
@@ -51,7 +51,7 @@ PropertyChangeListener {
 	private final String HISTORY_KEY = "virtScreenGoldJob";
 
 	private final List<AbstractWidget> widgets = new LinkedList<AbstractWidget>();
-	private SingleInputFile singleInputFile;
+	private SingleInputGridFile singleInputFile;
 	private final ValidationPanel validationPanel = new ValidationPanel();
 	private final ValidationGroup validationGroup;
 	private JButton btnRefresh;
