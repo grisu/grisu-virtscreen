@@ -47,6 +47,10 @@
 					<artifactId>java-getopt</artifactId>
 					<groupId>urbanophile</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jgoodiesforms</artifactId>
+					<groupId>com.jgoodies</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -402,7 +406,7 @@
 		<version>0.23</version>
 	</parent>
 	<properties>
-		<grisu.version>0.6.2-SNAPSHOT</grisu.version>
+		<grisu.version>0.6.2</grisu.version>
 	</properties>
 </project>
 
