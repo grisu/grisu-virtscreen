@@ -7,14 +7,13 @@ import grisu.frontend.view.swing.files.virtual.GridFileTreePanel;
 import grisu.frontend.view.swing.jobcreation.JobCreationPanel;
 import grisu.jcommons.utils.EnvironmentVariableHelpers;
 import grith.jgrith.Environment;
-
-import java.awt.EventQueue;
-
 import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.gold.GoldJobInputPanelNew;
 import org.bestgrid.virtscreen.view.gromacs.GromacsSubmitPanel;
 import org.bestgrid.virtscreen.view.szybki.SzybkiJobCreationPanel;
+
+import java.awt.*;
 
 public class GrisuVirtScreen extends GrisuApplicationWindow {
 
@@ -34,7 +33,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	// public static final String GOLD_VERSION = "5.1";
 	public static final String GOLD_VERSION = "5.1";
-	
+
 	public static final String GROMACS_VERSION = "4.5.4";
 
 	public static void main(String[] args) throws Exception {
@@ -43,7 +42,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 		LoginManager.setClientVersion(grisu.jcommons.utils.Version
 				.get("virtscreen"));
-		
+
 		GrisuApplicationWindow.PANEL_TO_PRELOAD = "Gold";
 
 		GrisuVirtScreen app = new GrisuVirtScreen();
@@ -94,7 +93,8 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	public JobCreationPanel[] getJobCreationPanels() {
 		// return new JobCreationPanel[] { getGoldJobCreationPanel(),
 		// getSzybkiJobCreationPanel() };
-		return new JobCreationPanel[] { getGoldJobCreationPanel(), getGromacsJobCreationPanel() };
+		//return new JobCreationPanel[] { getGoldJobCreationPanel(), getGromacsJobCreationPanel() };
+        return new JobCreationPanel[] { getGoldJobCreationPanel() };
 	}
 
 	@Override
