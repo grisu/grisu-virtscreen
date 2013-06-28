@@ -27,7 +27,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	// public static final String SUBMISSION_VO =
 	// "/ARCS/BeSTGRID/Drug_discovery/Local";
 
-	public static final String SUBMISSION_LOCATION = "pan:pan.nesi.org.nz";
+	public static final String SUBMISSION_LOCATION = "pan:gram.uoa.nesi.org.nz";
 	// public static final String SUBMISSION_LOCATION =
 	// "gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz";
 

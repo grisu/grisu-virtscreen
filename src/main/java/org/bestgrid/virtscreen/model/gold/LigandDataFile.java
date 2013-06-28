@@ -3,6 +3,9 @@ package org.bestgrid.virtscreen.model.gold;
 import grisu.control.exceptions.RemoteFileSystemException;
 import grisu.model.FileManager;
 import grisu.model.dto.GridFile;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URI;
@@ -11,16 +14,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 public class LigandDataFile extends AbstractGoldParameter {
 
 	static final Logger myLogger = Logger.getLogger(LigandDataFile.class
 			.getName());
 
-	public static final String VS_LIBRARY_FILES_URL = "gsiftp://pan.nesi.org.nz/home/grid-vs/libraries/";
+	public static final String VS_LIBRARY_FILES_URL = "gsiftp://gram.uoa.nesi.org.nz/home/grid-vs/libraries/";
 	public static final String VS_LIBRARY_LOCAL_PATH = "/home/grid-vs/libraries/";
 
 	public static final String LIGAND_PARAMETER_NAME = "ligand_data_file";
