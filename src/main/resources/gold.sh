@@ -2,11 +2,12 @@
 killall -9 pvmd3
 rm -Rf /tmp/pvm*
 
+export GOLD_VERSION=5.2
 #export GOLD_DIR=/share/apps/gold/GOLD
-export GOLD_DIR=/share/apps/goldsuite-5.1/GOLD
+export GOLD_DIR=/share/apps/goldsuite-${GOLD_VERSION}/GOLD
 export GOLD_LICENSE=${GOLD_DIR}/bin/gold_licence
 export CCDC_LICENSE_FILE=27004@xcat-p
-#export CCDC_LICENSE_FILE=/share/apps/goldsuite-5.1/ccdc_licence.dat
+#export CCDC_LICENSE_FILE=/share/apps/goldsuite-${GOLD_VERSION}/ccdc_licence.dat
 export PVM_ROOT=${GOLD_DIR}/pvm3
 
 export INDIR=`pwd`
@@ -73,7 +74,7 @@ function start_pvm_daemon () {
     nohup ${PVM_ROOT}/lib/LINUX64/pvmd3  &
 }
 
-dos2unix ${CONF_FILE} 
+dos2unix ${CONF_FILE}
 
 start_pvm_daemon
 

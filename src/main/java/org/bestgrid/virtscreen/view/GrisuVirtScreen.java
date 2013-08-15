@@ -32,16 +32,14 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 	// "gold@er171.ceres.auckland.ac.nz:ng2.auckland.ac.nz";
 
 	// public static final String GOLD_VERSION = "5.1";
-	public static final String GOLD_VERSION = "5.1";
+	public static final String GOLD_VERSION = "5.2";
 
 	public static final String GROMACS_VERSION = "4.5.4";
 
 	public static void main(String[] args) throws Exception {
 
-		LoginManager.setClientName("virtscreen");
 
-		LoginManager.setClientVersion(grisu.jcommons.utils.Version
-				.get("virtscreen"));
+        LoginManager.initGrisuClient("virtscreen");
 
 		GrisuApplicationWindow.PANEL_TO_PRELOAD = "Gold";
 
