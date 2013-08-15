@@ -6,7 +6,8 @@ export GOLD_VERSION=5.2
 #export GOLD_DIR=/share/apps/gold/GOLD
 export GOLD_DIR=/share/apps/goldsuite-${GOLD_VERSION}/GOLD
 export GOLD_LICENSE=${GOLD_DIR}/bin/gold_licence
-export CCDC_LICENSE_FILE=27004@xcat-p
+export LICENSE_PORT=27000
+export CCDC_LICENSE_FILE=${LICENSE_PORT}@xcat-p
 #export CCDC_LICENSE_FILE=/share/apps/goldsuite-${GOLD_VERSION}/ccdc_licence.dat
 export PVM_ROOT=${GOLD_DIR}/pvm3
 
@@ -17,7 +18,7 @@ export CONF_FILE=$1
 function release_licenses () {
     ${GOLD_DIR}/bin/gold_licence  statall|
      grep ${USER}|
-      awk '{print "${GOLD_DIR}/gold/d_linux_64/bin/lmutil lmremove  -h gold " $2 " 27004 "  substr($6,0, length($6)-2)}'|
+      awk '{print "${GOLD_DIR}/gold/d_linux_64/bin/lmutil lmremove  -h gold " $2 " ${LICENSE_PORT} "  substr($6,0, length($6)-2)}'|
       sh
 }
 
