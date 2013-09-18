@@ -4,18 +4,17 @@ import grisu.X;
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
-import grisu.frontend.control.jobMonitoring.RunningJobManager;
+import grisu.frontend.control.jobMonitoring.RunningJobManagerImpl;
 import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.model.szybki.SzybkiParameter.TYPE;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SzybkiJob {
 
@@ -93,7 +92,7 @@ public class SzybkiJob {
 
 		}
 
-		RunningJobManager.getDefault(si).createJob(job,
+		RunningJobManagerImpl.getDefault(si).createJob(job,
 				// "/ARCS/BeSTGRID/Drug_discovery/Local");
 				"/ARCS/BeSTGRID");
 

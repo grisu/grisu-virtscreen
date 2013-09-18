@@ -3,23 +3,21 @@ package org.bestgrid.virtscreen.model.gromacs;
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
-import grisu.frontend.control.jobMonitoring.RunningJobManager;
+import grisu.frontend.control.jobMonitoring.RunningJobManagerImpl;
 import grisu.frontend.control.login.LoginManager;
 import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.FileUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
 import org.bestgrid.virtscreen.view.GrisuVirtScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GromacsJob {
 
@@ -53,7 +51,7 @@ public class GromacsJob {
 		job.addInputFileUrl("/media/data/work/Workspaces/Grisu/grisu-virtscreen/src/main/resources/gromacs.sh");
 
 
-		
+
 		job.setCommandline("sh gromacs.sh");
 		job.setWalltimeInSeconds(3600 * 23);
 
@@ -94,7 +92,7 @@ public class GromacsJob {
 		job.setApplication("GROMACS");
 		job.setApplicationVersion(GrisuVirtScreen.GROMACS_VERSION);
 		job.setSubmissionLocation(GrisuVirtScreen.SUBMISSION_LOCATION);
-		
+
 		job.setEmail_address(email);
 		job.setEmail_on_job_finish(email_on_finish);
 		job.setEmail_on_job_start(email_on_start);
@@ -111,14 +109,14 @@ public class GromacsJob {
 		job.addInputFileUrl(GROMACS_JOB_CONTROL_SCRIPT.getPath());
 		job.addInputFileUrl(getGroFile().getUrl());
 		job.addInputFileUrl(getTopFile().getUrl());
-		
+
 		job.addInputFileUrl(mdpFileOrder.getAbsolutePath());
 
 		for (GridFile f : getMbpFiles()) {
 			job.addInputFileUrl(f.getUrl());
 		}
 
-		RunningJobManager.getDefault(si).createJob(job,
+		RunningJobManagerImpl.getDefault(si).createJob(job,
 				"/nz/nesi/projects/nesi00039");
 		//GrisuVirtScreen.SUBMISSION_VO);
 
@@ -203,7 +201,7 @@ public class GromacsJob {
 			mdpFileOrder = File.createTempFile("mdp_order_", ".txt");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} 
+		}
 		StringBuffer temp = new StringBuffer();
 		for (GridFile f : mdpFiles) {
 			temp.append(f.getName()+"\n");
