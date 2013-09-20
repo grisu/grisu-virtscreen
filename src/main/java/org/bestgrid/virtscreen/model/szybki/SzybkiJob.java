@@ -4,7 +4,7 @@ import grisu.X;
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
-import grisu.frontend.control.jobMonitoring.RunningJobManagerImpl;
+import grisu.frontend.control.jobMonitoring.RunningJobManagerManager;
 import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
 import org.apache.commons.io.FilenameUtils;
@@ -92,7 +92,7 @@ public class SzybkiJob {
 
 		}
 
-		RunningJobManagerImpl.getDefault(si).createJob(job,
+		RunningJobManagerManager.getDefault(si).createJob(job,
 				// "/ARCS/BeSTGRID/Drug_discovery/Local");
 				"/ARCS/BeSTGRID");
 

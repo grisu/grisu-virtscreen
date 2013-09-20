@@ -4,7 +4,7 @@ import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
 import grisu.frontend.control.clientexceptions.FileTransactionException;
-import grisu.frontend.control.jobMonitoring.RunningJobManagerImpl;
+import grisu.frontend.control.jobMonitoring.RunningJobManagerManager;
 import grisu.frontend.model.job.JobObject;
 import org.apache.commons.io.FilenameUtils;
 import org.bestgrid.virtscreen.control.VirtScreenEnvironment;
@@ -66,7 +66,7 @@ public class GoldJob {
 			job.addInputFileUrl(url);
 		}
 
-		RunningJobManagerImpl.getDefault(si).createJob(job,
+		RunningJobManagerManager.getDefault(si).createJob(job,
 				GrisuVirtScreen.SUBMISSION_VO);
 
 		final Map<String, String> additionalJobProperties = new HashMap<String, String>();

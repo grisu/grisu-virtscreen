@@ -3,7 +3,7 @@ package org.bestgrid.virtscreen.model.gromacs;
 import grisu.control.ServiceInterface;
 import grisu.control.exceptions.JobPropertiesException;
 import grisu.control.exceptions.JobSubmissionException;
-import grisu.frontend.control.jobMonitoring.RunningJobManagerImpl;
+import grisu.frontend.control.jobMonitoring.RunningJobManagerManager;
 import grisu.frontend.control.login.LoginManager;
 import grisu.frontend.model.job.JobObject;
 import grisu.model.dto.GridFile;
@@ -116,7 +116,7 @@ public class GromacsJob {
 			job.addInputFileUrl(f.getUrl());
 		}
 
-		RunningJobManagerImpl.getDefault(si).createJob(job,
+		RunningJobManagerManager.getDefault(si).createJob(job,
 				"/nz/nesi/projects/nesi00039");
 		//GrisuVirtScreen.SUBMISSION_VO);
 
