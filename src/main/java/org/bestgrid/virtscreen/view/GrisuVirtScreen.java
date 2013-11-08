@@ -22,8 +22,7 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	public static final String VIRTSCREEN_ROOTS = "virtscreen_roots";
 
-//	public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
-	public static final String SUBMISSION_VO = "/nz/nesi";
+	public static final String SUBMISSION_VO = "/nz/virtual-screening/jobs";
 	// public static final String SUBMISSION_VO =
 	// "/ARCS/BeSTGRID/Drug_discovery/Local";
 
