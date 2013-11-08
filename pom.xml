@@ -4,7 +4,7 @@
 	<groupId>org.bestgrid.virtscreen</groupId>
 	<artifactId>grisu-virtscreen</artifactId>
 	<packaging>jar</packaging>
-	<version>0.17-SNAPSHOT</version>
+	<version>0.18-SNAPSHOT</version>
 	<name>A Grid client to support high troughput virtual screening.</name>
 
 	<repositories>
