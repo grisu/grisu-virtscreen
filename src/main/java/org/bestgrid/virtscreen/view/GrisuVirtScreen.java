@@ -38,7 +38,6 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 
 	public static void main(String[] args) throws Exception {
 
-
         LoginManager.initGrisuClient("virtscreen");
 
 		GrisuApplicationWindow.PANEL_TO_PRELOAD = "Gold";
