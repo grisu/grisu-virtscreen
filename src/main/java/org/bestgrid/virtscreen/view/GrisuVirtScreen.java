@@ -112,9 +112,10 @@ public class GrisuVirtScreen extends GrisuApplicationWindow {
 		GridFileTreePanel.defaultRoots.clear();
 		GridFileTreePanel.defaultRoots.put("Data Fabric",
 				"grid://groups/nz/nesi//");
-
-		GridFileTreePanel.defaultRoots.put("Virtual Screening",
-				"grid://groups/nz/virtual-screening//");
+        GridFileTreePanel.defaultRoots.put("User home",
+				"grid://groups/nz/uoa");
+		GridFileTreePanel.defaultRoots.put("Virtual Screening home",
+				"grid://groups/nz/uoa/projects/uoa00040//");
 		GridFileTreePanel.defaultRoots.put("Jobs", "grid://jobs");
 		GridFileTreePanel.defaultRoots.put(GridFileTreePanel.LOCAL_ALIAS, null);
 		addGroupFileListPanel(null, null);
